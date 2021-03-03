@@ -1,7 +1,6 @@
 {
     "private": true,
     "scripts": {
-        "init-load": "",
         "start": "",
         "dev": "npm run development",
         "development": "mix",
