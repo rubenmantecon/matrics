@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Look And Feel</title>
     <script src="https://kit.fontawesome.com/92479866c9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/template.css') }}">
     <style>
         body {
             margin: 0px;
@@ -35,6 +36,7 @@
             border: 2px solid #5cbdff;
             box-shadow: 0 0 10px #a6a6e8;
         }
+
     </style>
 </head>
 
@@ -65,10 +67,14 @@
     <div class="container">
         <h1>Message</h1>
         <div class="box" style="flex-direction: column;">
-            <div class="message msg-success" style="display: block;width: 300px;margin-bottom: 10px !important;">Success</div>
-            <div class="message msg-error" style="display: block;width: 300px;margin-bottom: 10px !important;">Error</div>
-            <div class="message msg-warning" style="display: block;width: 300px;margin-bottom: 10px !important;">Warning</div>
-            <div class="message msg-info" style="display: block;width: 300px;margin-bottom: 10px !important;">Information</div>
+            <div class="message msg-success" style="display: block;width: 300px;margin-bottom: 10px !important;">Success
+            </div>
+            <div class="message msg-error" style="display: block;width: 300px;margin-bottom: 10px !important;">Error
+            </div>
+            <div class="message msg-warning" style="display: block;width: 300px;margin-bottom: 10px !important;">Warning
+            </div>
+            <div class="message msg-info" style="display: block;width: 300px;margin-bottom: 10px !important;">
+                Information</div>
         </div>
     </div>
     <div class="container" style="padding: 0px">
@@ -76,8 +82,7 @@
         <div class="box" style="width: 100%">
             <header style="margin: 0px !important">
                 <div class="logo-box">
-                    <img src="https://pbs.twimg.com/profile_images/478903857653620737/aNqCiRN7_400x400.jpeg" alt="logo"
-                        class="logo" width="80">
+                    <img src="{{ asset('images/logo-ieti.png') }}" alt="logo" class="logo" width="80">
                 </div>
                 <div class="items">
                     <a href="#user" class="item active"><i class="fas fa-home"></i> Home</a>
@@ -93,7 +98,7 @@
         <div class="box" style="width: 100%">
             <header class="admin" style="margin: 0px !important">
                 <div class="logo-box">
-                    <img src="https://pbs.twimg.com/profile_images/478903857653620737/aNqCiRN7_400x400.jpeg" alt="logo"
+                    <img src="{{ asset('images/logo-ieti.png') }}" alt="logo"
                         class="logo" width="80">
                 </div>
                 <div class="items">

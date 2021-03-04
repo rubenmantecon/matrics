@@ -47,6 +47,7 @@
 }
 
 .btn {
+    box-shadow: 0 0 4px 0px black;
     cursor: pointer;
     display: inline-block;
     min-height: 1em;
@@ -65,16 +66,14 @@
     text-align: center;
     text-decoration: none;
     border-radius: .28571429rem;
-    -webkit-box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgb(34 36 38 / 15%) inset;
-    box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgb(34 36 38 / 15%) inset;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    -webkit-transition: opacity .1s ease, background-color .1s ease, color .1s ease, background .1s ease, -webkit-box-shadow .1s ease;
-    transition: opacity .1s ease, background-color .1s ease, color .1s ease, background .1s ease, -webkit-box-shadow .1s ease;
-    transition: opacity .1s ease, background-color .1s ease, color .1s ease, box-shadow .1s ease, background .1s ease;
-    transition: opacity .1s ease, background-color .1s ease, color .1s ease, box-shadow .1s ease, background .1s ease, -webkit-box-shadow .1s ease;
+    -webkit-transition: opacity .2s ease, background-color .2s ease, color .2s ease, background .2s ease, -webkit-box-shadow .2s ease;
+    transition: opacity .2s ease, background-color .2s ease, color .2s ease, background .2s ease, -webkit-box-shadow .2s ease;
+    transition: opacity .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, background .2s ease;
+    transition: opacity .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, background .2s ease, -webkit-box-shadow .2s ease;
     will-change: '';
     -webkit-tap-highlight-color: transparent;
 }
@@ -267,7 +266,7 @@ td {
 
 .table>thead th {
     cursor: auto;
-    background: #f9fafb;
+    background: #ececec;
     text-align: inherit;
     color: rgba(0, 0, 0, .87);
     padding: .92857143em .78571429em;
