@@ -2,10 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pàgina Principal</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -38,17 +38,17 @@
             width: 11%;
         }
 
-        p.subtitle.text {
+        main.landing>p.subtitle.text {
             font-size: 27px;
         }
 
-        p.text {
+        main.landing>p.text {
             font-size: 23px;
             text-align: center;
             margin: 7px 0;
         }
 
-        .btn-container {
+        main.landing>.btn-container {
             text-align: center;
             font-size: 25px;
             margin-top: 15px;
@@ -63,8 +63,9 @@
         <p class="title">Institut Esteve Terrades i Illa</p>
         <img src="{{ asset('images/logo-ieti.png') }}" alt="logo" class="logo" />
     </div>
-    <main>
-        <p class="subtitle text">Matriculació de l'alumnat de l'ESO, Batxillerat i Cicles Formatius de l'any 2020/2021.
+    <main class="landing">
+        <p class="subtitle text">Matriculació de l'alumnat de l'ESO, Batxillerat i Cicles Formatius de l'any
+            {{ $year ?? '(year/year)' }}.
         </p>
         <p class="text">Per poder accedir al teu compte necessites haver rebut un correu electrònic amb un enllaç per
             poder registrar-te.</p>
