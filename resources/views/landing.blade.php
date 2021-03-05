@@ -13,57 +13,17 @@
     <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/template.css') }}">
     <style>
-        body {
-            background-color: aliceblue;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            height: 57vh;
-        }
-
-        .container-title {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container-title>.title {
-            font-size: 3em;
-            margin: 0 15px;
-        }
-
-        .container-title>img {
-            width: 11%;
-        }
-
-        main.landing>p.subtitle.text {
-            font-size: 27px;
-        }
-
-        main.landing>p.text {
-            font-size: 23px;
-            text-align: center;
-            margin: 7px 0;
-        }
-
-        main.landing>.btn-container {
-            text-align: center;
-            font-size: 25px;
-            margin-top: 15px;
-        }
 
     </style>
 </head>
 
-<body>
+<body class="landing">
     <div class="container-title">
         <img src="{{ asset('images/logo-ieti.png') }}" alt="logo" class="logo" />
         <p class="title">Institut Esteve Terrades i Illa</p>
         <img src="{{ asset('images/logo-ieti.png') }}" alt="logo" class="logo" />
     </div>
-    <main class="landing">
+    <main>
         <p class="subtitle text">Matriculació de l'alumnat de l'ESO, Batxillerat i Cicles Formatius de l'any
             {{ $year ?? '(year/year)' }}.
         </p>
@@ -74,7 +34,7 @@
         <div class="btn-container">
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="btn secundary-btn">Dashboard</a>
+                    <a href="{{ url('/dashboard') }}" class="btn primary-btn">Dashboard</a>
                 @else
                     <a href="{{ route('login') }}" class="btn primary-btn">Accedir</a>
                 @endauth
