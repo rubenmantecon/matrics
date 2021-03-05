@@ -12,6 +12,7 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/template.css') }}">
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
@@ -21,12 +22,30 @@
             @include('layouts.navigation')
 
             <!-- Page Heading -->
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-
+            @if(Auth::user()->role == 'admin')
+            <div class="box" style="width: 100%">
+                <header class="admin" style="margin: 0px !important">
+                    <div class="items">
+                        <a href="#user" class="item active"><i class="fas fa-home"></i> Home</a>
+                        <a href="#login" class="item"><i class="fas fa-user-lock"></i> Login</a>
+                        <a href="#test" class="item"><i class="fas fa-vial"></i> Test</a>
+                    </div>
+                    <p class="user"><i class="fas fa-user"></i> Admin</p>
+                </header>
+            </div>
+            @endif
+            @if(Auth::user()->role == 'alumne')
+            <div class="box" style="width: 100%">
+                <header style="margin: 0px !important">
+                    <div class="items">
+                        <a href="#user" class="item active"><i class="fas fa-home"></i> Home</a>
+                        <a href="#login" class="item"><i class="fas fa-user-lock"></i> Login</a>
+                        <a href="#test" class="item"><i class="fas fa-vial"></i> Test</a>
+                    </div>
+                    <p class="user"><i class="fas fa-user"></i> Student</p>
+                </header>
+            </div>
+            @endif
             <!-- Page Content -->
             <main>
                 {{ $slot }}
