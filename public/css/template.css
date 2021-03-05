@@ -5,6 +5,13 @@
     font-family: 'Roboto', sans-serif;
 }
 
+/* BODY */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: aliceblue;
+}
+
 /* BUTTON, LINK */
 .btn.primary-btn {
     background-color: #1678c2 !important;
@@ -290,4 +297,66 @@ td {
     text-transform: none;
     border-bottom: 1px solid rgba(34, 36, 38, .1);
     border-left: none;
+}
+
+/* ERROR PAGE 404, 403 */
+.error-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-page>.number {
+    font-size: 200px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.error-page>.description {
+    font-size: 50px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* LANDING */
+.landing {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 57vh;
+}
+
+.landing>.container-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing>.container-title>.title {
+    font-size: 3em;
+    margin: 0 15px;
+}
+
+.landing>.container-title>img {
+    width: 11%;
+}
+
+.landing>main>p.subtitle.text {
+    font-size: 27px;
+}
+
+.landing>main>p.text {
+    font-size: 23px;
+    text-align: center;
+    margin: 7px 0;
+}
+
+.landing>main>.btn-container {
+    text-align: center;
+    font-size: 25px;
+    margin-top: 15px;
 }
