@@ -7,9 +7,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use App\Models\Term;
+use App\Models\Career;
+use App\Models\Mp;
+use App\Models\Uf;
+use App\Models\Enrolment;
+use App\Models\Record;
+use App\Models\Requirement;
+use App\Models\Upload;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
