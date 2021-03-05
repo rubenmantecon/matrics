@@ -69,7 +69,7 @@
         </p>
         <p class="text">Per poder accedir al teu compte necessites haver rebut un correu electrònic amb un enllaç per
             poder registrar-te.</p>
-        <p class="text">En el cas que ja tens un compte podràs accedir al teu expedient donanli el botó Accedir.
+        <p class="text">En cas de disposar ja d'un compte, pots accedir al teu expedient donant-li al botó Accedir.
         </p>
         <div class="btn-container">
             @if (Route::has('login'))
