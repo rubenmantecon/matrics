@@ -4,9 +4,7 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    <script>
 
-    </script>
     <div class="terms">
         <table>
             <caption>Llistat de cursos</caption>
@@ -39,5 +37,27 @@
                 </tr>
             </tfoot>
         </table>
+        <div class="bg-dialog"></div>
+        <div class="modal-term dis-none" title="Nou Curs">
+            <div class="label-group">
+                <label for="name">Nom:</label>
+                <input type="text" id="name" class="input">
+            </div>
+            <div class="label-group">
+                <label for="description">Descripció:</label>
+                <input type="text" id="description" class="input">
+            </div>
+            <div class="row">
+                <div class="label-group">
+                    <label for="start">Data d'inici:</label>
+                    <input type="text" id="start" class="input">
+                </div>
+                <div class="label-group">
+                    <label for="end">Data de finalització:</label>
+                    <input type="text" id="end" class="input">
+                </div>
+            </div>
+        </div>
+
     </div>
 </x-app-layout>

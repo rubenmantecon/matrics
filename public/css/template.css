@@ -12,6 +12,14 @@ body {
     background-color: aliceblue;
 }
 
+.dis-none {
+    display: none;
+}
+
+.min-w-screen {
+    width: 100vw;
+}
+
 /* BUTTON, LINK */
 .btn.primary-btn {
     background-color: #1678c2 !important;
@@ -118,7 +126,7 @@ body {
 
 input:focus {
     border: 2px solid #5cbdff;
-    box-shadow: 0 0 10px #a6a6e8;
+    box-shadow: 0 0 10px #a6a6e8 !important;
 }
 
 /* MESSAGE */
@@ -424,6 +432,12 @@ td {
 }
 
 /* TERMS */
+body.body-term {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .terms {
     margin: 3% 0;
 }
@@ -437,4 +451,183 @@ td {
     width: 100%;
     height: 50px;
     border-radius: 0px;
+    font-size: 20px;
+    padding: 0px;
+}
+
+.terms tbody tr:last-child td button.btn i {
+    font-size: 24px;
+    margin-right: 5px;
+}
+
+/* DIALOG JQUERY */
+.ui-dialog {
+    position: fixed;
+    background-color: #fff;
+    top: unset !important;
+    left: unset !important;
+    width: 700px !important;
+    box-shadow: 0 0 20px 1px black;
+    border-radius: 7px;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    border-bottom: 2px solid #589ed0;
+    text-align: center;
+    font-size: 24px;
+    background-color: #efefef;
+    padding: 6px 0;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px #589ed0;
+}
+
+.ui-dialog .ui-dialog-titlebar button {
+    position: absolute;
+    top: 4px;
+    right: 15px;
+    font-size: 1.2em;
+    outline: none !important;
+}
+
+.ui-dialog .label-group {
+    display: flex;
+    flex-direction: column;
+    padding: 15px 30px;
+}
+
+.ui-dialog .label-group input {
+    background-color: #dcdcdc;
+    border: 0;
+}
+
+.ui-dialog .label-group input:focus {
+    border: 2px solid #5cbdff;
+    box-shadow: 0 0 10px #007effb3 !important;
+}
+
+.ui-dialog .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.bg-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.bg-opacity {
+    z-index: 0;
+    overflow: hidden;
+    background-color: #00000062;
+}
+
+/* DATAPICKER JQUERY */
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: .2em 0;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    margin: 0 2.3em;
+    line-height: 1.8em;
+    text-align: center;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+    left: 7px;
+}
+
+.ui-datepicker .ui-datepicker-next {
+    right: 2px;
+}
+
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    top: 0px;
+    width: 1.3em;
+    height: 0.8em;
+    font-size: 25px;
+}
+
+.ui-datepicker .ui-widget-header {
+    border: 1px solid #003281;
+    background: #ececec;
+    color: #333333;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+div#ui-datepicker-div table {
+    width: 360px;
+}
+
+
+/* BUTTONS WITH OR */
+.buttons-group {
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    vertical-align: baseline;
+    background-color: #efefef;
+    padding: 15px 20px;
+    width: 50%;
+    margin: 10px 0 auto auto;
+    border-top: 2px solid #5cbdff;
+    border-left: 2px solid #5cbdff;
+    box-shadow: 0px 0px 7px 0px #007effb3;
+    border-top-left-radius: 20px;
+}
+
+.buttons-group .or {
+    position: relative;
+    width: .3em;
+    height: 2.57142857em;
+    z-index: 3;
+}
+
+.buttons-group .or:before {
+    position: absolute;
+    text-align: center;
+    border-radius: 500rem;
+    content: 'or';
+    top: 50%;
+    left: 50%;
+    background-color: #fff;
+    text-shadow: none;
+    margin-top: -.89285714em;
+    margin-left: -.89285714em;
+    width: 1.78571429em;
+    height: 1.78571429em;
+    line-height: 1.78571429em;
+    color: rgba(0, 0, 0, .4);
+    font-style: normal;
+    font-weight: 700;
+    -webkit-box-shadow: 0 0 0 1px transparent inset;
+    box-shadow: 0 0 0 1px transparent inset;
+}
+
+.buttons-group:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.buttons-group button {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    margin: 0;
+    border-radius: 0;
+    margin: 0;
 }
