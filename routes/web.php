@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
+use App\Http\Controllers\TermController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,19 +21,20 @@ Route::get('/', function () {
     return view('landing', ["year" => "$year/$nextYear"]);
 });
 
-Route::get('/lookAndFeel', function () {
-    return view('lookAndFeel');
+Route::get('/sample', function () {
+    return view('sample');
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+Route::resource('api/terms', TermController::class);
+require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
-  ->prefix('admin')
-  ->middleware(['auth', 'can:accessAdmin'])
-  ->group(function () {
-    require __DIR__.'/admin.php';
-});
+    ->prefix('admin')
+    ->middleware(['auth', 'can:accessAdmin'])
+    ->group(function () {
+        require __DIR__ . '/admin.php';
+    });
