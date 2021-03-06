@@ -8,6 +8,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Log;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -43,6 +45,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
+        Log::channel('dblogging')->debug("Ha cerrado sesión", ['user_id' => Auth::id()]);
+        
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
