@@ -1,9 +1,19 @@
 /* FUNCTIONS */
-function isNull(name) {
-    return document.getElementsByName(name)[0].value.replace(/ /g, "");
+function isNull(element) {
+    return (element.replace(/ /g, "")) ? false : true;
+}
+
+function momentFormat(value, valFormat, newFormat) {
+    return moment(value, valFormat).format(newFormat);
+}
+
+function now() {
+    return moment().format("DD/MM/YYYY HH:mm:ss");
 }
 
 /* GENERATE MESSAGES */
+let cont = 1;
+
 function generateMessages(type, text, parentName, seconds) {
     const icons = {
         success: "far fa-check-circle",
@@ -11,16 +21,17 @@ function generateMessages(type, text, parentName, seconds) {
         warning: "fas fa-exclamation-triangle",
         info: "fas fa-info-circle"
     }
-    $(parentName).prepend(`<div class="message msg-${type}"><i class="${icons[type]}"></i> ${text}</div>`);
+    $(parentName).prepend(`<div id="${cont}" class="message msg-${type}"><i class="${icons[type]}"></i> ${text}</div>`);
     setTimeout(() => {
         $(parentName + " .message:nth-child(1)").fadeIn();
+        countdown(parentName, cont, seconds);
+        cont++;
     }, 1);
-    countdown(parentName, seconds);
 }
 
-function countdown(parentName, seconds) {
+function countdown(parentName, id, seconds) {
     setTimeout(() => {
-        $(parentName + " .message").last().fadeOut(400, () => $(parentName + " .message").last().remove());
+        $(parentName + " .message#" + id).fadeOut(400, () => $(parentName + " .message").last().remove());
     }, seconds * 1000);
 }
 
@@ -54,10 +65,10 @@ function loadTermPage() {
             for (const item of res) {
                 $("tbody").append(insertNewRow(
                     item.id, item.name, item.description,
-                    moment(item.start, "YYYY-MM-DD").format("DD-MM-YYYY"),
-                    moment(item.end, "YYYY-MM-DD").format("DD-MM-YYYY"),
-                    moment(item.created_at, "YYYY-MM-DD hh:mm:ss").format("DD/MM/YYYY HH:mm:ss"),
-                    moment(item.updated_at, "YYYY-MM-DD hh:mm:ss").format("DD/MM/YYYY HH:mm:ss")
+                    momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
+                    momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
+                    momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss")
                 ));
             }
             $("tbody").append(
@@ -79,13 +90,15 @@ function rowEventEditAndNew(tag) {
         modal: true,
         buttons: {
             "Desar": () => {
-                dialog.dialog("close");
-                updateTableRowTerm(rowSelected.children());
-                $(".bg-dialog").removeClass("bg-opacity");
+                if (validationTermForm()) {
+                    dialog.dialog("close");
+                    updateTableRowTerm(rowSelected.children());
+                    $(".bg-dialog").removeClass("bg-opacity");
+                }
             },
             "Cancela": () => {
                 dialog.dialog("close");
-                $(".bg-dialog").removeClass("bg-opacity");
+                setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
             }
         },
         close: () => {
@@ -109,7 +122,6 @@ function rowEventEditAndNew(tag) {
 }
 
 function insertNewRow(...params) {
-
     return `<tr>
                 <td>${params[0]}</td>
                 <td>${params[1]}</td>
@@ -131,6 +143,7 @@ function getInfoForTermModal(cols) {
 }
 
 function insertTermInDB(name, desc, start, end, created, updated) {
+    console.log(created, updated);
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -186,10 +199,9 @@ function updateTableRowTerm(cols) {
         insertTermInDB(
             $(".label-group input#name").val(),
             $(".label-group input#description").val(),
-            moment($(".label-group input#start").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
-            moment($(".label-group input#end").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
-            moment().format("DD/MM/YYYY HH:mm:ss"),
-            moment().format("DD/MM/YYYY HH:mm:ss")
+            momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            now(), now()
         );
         loadTermPage();
     } else {
@@ -198,13 +210,37 @@ function updateTableRowTerm(cols) {
             $(cols[0]).text(),
             $(".label-group input#name").val(),
             $(".label-group input#description").val(),
-            moment($(".label-group input#start").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
-            moment($(".label-group input#end").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
-            moment().format("DD/MM/YYYY HH:mm:ss"),
-            moment().format("DD/MM/YYYY HH:mm:ss")
+            momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            now(), now()
         );
         loadTermPage();
     }
+}
+
+function validationTermForm() {
+    let msg = "";
+    if (isNull($(".label-group input#name").val())) msg += "El camp 'Nom' no pot estar buit.\n";
+    if (isNull($(".label-group input#description").val())) msg += "El camp 'Descripció' no pot estar buit.\n";
+    if (isNull($(".label-group input#start").val())) msg += "El camp 'Data d'inici' no pot estar buit.\n";
+    if (isNull($(".label-group input#end").val())) msg += "El camp 'Data de finalització' no pot estar buit.\n";
+
+    if (!msg) {
+        let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
+        let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
+        if (start === "Invalid date") {
+            msg += "Data d'inici invalida 'DD-MM-AAAA'.\n";
+        } else if (end === "Invalid date") {
+            msg += "Data de finalització invalida 'DD-MM-AAAA'.\n";
+        } else if (end < start) {
+            msg += "La data de finalització no pot ser petita que la d'inici.\n";
+        }
+    }
+
+    if (msg) {
+        generateMessages("error", msg, ".container-messages", 5);
+        return false;
+    } else return true;
 }
 
 $(function () {
