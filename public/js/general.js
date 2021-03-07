@@ -143,7 +143,6 @@ function getInfoForTermModal(cols) {
 }
 
 function insertTermInDB(name, desc, start, end, created, updated) {
-    console.log(created, updated);
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
