@@ -134,39 +134,66 @@ input:focus {
 }
 
 /* MESSAGE */
+
+.ui.message {
+    font-size: 1em;
+}
+
+div.container-messages {
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    white-space: pre-line;    
+    font-size: 1em;
+    position: absolute;
+    top: 65px;
+
+}
+
 .message {
     display: none;
-    padding: 0.55em 2em;
-    margin: 1.2em 0 1.2em 0;
+    padding: .55em 2em .55em  1em;
+    margin: .4em 0;
     border-radius: 10px;
+    place-self: center;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.message i {
+    font-size: 22px;
+    margin-right: 25px;
+    vertical-align: middle;
 }
 
 .msg-info {
-    color: #fff;
-    background-color: #2196F3;
-    border: 1px solid #58748a;
-    box-shadow: 0 0 5px #2196F3;
+    background-color: #dff0ff;
+    color: #144d77;
+    -webkit-box-shadow: 0 0 0 1px #2185d0 inset, 0 0 0 0 transparent;
+    box-shadow: 0 0 0 1px #2185d0 inset, 0 0 0 0 transparent;
 }
 
 .msg-success {
-    color: #fff;
-    background-color: #4CAF50;
-    border: 1px solid #39883c;
-    box-shadow: 0 0 5px #4CAF50;
+    background-color: #e5f9e7;
+    color: #187523;
+    -webkit-box-shadow: 0 0 0 1px #1ebc30 inset, 0 0 0 0 transparent;
+    box-shadow: 0 0 0 1px #1ebc30 inset, 0 0 0 0 transparent;
 }
 
 .msg-warning {
-    color: #fff;
-    background-color: #ff9800;
-    border: 1px solid #ad7c33;
-    box-shadow: 0 0 5px #ff9800;
+    background-color: #fff8db;
+    color: #6d5315;
+    -webkit-box-shadow: 0 0 0 1px #b58105 inset, 0 0 0 0 transparent;
+    box-shadow: 0 0 0 1px #b58105 inset, 0 0 0 0 transparent;
 }
 
 .msg-error {
-    color: #fff;
-    background-color: #f44336;
-    border: 1px solid #a0342c;
-    box-shadow: 0 0 5px #f44336;
+    background-color: #ffe8e6;
+    color: #b52626;
+    -webkit-box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
+    box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
 }
 
 /* HEADER */
@@ -634,4 +661,26 @@ div#ui-datepicker-div table {
     margin: 0;
     border-radius: 0;
     margin: 0;
+}
+
+@media (max-width: 1270px) {
+    .terms table {
+        width: 90vw;
+    }
+
+    .terms td:nth-child(7),
+    .terms th:nth-child(7) {
+        display: none;
+    }
+}
+
+@media (max-width: 1000px) {
+    .terms table {
+        width: 90vw;
+    }
+
+    .terms td:nth-child(6),
+    .terms th:nth-child(6) {
+        display: none;
+    }
 }

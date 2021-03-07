@@ -50,7 +50,7 @@ class TermController extends Controller
             $term->description = $request->desc;
             $term->start = $request->start;
             $term->end = $request->end;
-            // $term->active = 1; // NO HARDCODEAR
+            $term->active = 1; // NO HARDCODEAR
             $term->created_at = $request->created;
             $term->updated_at = $request->updated;
 
@@ -102,8 +102,6 @@ class TermController extends Controller
             $term->start = $request->start;
             $term->end = $request->end;
             $term->updated_at = $request->updated;
-
-            // Term::whereId($term)->update($request->all());
 
             $status = $term->save();
             if ($status)

@@ -1,3 +1,29 @@
+/* FUNCTIONS */
+function isNull(name) {
+    return document.getElementsByName(name)[0].value.replace(/ /g, "");
+}
+
+/* GENERATE MESSAGES */
+function generateMessages(type, text, parentName, seconds) {
+    const icons = {
+        success: "far fa-check-circle",
+        error: "far fa-times-circle",
+        warning: "fas fa-exclamation-triangle",
+        info: "fas fa-info-circle"
+    }
+    $(parentName).prepend(`<div class="message msg-${type}"><i class="${icons[type]}"></i> ${text}</div>`);
+    setTimeout(() => {
+        $(parentName + " .message:nth-child(1)").fadeIn();
+    }, 1);
+    countdown(parentName, seconds);
+}
+
+function countdown(parentName, seconds) {
+    setTimeout(() => {
+        $(parentName + " .message").last().fadeOut(400, () => $(parentName + " .message").last().remove());
+    }, seconds * 1000);
+}
+
 /* TERMS */
 const dataPickerOptions = {
     closeText: 'Cerrar',
@@ -124,12 +150,8 @@ function insertTermInDB(name, desc, start, end, created, updated) {
             created,
             updated
         },
-        success: (res) => {
-            console.log(res);
-        },
-        error: (res) => {
-            console.log(res.responseJSON.message)
-        }
+        success: (res) => generateMessages("success", res.status, ".container-messages", 3),
+        error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
     });
 }
 
@@ -153,12 +175,8 @@ function updateTermInDB(id, name, desc, start, end, created, updated) {
             created,
             updated
         },
-        success: (res) => {
-            console.log(res);
-        },
-        error: (res) => {
-            console.log(res.responseJSON.message)
-        }
+        success: (res) => generateMessages("success", res.status, ".container-messages", 3),
+        error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
     });
 }
 

@@ -34,6 +34,7 @@
 
         <!-- Page Content -->
         <main>
+            <div class="container-messages"></div>
             {{ $slot }}
         </main>
     </div>
