@@ -16,6 +16,10 @@ body {
     display: none;
 }
 
+.text-red {
+    color: red;
+}
+
 .min-w-screen {
     width: 100vw;
 }

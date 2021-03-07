@@ -1,3 +1,4 @@
+/* TERMS */
 const dataPickerOptions = {
     closeText: 'Cerrar',
     prevText: '<Ant',
@@ -23,21 +24,15 @@ function loadTermPage() {
         headers: {
             token: $("meta[name='_token']").attr("content"),
         },
-        success: function (res) {
+        success: (res) => {
             for (const item of res) {
-                $("tbody").append(
-                    `<tr ${(!item.active) ? 'class="disabled"': ''}>
-                            <td>${item.id}</td>
-                            <td>${item.name}</td>
-                            <td>${item.description}</td>
-                            <td>${item.start}</td>
-                            <td>${item.end}</td>
-                            <td>${moment(item.created_at, "YYYY-MM-DD hh:mm:ss").format("DD/MM/YYYY hh:mm:ss")}</td>
-                            <td>${moment(item.updated_at, "YYYY-MM-DD hh:mm:ss").format("DD/MM/YYYY hh:mm:ss")}</td>
-                            <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
-                            <td><button id="remove" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></button></td>
-                        </tr>`
-                );
+                $("tbody").append(insertNewRow(
+                    item.id, item.name, item.description,
+                    moment(item.start, "YYYY-MM-DD").format("DD-MM-YYYY"),
+                    moment(item.end, "YYYY-MM-DD").format("DD-MM-YYYY"),
+                    moment(item.created_at, "YYYY-MM-DD hh:mm:ss").format("DD/MM/YYYY HH:mm:ss"),
+                    moment(item.updated_at, "YYYY-MM-DD hh:mm:ss").format("DD/MM/YYYY HH:mm:ss")
+                ));
             }
             $("tbody").append(
                 `<tr>
@@ -46,38 +41,152 @@ function loadTermPage() {
             ).fadeIn(300);
 
             $("body").addClass("body-term");
-            $("#new, #edit").on("click", () => {
-                $(".bg-dialog").addClass("bg-opacity");
-                let dialog = $(".modal-term").dialog({
-                    modal: true,
-                    buttons: {
-                        "Guardar": () => {
-
-                        },
-                        "Cancela": () => {
-                            dialog.dialog("close");
-                            $(".bg-dialog").removeClass("bg-opacity");
-                        }
-                    },
-                    close: function () {
-                        $(".bg-dialog").removeClass("bg-opacity");
-                    },
-                    show: {
-                        effect: "fold",
-                        duration: 700
-                    },
-                    hide: {
-                        effect: "fold",
-                        duration: 700
-                    }
-                });
-                let childrens = $(".ui-dialog-buttonset").addClass("buttons-group").children();
-                $(childrens[1]).attr("class", "btn cancel");
-                $(childrens[0]).attr("class", "btn save").after('<div class="or"></div>');
-                $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-            });
+            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target));
         }
     });
+}
+
+function rowEventEditAndNew(tag) {
+    $(".bg-dialog").addClass("bg-opacity");
+    const rowSelected = $(tag).closest("tr");
+    let dialog = $(".modal-term").dialog({
+        modal: true,
+        buttons: {
+            "Desar": () => {
+                dialog.dialog("close");
+                updateTableRowTerm(rowSelected.children());
+                $(".bg-dialog").removeClass("bg-opacity");
+            },
+            "Cancela": () => {
+                dialog.dialog("close");
+                $(".bg-dialog").removeClass("bg-opacity");
+            }
+        },
+        close: () => {
+            $(".bg-dialog").removeClass("bg-opacity");
+        },
+        show: {
+            effect: "fold",
+            duration: 700
+        },
+        hide: {
+            effect: "fold",
+            duration: 700
+        }
+    });
+    let childrens = $(".ui-dialog-buttonset").addClass("buttons-group").children();
+    $(childrens[1]).attr("class", "btn cancel");
+    $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crear' : 'Desar').after('<div class="or"></div>');
+    $(".ui-dialog-title").text((tag.id === "new") ? 'Nou Curs' : 'Modicació de curs');
+    $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
+    getInfoForTermModal(rowSelected.children());
+}
+
+function insertNewRow(...params) {
+
+    return `<tr>
+                <td>${params[0]}</td>
+                <td>${params[1]}</td>
+                <td>${(params[2]) ? params[2] : ''}</td>
+                <td>${params[3]}</td>
+                <td>${params[4]}</td>
+                <td>${params[5]}</td>
+                <td>${params[6]}</td>
+                <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
+                <td><button id="remove" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></button></td>
+            </tr>`;
+}
+
+function getInfoForTermModal(cols) {
+    $(".label-group input#name").val($(cols[1]).text()); // NAME
+    $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
+    $(".label-group input#start").val($(cols[3]).text()); // START
+    $(".label-group input#end").val($(cols[4]).text()); // END
+}
+
+function insertTermInDB(name, desc, start, end, created, updated) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'POST',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        data: {
+            name,
+            desc,
+            start,
+            end,
+            created,
+            updated
+        },
+        success: (res) => {
+            console.log(res);
+        },
+        error: (res) => {
+            console.log(res.responseJSON.message)
+        }
+    });
+}
+
+function updateTermInDB(id, name, desc, start, end, created, updated) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: $("meta[name='url']").attr("content") + "/" + id,
+        method: 'PUT',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        data: {
+            name,
+            desc,
+            start,
+            end,
+            created,
+            updated
+        },
+        success: (res) => {
+            console.log(res);
+        },
+        error: (res) => {
+            console.log(res.responseJSON.message)
+        }
+    });
+}
+
+function updateTableRowTerm(cols) {
+    if (cols.length === 1) {
+        $("tbody").html('');
+        insertTermInDB(
+            $(".label-group input#name").val(),
+            $(".label-group input#description").val(),
+            moment($(".label-group input#start").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
+            moment($(".label-group input#end").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
+            moment().format("DD/MM/YYYY HH:mm:ss"),
+            moment().format("DD/MM/YYYY HH:mm:ss")
+        );
+        loadTermPage();
+    } else {
+        $("tbody").html('');
+        updateTermInDB(
+            $(cols[0]).text(),
+            $(".label-group input#name").val(),
+            $(".label-group input#description").val(),
+            moment($(".label-group input#start").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
+            moment($(".label-group input#end").val(), "DD/MM/YYYY").format("YYYY-MM-DD"),
+            moment().format("DD/MM/YYYY HH:mm:ss"),
+            moment().format("DD/MM/YYYY HH:mm:ss")
+        );
+        loadTermPage();
+    }
 }
 
 $(function () {

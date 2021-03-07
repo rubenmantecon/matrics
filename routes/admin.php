@@ -6,5 +6,3 @@
     Route::get('/dashboard/cursos', function() {
         return view('terms');
     });        
-    
-    Route::resource('users', 'UserController');

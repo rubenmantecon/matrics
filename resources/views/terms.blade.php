@@ -40,20 +40,20 @@
         <div class="bg-dialog"></div>
         <div class="modal-term dis-none" title="Nou Curs">
             <div class="label-group">
-                <label for="name">Nom:</label>
+                <label for="name">Nom: <span class="text-red">*</span></label>
                 <input type="text" id="name" class="input">
             </div>
             <div class="label-group">
-                <label for="description">Descripció:</label>
+                <label for="description">Descripció: <span class="text-red">*</span></label>
                 <input type="text" id="description" class="input">
             </div>
             <div class="row">
                 <div class="label-group">
-                    <label for="start">Data d'inici:</label>
+                    <label for="start">Data d'inici: <span class="text-red">*</span></label>
                     <input type="text" id="start" class="input">
                 </div>
                 <div class="label-group">
-                    <label for="end">Data de finalització:</label>
+                    <label for="end">Data de finalització: <span class="text-red">*</span></label>
                     <input type="text" id="end" class="input">
                 </div>
             </div>
