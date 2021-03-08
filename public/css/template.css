@@ -471,7 +471,7 @@ form.form .label-group button {
 table {
     border-collapse: collapse;
     background: #fff;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
     width: 80vw;
     margin: 0 auto;
@@ -490,11 +490,11 @@ table caption {
 }
 
 table thead th:nth-child(1) {
-    border-top-left-radius: 10px;
+    border-top-left-radius: 8px;
 }
 
 table thead th:last-child {
-    border-top-right-radius: 10px;
+    border-top-right-radius: 8px;
 }
 
 table thead th,
@@ -610,6 +610,7 @@ td {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-top: 8em;
 }
 
 .landing > .container-title > .title {
@@ -623,6 +624,7 @@ td {
 
 .landing > main > p.subtitle.text {
     font-size: 27px;
+    margin-top: 2em;
 }
 
 .landing > main > p.text {
@@ -634,7 +636,7 @@ td {
 .landing > main > .btn-container {
     text-align: center;
     font-size: 25px;
-    margin-top: 15px;
+    margin-top: 70px;
 }
 
 /* TERMS */
@@ -837,6 +839,12 @@ div#ui-datepicker-div table {
     margin: 0;
 }
 
+.options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
 @media (max-width: 1270px) {
     .terms table {
         width: 90vw;
@@ -856,5 +864,12 @@ div#ui-datepicker-div table {
     .terms td:nth-child(6),
     .terms th:nth-child(6) {
         display: none;
+    }
+}
+
+@media (max-width: 750px) {
+    .options {
+        flex-direction: column;
+        align-items: center;
     }
 }

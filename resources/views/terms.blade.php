@@ -17,8 +17,8 @@
                     <th>Data de finalització</th>
                     <th>Creació</th>
                     <th>Darrera modificació</th>
-                    <th>Editar</th>
-                    <th>Eliminar</th>
+                    <th>Edita</th>
+                    <th>Elimina</th>
                 </tr>
             </thead>
             <tbody style="display: none">
@@ -32,8 +32,8 @@
                     <th>Data de finalització</th>
                     <th>Creació</th>
                     <th>Darrera modificació</th>
-                    <th>Editar</th>
-                    <th>Eliminar</th>
+                    <th>Edita</th>
+                    <th>Elimina</th>
                 </tr>
             </tfoot>
         </table>
