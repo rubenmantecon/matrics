@@ -15,9 +15,9 @@ class TermController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::select("remember_token")->where('remember_token', $request->header('token'))->get()[0];
+        $user = User::select("token")->where('token', $request->header('token'))->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
-        if ($user['remember_token'])
+        if ($user['token'])
             $data = Term::select("*")->where("active", 1)->get();
         return response()->json($data);
     }
