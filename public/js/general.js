@@ -242,7 +242,7 @@ function validationTermForm() {
 }
 
 $(function () {
-    if (location.pathname.includes("dashboard/cursos")) {
+    if (location.pathname.includes("dashboard/courses")) {
         loadTermPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
