@@ -37,8 +37,15 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['dblogging', 'single'],
             'ignore_exceptions' => false,
+        ],
+
+	'dblogging' => [
+            'driver' => 'custom',
+            'handler' => App\Logging\SQLLoggingHandler::class,
+            'via' => App\Logging\SQLCustomLogger::class,
+            'level' => 'debug',
         ],
 
         'single' => [
