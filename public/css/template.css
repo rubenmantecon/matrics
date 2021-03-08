@@ -31,6 +31,24 @@ body {
     /* pointer-events: none !important; */
 }
 
+.label-group {
+    display: flex;
+    flex-direction: column;
+    padding: 15px 30px;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.bg-opacity {
+    z-index: 0;
+    overflow: hidden;
+    background-color: #00000062;
+}
+
 /* LOADING */
 .loading {
     position: relative;
@@ -204,11 +222,6 @@ input:focus {
 }
 
 /* MESSAGE */
-
-.ui.message {
-    font-size: 1em;
-}
-
 div.container-messages {
     width: 100%;
     display: flex;
@@ -536,7 +549,7 @@ form.form .label-group button {
 table {
     border-collapse: collapse;
     background: #fff;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
     width: 80vw;
     margin: 0 auto;
@@ -555,11 +568,11 @@ table caption {
 }
 
 table thead th:nth-child(1) {
-    border-top-left-radius: 10px;
+    border-top-left-radius: 8px;
 }
 
 table thead th:last-child {
-    border-top-right-radius: 10px;
+    border-top-right-radius: 8px;
 }
 
 table thead th,
@@ -628,6 +641,7 @@ tbody tr:nth-child(even) {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-top: 8em;
 }
 
 .landing>.container-title>.title {
@@ -641,6 +655,7 @@ tbody tr:nth-child(even) {
 
 .landing>main>p.subtitle.text {
     font-size: 27px;
+    margin-top: 2em;
 }
 
 .landing>main>p.text {
@@ -652,7 +667,7 @@ tbody tr:nth-child(even) {
 .landing>main>.btn-container {
     text-align: center;
     font-size: 25px;
-    margin-top: 15px;
+    margin-top: 70px;
 }
 
 /* TERMS */
@@ -686,6 +701,15 @@ body.body-term {
 }
 
 /* DIALOG JQUERY */
+.bg-dialog {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+}
+
 .ui-dialog {
     position: fixed;
     background-color: #fff;
@@ -715,12 +739,6 @@ body.body-term {
     outline: none !important;
 }
 
-.label-group {
-    display: flex;
-    flex-direction: column;
-    padding: 15px 30px;
-}
-
 .ui-dialog .label-group input {
     background-color: #dcdcdc;
     border: 0;
@@ -737,20 +755,6 @@ body.body-term {
     justify-content: space-evenly;
 }
 
-.bg-dialog {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-}
-
-.bg-opacity {
-    z-index: 0;
-    overflow: hidden;
-    background-color: #00000062;
-}
 
 /* DATAPICKER JQUERY */
 .ui-datepicker .ui-datepicker-header {
@@ -932,7 +936,7 @@ div#ui-datepicker-div table {
     padding: 0;
 }
 
-/* #c12e2a */
+/* RESPONSIVE */
 @media (max-width: 1270px) {
     .terms table {
         width: 90vw;
@@ -952,5 +956,12 @@ div#ui-datepicker-div table {
     .terms td:nth-child(6),
     .terms th:nth-child(6) {
         display: none;
+    }
+}
+
+@media (max-width: 750px) {
+    .options {
+        flex-direction: column;
+        align-items: center;
     }
 }

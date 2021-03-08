@@ -73,7 +73,7 @@ function loadTermPage() {
             }
             $("tbody").append(
                 `<tr>
-                    <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegir un nou curs</button></td>
+                    <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
                 </tr>`
             ).fadeIn(300);
 
@@ -89,7 +89,7 @@ function rowEventEditAndNew(tag) {
     let dialog = $(".modal-term").dialog({
         modal: true,
         buttons: {
-            "Desar": () => {
+            "Desa": () => {
                 if (validationTermForm()) {
                     dialog.dialog("close");
                     updateTableRowTerm(rowSelected.children());
@@ -115,7 +115,7 @@ function rowEventEditAndNew(tag) {
     });
     let childrens = $(".ui-dialog-buttonset").addClass("buttons-group").children();
     $(childrens[1]).attr("class", "btn cancel");
-    $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crear' : 'Desar').after('<div class="or"></div>');
+    $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou Curs' : 'Modicació de curs');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
     getInfoForTermModal(rowSelected.children());

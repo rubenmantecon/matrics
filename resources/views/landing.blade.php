@@ -22,14 +22,14 @@
         </p>
         <p class="text">Per poder accedir al teu compte necessites haver rebut un correu electrònic amb un enllaç per
             poder registrar-te.</p>
-        <p class="text">En cas de disposar ja d'un compte, pots accedir al teu expedient donant-li al botó Accedir.
+        <p class="text">En cas de disposar ja d'un compte, pots accedir al teu expedient donant-li al botó Accedeix.
         </p>
         <div class="btn-container">
             @if (Route::has('login'))
                 @auth
                     <a href="{{ url('/dashboard') }}" class="btn primary-btn">Dashboard</a>
                 @else
-                    <a href="{{ route('login') }}" class="btn primary-btn">Accedir</a>
+                    <a href="{{ route('login') }}" class="btn primary-btn">Accedeix</a>
                 @endauth
             @endif
         </div>
