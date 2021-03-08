@@ -839,6 +839,12 @@ div#ui-datepicker-div table {
     margin: 0;
 }
 
+.options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
 @media (max-width: 1270px) {
     .terms table {
         width: 90vw;
@@ -858,5 +864,12 @@ div#ui-datepicker-div table {
     .terms td:nth-child(6),
     .terms th:nth-child(6) {
         display: none;
+    }
+}
+
+@media (max-width: 750px) {
+    .options {
+        flex-direction: column;
+        align-items: center;
     }
 }
