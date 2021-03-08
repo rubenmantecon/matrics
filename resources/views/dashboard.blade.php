@@ -12,7 +12,7 @@
                 <img src="{{ asset('images/cursos.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <button class="btn primary-btn">Cursos</button>
+                <a href="admin/dashboard/cursos" class="btn primary-btn">Cursos</a>
             </div>
         </div>
         <div class="flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2">
@@ -20,7 +20,7 @@
                 <img src="{{ asset('images/icono-alumno.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <button class="btn primary-btn">Alumnes</button>        
+                <a class="btn primary-btn">Alumnes</a>        
             </div>
         </div>
     </div>
