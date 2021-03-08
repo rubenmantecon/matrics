@@ -25,10 +25,6 @@ Route::get('/sample', function () {
     return view('sample');
 });
 
-Route::get('/sample2', function () {
-    return view('sample_2');
-});
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
