@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+use Illuminate\Support\Facades\Log;
+
 class LoginRequest extends FormRequest
 {
     /**
@@ -51,6 +53,12 @@ class LoginRequest extends FormRequest
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
+            
+            // no tenemos la user_id
+            //Log::channel('dblogging')->debug("Inicio de sesión fallido", ['user_id' => 1]);
+        }
+        else{
+        	Log::channel('dblogging')->debug("Ha iniciado sesión", ['user_id' => Auth::id()]);
         }
 
         RateLimiter::clear($this->throttleKey());
