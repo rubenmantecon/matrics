@@ -101,11 +101,16 @@ class TermController extends Controller
             $term->description = $request->desc;
             $term->start = $request->start;
             $term->end = $request->end;
+            if ($request->type === "softDelete")
+                $term->active = 0;
             $term->updated_at = $request->updated;
 
             $status = $term->save();
             if ($status)
-                $data = ["status" => "Curs actualitzat correctament."];
+                if ($request->type === "softDelete")
+                    $data = ["status" => "Curs eliminat correctament."];
+                else
+                    $data = ["status" => "Curs actualitzat correctament."];
         }
         return response()->json($data);
     }
