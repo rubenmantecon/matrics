@@ -83,6 +83,26 @@ function loadTermPage() {
     });
 }
 
+function loadLogsPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            console.log(res);
+            /*
+            for (const item of res) {
+                console.log(item);
+            }
+            */
+
+            $("body").addClass("body-logs");
+        }
+    });
+}
+
 function rowEventEditAndNew(tag) {
     $(".bg-dialog").addClass("bg-opacity");
     const rowSelected = $(tag).closest("tr");
@@ -128,10 +148,6 @@ function insertNewRow(...params) {
                 <td>${(params[2]) ? params[2] : ''}</td>
                 <td>${params[3]}</td>
                 <td>${params[4]}</td>
-                <td>${params[5]}</td>
-                <td>${params[6]}</td>
-                <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
-                <td><button id="remove" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></button></td>
             </tr>`;
 }
 
@@ -249,5 +265,8 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
+    }
+    else if (location.pathname.includes("admin/dashboard/logs")) {
+        loadLogsPage();
     }
 });

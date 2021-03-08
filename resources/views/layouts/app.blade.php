@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="_token" content="{{ Auth::user()->token }}">
-    <meta name="url" content="{{ ('/api/terms') }}">
+    <meta name="url" content="{{ $page ?? ''}}">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/template.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">

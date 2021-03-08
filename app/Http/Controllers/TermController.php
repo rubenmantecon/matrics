@@ -6,6 +6,9 @@ use App\Models\Term;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+
 class TermController extends Controller
 {
     /**
@@ -45,6 +48,7 @@ class TermController extends Controller
         $data = ['status' => 'Unauthorized, error 503'];
 
         if ($user['token']) {
+        
             $term = new Term;
             $term->name = $request->name;
             $term->description = $request->desc;
@@ -57,6 +61,7 @@ class TermController extends Controller
             $status = $term->save();
             if ($status)
                 $data = ["status" => "Nou curs creat correctament."];
+                Log::channel('dblogging')->debug("Ha creado un nuevo Curso", ["user_id" => 1]);
         }
         return response()->json($data);
     }
@@ -106,6 +111,7 @@ class TermController extends Controller
             $status = $term->save();
             if ($status)
                 $data = ["status" => "Curs actualitzat correctament."];
+                Log::channel('dblogging')->debug("Ha actualizado un Curso", ["user_id" => Auth::id()]);
         }
         return response()->json($data);
     }
