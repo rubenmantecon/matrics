@@ -37,7 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['dblogging', 'single'],
+            'channels' => ['single'],
             'ignore_exceptions' => false,
         ],
 

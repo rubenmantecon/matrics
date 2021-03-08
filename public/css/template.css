@@ -1,8 +1,8 @@
 /* FONT */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
 
 * {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 
 /* BODY */
@@ -75,9 +75,9 @@ body {
     border: none;
     vertical-align: baseline;
     background: #e0e1e2 none;
-    color: rgba(0, 0, 0, .6);
-    margin: 0 .25em 0 0;
-    padding: .78571429em 1.5em .78571429em;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0 0.25em 0 0;
+    padding: 0.78571429em 1.5em 0.78571429em;
     text-transform: none;
     text-shadow: none;
     font-weight: 700;
@@ -85,16 +85,20 @@ body {
     font-style: normal;
     text-align: center;
     text-decoration: none;
-    border-radius: .28571429rem;
+    border-radius: 0.28571429rem;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    -webkit-transition: opacity .2s ease, background-color .2s ease, color .2s ease, background .2s ease, -webkit-box-shadow .2s ease;
-    transition: opacity .2s ease, background-color .2s ease, color .2s ease, background .2s ease, -webkit-box-shadow .2s ease;
-    transition: opacity .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, background .2s ease;
-    transition: opacity .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, background .2s ease, -webkit-box-shadow .2s ease;
-    will-change: '';
+    -webkit-transition: opacity 0.2s ease, background-color 0.2s ease,
+        color 0.2s ease, background 0.2s ease, -webkit-box-shadow 0.2s ease;
+    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease,
+        background 0.2s ease, -webkit-box-shadow 0.2s ease;
+    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease,
+        box-shadow 0.2s ease, background 0.2s ease;
+    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease,
+        box-shadow 0.2s ease, background 0.2s ease, -webkit-box-shadow 0.2s ease;
+    will-change: "";
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -115,15 +119,16 @@ body {
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     text-align: left;
     line-height: 1.21428571em;
-    padding: .67857143em 1em;
+    padding: 0.67857143em 1em;
     background-color: #ececec;
     border: 2px solid #585858;
-    color: rgba(0, 0, 0, .87);
-    border-radius: .28571429rem;
-    -webkit-transition: border-color .1s ease, -webkit-box-shadow .1s ease;
-    transition: border-color .1s ease, -webkit-box-shadow .1s ease;
-    transition: box-shadow .1s ease, border-color .1s ease;
-    transition: box-shadow .1s ease, border-color .1s ease, -webkit-box-shadow .1s ease;
+    color: rgba(0, 0, 0, 0.87);
+    border-radius: 0.28571429rem;
+    -webkit-transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
+    transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
+    transition: box-shadow 0.1s ease, border-color 0.1s ease;
+    transition: box-shadow 0.1s ease, border-color 0.1s ease,
+        -webkit-box-shadow 0.1s ease;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
@@ -148,13 +153,12 @@ div.container-messages {
     font-size: 1em;
     position: absolute;
     top: 65px;
-
 }
 
 .message {
     display: none;
-    padding: .55em 2em .55em 1em;
-    margin: .4em 0;
+    padding: 0.55em 2em 0.55em 1em;
+    margin: 0.4em 0;
     border-radius: 10px;
     place-self: center;
     justify-content: center;
@@ -197,7 +201,7 @@ div.container-messages {
 }
 
 /* HEADER */
-/* header.admin {
+header.admin {
     background-color: #ffa500;
 }
 
@@ -207,25 +211,25 @@ header {
     display: flex;
     justify-content: space-around;
     height: 100px;
-} */
+}
 
-header>.logo-box {
+header > .logo-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-header>.logo-box>img.logo {
+header > .logo-box > img.logo {
     border-radius: 100px;
 }
 
-header>.items {
+header > .items {
     display: flex;
     flex-flow: row nowrap;
 }
 
-header>.items>.item {
+header > .items > .item {
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -236,15 +240,15 @@ header>.items>.item {
     color: #023382;
 }
 
-header>.items>.item.active {
+header > .items > .item.active {
     font-weight: bold;
 }
 
-header>.items>.item:hover {
+header > .items > .item:hover {
     color: #000000;
 }
 
-header>p.user {
+header > p.user {
     font-size: 1.4em;
     display: flex;
     justify-content: center;
@@ -263,35 +267,33 @@ div.list {
     padding: 0 0;
 }
 
-div.list>.item {
+div.list > .item {
     display: flex;
     table-layout: fixed;
     list-style-type: none;
     list-style-position: outside;
-    padding: .21428571em 0;
+    padding: 0.21428571em 0;
     line-height: 1.14285714em;
 }
 
-div.list>.item>.content {
+div.list > .item > .content {
     display: table-cell;
     width: 100%;
-    padding: 0 0 0 .5em;
+    padding: 0 0 0 0.5em;
     vertical-align: top;
 }
 
-div.list>.item>.content>.header {
+div.list > .item > .content > .header {
     display: block;
     margin: 0;
     font-weight: 700;
-    color: rgba(0, 0, 0, .87);
+    color: rgba(0, 0, 0, 0.87);
 }
 
-div.list>.item>.content>.description {
+div.list > .item > .content > .description {
     display: block;
-    color: rgba(0, 0, 0, .7);
+    color: rgba(0, 0, 0, 0.7);
 }
-
-
 
 ul.list {
     margin: 0 auto;
@@ -312,8 +314,8 @@ ul.list a {
     position: relative;
     font-size: 15px;
     margin-bottom: 8px;
-    font-family: 'Raleway', sans-serif;
-    transition: background-color .5s ease;
+    font-family: "Raleway", sans-serif;
+    transition: background-color 0.5s ease;
 }
 
 ul.list a {
@@ -390,15 +392,15 @@ ol.list a {
     font-size: 1.3em;
     position: relative;
     display: block;
-    padding: .4em .4em .4em 2em;
-    margin: .25em 0;
-    background: #93C775;
+    padding: 0.4em 0.4em 0.4em 2em;
+    margin: 0.25em 0;
+    background: #93c775;
     color: #000;
     text-decoration: none;
-    -moz-border-radius: .3em;
-    -webkit-border-radius: .3em;
+    -moz-border-radius: 0.3em;
+    -webkit-border-radius: 0.3em;
     border-radius: 10em;
-    transition: all .2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
 ol.list a:hover {
@@ -414,17 +416,17 @@ ol.list a:before {
     left: -1.3em;
     top: 50%;
     margin-top: -1.3em;
-    background: #93C775;
+    background: #93c775;
     height: 2em;
     width: 2em;
     line-height: 2em;
-    border: .3em solid #fff;
+    border: 0.3em solid #fff;
     text-align: center;
     font-weight: bold;
     -moz-border-radius: 2em;
     -webkit-border-radius: 2em;
     border-radius: 2em;
-    color: #FFF;
+    color: #fff;
 }
 
 /* FORM */
@@ -582,14 +584,14 @@ td {
     align-items: center;
 }
 
-.error-page>.number {
+.error-page > .number {
     font-size: 200px;
     font-weight: bold;
     margin: 0;
     user-select: none;
 }
 
-.error-page>.description {
+.error-page > .description {
     font-size: 50px;
     font-weight: bold;
     margin: 0;
@@ -604,33 +606,33 @@ td {
     height: 57vh;
 }
 
-.landing>.container-title {
+.landing > .container-title {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.landing>.container-title>.title {
+.landing > .container-title > .title {
     font-size: 3em;
     margin: 0 15px;
 }
 
-.landing>.container-title>img {
+.landing > .container-title > img {
     width: 11%;
 }
 
-.landing>main>p.subtitle.text {
+.landing > main > p.subtitle.text {
     font-size: 27px;
 }
 
-.landing>main>p.text {
+.landing > main > p.text {
     font-size: 23px;
     text-align: center;
     margin: 7px 0;
 }
 
-.landing>main>.btn-container {
+.landing > main > .btn-container {
     text-align: center;
     font-size: 25px;
     margin-top: 15px;
@@ -648,7 +650,7 @@ body.body-term {
 }
 
 .terms td button.btn {
-    padding: .8em;
+    padding: 0.8em;
     margin: 0;
 }
 
@@ -735,7 +737,7 @@ body.body-term {
 /* DATAPICKER JQUERY */
 .ui-datepicker .ui-datepicker-header {
     position: relative;
-    padding: .2em 0;
+    padding: 0.2em 0;
 }
 
 .ui-datepicker .ui-datepicker-title {
@@ -773,7 +775,6 @@ div#ui-datepicker-div table {
     width: 360px;
 }
 
-
 /* BUTTONS WITH OR */
 .buttons-group {
     display: flex;
@@ -794,7 +795,7 @@ div#ui-datepicker-div table {
 
 .buttons-group .or {
     position: relative;
-    width: .3em;
+    width: 0.3em;
     height: 2.57142857em;
     z-index: 3;
 }
@@ -803,17 +804,17 @@ div#ui-datepicker-div table {
     position: absolute;
     text-align: center;
     border-radius: 500rem;
-    content: 'or';
+    content: "or";
     top: 50%;
     left: 50%;
     background-color: #fff;
     text-shadow: none;
-    margin-top: -.89285714em;
-    margin-left: -.89285714em;
+    margin-top: -0.89285714em;
+    margin-left: -0.89285714em;
     width: 1.78571429em;
     height: 1.78571429em;
     line-height: 1.78571429em;
-    color: rgba(0, 0, 0, .4);
+    color: rgba(0, 0, 0, 0.4);
     font-style: normal;
     font-weight: 700;
     -webkit-box-shadow: 0 0 0 1px transparent inset;

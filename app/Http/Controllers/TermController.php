@@ -15,9 +15,9 @@ class TermController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::select("remember_token")->where('remember_token', $request->header('token'))->get()[0];
+        $user = User::select("token")->where('token', $request->header('token'))->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
-        if ($user['remember_token'])
+        if ($user['token'])
             $data = Term::select("*")->where("active", 1)->get();
         return response()->json($data);
     }
@@ -41,10 +41,10 @@ class TermController extends Controller
     public function store(Request $request)
     {
         $token = $request->header('token');
-        $user = User::select("remember_token")->where('remember_token', $token)->where("role", "admin")->get()[0];
+        $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
 
-        if ($user['remember_token']) {
+        if ($user['token']) {
             $term = new Term;
             $term->name = $request->name;
             $term->description = $request->desc;
@@ -93,10 +93,10 @@ class TermController extends Controller
     public function update(Request $request, Term $term)
     {
         $token = $request->header('token');
-        $user = User::select("remember_token")->where('remember_token', $token)->where("role", "admin")->get()[0];
+        $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
 
-        if ($user['remember_token']) {
+        if ($user['token']) {
             $term->name = $request->name;
             $term->description = $request->desc;
             $term->start = $request->start;
