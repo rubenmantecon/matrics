@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="_token" content="{{ Auth::user()->remember_token }}">
+    <meta name="_token" content="{{ Auth::user()->token }}">
     <meta name="url" content="{{ ('/api/terms') }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/template.css') }}">
@@ -16,16 +16,17 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
         integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/moment.js') }}" defer></script>
-    <script src="{{ asset('js/general.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/moment.js') }}"></script>
+    <script src="{{ asset('js/general.js') }}"></script>
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+<body class="">
+    <div class="min-h-screen min-w-screen">
         @include('layouts.navigation')
         <!-- Page Content -->
         <main>
+            <div class="container-messages"></div>
             {{ $slot }}
         </main>
     </div>
