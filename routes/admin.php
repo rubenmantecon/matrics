@@ -3,7 +3,7 @@
         return view('dashboard');
     });
 
-    Route::get('/dashboard/courses', function() {
+    Route::get('/dashboard/terms', function() {
         return view('terms');
     });
     
