@@ -131,7 +131,7 @@ function insertNewRow(...params) {
                 <td>${params[5]}</td>
                 <td>${params[6]}</td>
                 <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
-                <td><button id="remove" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></button></td>
+                <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>
             </tr>`;
 }
 
@@ -167,7 +167,7 @@ function insertTermInDB(name, desc, start, end, created, updated) {
     });
 }
 
-function updateTermInDB(id, name, desc, start, end, created, updated) {
+function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete") {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -180,14 +180,22 @@ function updateTermInDB(id, name, desc, start, end, created, updated) {
             token: $("meta[name='_token']").attr("content"),
         },
         data: {
+            type,
             name,
             desc,
             start,
             end,
-            created,
             updated
         },
-        success: (res) => generateMessages("success", res.status, ".container-messages", 3),
+        success: (res) => {
+            generateMessages("success", res.status, ".container-messages", 3)
+            if (type === "softDelete") {
+                setTimeout(() => {
+                    $("#remove").html('Eliminar').removeClass("loading");
+                    location.href = "/admin/dashboard/terms"
+                }, 2000);
+            }
+        },
         error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
     });
 }
@@ -211,7 +219,7 @@ function updateTableRowTerm(cols) {
             $(".label-group input#description").val(),
             momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            now(), now()
+            now(), null
         );
         loadTermPage();
     }
@@ -242,12 +250,38 @@ function validationTermForm() {
 }
 
 $(function () {
-    if (location.pathname.includes("dashboard/terms")) {
+    if (location.pathname.endsWith("dashboard/terms/") || location.pathname.endsWith("dashboard/terms")) {
         loadTermPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
+        })
+    }
+    if (location.pathname.includes("dashboard/terms/delete/")) {
+        $("#name").focus();
+        const name = $("span.code").text();
+        $("#name").on("input", (e) => {
+            if (e.target.value === name) $("#remove").removeClass("disabled");
+            else $("#remove").addClass("disabled");
+        });
+        $("#remove").on("click", (e) => {
+            if ($("#remove").hasClass("disabled")) {
+                generateMessages("info", "Introdueix el nom del curs.", ".container-messages", 2.5)
+                $("#name").focus();
+            } else {
+                if ($("#name").val() === name) {
+                    $("#remove").html('').addClass("loading");
+                    updateTermInDB(
+                        $(".delete-term").attr("data-id"),
+                        $(".delete-term").attr("data-name"),
+                        $(".delete-term").attr("data-desc"),
+                        $(".delete-term").attr("data-start"),
+                        $(".delete-term").attr("data-end"),
+                        $(".delete-term").attr("data-updated"),
+                    );
+                } else $("#remove").addClass("disabled");
+            }
         })
     }
 });
