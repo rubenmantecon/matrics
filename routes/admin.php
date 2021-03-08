@@ -5,4 +5,5 @@
 
     Route::get('/dashboard/cursos', function() {
         return view('terms');
-    });        
+    });   
+   

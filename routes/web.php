@@ -29,6 +29,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+// Route::get('/dashboard/cursos/delete/${term}', function(Request $request) {
+        
+    // return view('deleteTerm');
+// });     
+
 Route::resource('api/terms', TermController::class);
 require __DIR__ . '/auth.php';
 

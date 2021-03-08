@@ -26,11 +26,6 @@
         .box {
             display: flex;
             justify-content: center;
-            align-items: center;
-        }
-
-        .box.col {
-            flex-direction: column;
         }
 
         .box>* {
@@ -52,7 +47,7 @@
             <p>Roboto</p>
         </div>
     </div>
-	<div class="container">
+    <div class="container">
         <h1>Buttons, Links</h1>
         <div class="box">
             <button class="btn">Default</button>
@@ -60,6 +55,13 @@
             <button class="btn secondary-btn">Secondary</button>
             <button class="btn save">Save</button>
             <button class="btn cancel">Cancel</button>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Input, Input:focus</h1>
+        <div class="box">
+            <input class="input" type="text" placeholder="username">
+            <input class="input focus" type="text" value="focus">
         </div>
     </div>
     <div class="container">
@@ -75,9 +77,42 @@
                 Information</div>
         </div>
     </div>
+    <div class="container" style="padding: 0px">
+        <h1>Header User</h1>
+        <div class="box" style="width: 100%">
+            <header style="margin: 0px !important">
+                <div class="logo-box">
+                    <img src="{{ asset('images/logo-ieti.png') }}" alt="logo" class="logo" width="80">
+                </div>
+                <div class="items">
+                    <a href="#user" class="item active"><i class="fas fa-home"></i> Home</a>
+                    <a href="#login" class="item"><i class="fas fa-user-lock"></i> Login</a>
+                    <a href="#test" class="item"><i class="fas fa-vial"></i> Test</a>
+                </div>
+                <p class="user"><i class="fas fa-user"></i> Student</p>
+            </header>
+        </div>
+    </div>
+    <div class="container" style="padding: 0px">
+        <h1>Header Admin</h1>
+        <div class="box" style="width: 100%">
+            <header class="admin" style="margin: 0px !important">
+                <div class="logo-box">
+                    <img src="{{ asset('images/logo-ieti.png') }}" alt="logo"
+                        class="logo" width="80">
+                </div>
+                <div class="items">
+                    <a href="#user" class="item active"><i class="fas fa-home"></i> Home</a>
+                    <a href="#login" class="item"><i class="fas fa-user-lock"></i> Login</a>
+                    <a href="#test" class="item"><i class="fas fa-vial"></i> Test</a>
+                </div>
+                <p class="user"><i class="fas fa-user"></i> Admin</p>
+            </header>
+        </div>
+    </div>
     <div class="container">
-        <h1>Sample page</h1>
-        <div class="box col">
+        <h1>List</h1>
+        <div class="box">
             <div class="list">
                 <div class="item">
                     <i class="fas fa-folder"></i>
@@ -117,79 +152,34 @@
                     </div>
                 </div>
             </div>
-            <br>
-            <ul class="list">
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-            </ul>
-            <br>
-            <p>This is a second list:</p>
-            <ol class="list">
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-                <li><a href="http://www.iesesteveterradas.cat/">This is a text link</a></li>
-            </ol>
         </div>
     </div>
     <div class="container">
-        <h2>Sample Form</h2>
-        <div class="box">
-            <div class="container-form">
-                <form class="form">
-                    <span class="title">Login</span>
-                    <div class="label-group">
-                        <label for="user">Nom usuari: </label>
-                        <input class="input" type="text" name="user" placeholder="username" id="name">
-                    </div>
-                    <div class="label-group">
-                        <label for="password">Contrasenya: </label>
-                        <input class="input" type="password" name="password" placeholder="password" id="password">
-                    </div>
-					<div class="label-group">
-						<button class="btn secondary-btn">Sign In</button>
-					</div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <h3>Super Important data</h3>
+        <h1>Table</h1>
         <div class="box" style="width: 80%">
             <table class="table">
-                <caption>The dark side teachers</caption>
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Birthday</th>
-                        <th>Password</th>
+                        <th>Age</th>
+                        <th>Job</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Leandro Zabala</td>
-                        <td>lzabala@xtec.cat</td>
-                        <td>2021/02/24</td>
-                        <td>iLoveAjax</td>
+                        <td data-label="Name">James</td>
+                        <td data-label="Age">24</td>
+                        <td data-label="Job">Engineer</td>
                     </tr>
                     <tr>
-                        <td>Enric Mieza</td>
-                        <td>emieza@xtec.cat</td>
-                        <td>2021/02/24</td>
-                        <td>ILovePHP</td>
+                        <td data-label="Name">Jill</td>
+                        <td data-label="Age">26</td>
+                        <td data-label="Job">Engineer</td>
                     </tr>
                     <tr>
-                        <td>Xavi Gómez</td>
-                        <td>xgomez@xtec.cat</td>
-                        <td>2021/02/24</td>
-                        <td>ILoveCSS</td>
+                        <td data-label="Name">Elyse</td>
+                        <td data-label="Age">24</td>
+                        <td data-label="Job">Designer</td>
                     </tr>
                 </tbody>
             </table>

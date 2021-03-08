@@ -227,13 +227,12 @@ function validationTermForm() {
     if (!msg) {
         let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
         let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
-        if (start === "Invalid date") {
+        if (start === "Invalid date")
             msg += "Data d'inici invalida 'DD-MM-AAAA'.\n";
-        } else if (end === "Invalid date") {
+        else if (end === "Invalid date")
             msg += "Data de finalització invalida 'DD-MM-AAAA'.\n";
-        } else if (end < start) {
-            msg += "La data de finalització no pot ser petita que la d'inici.\n";
-        }
+        else if (end < start)
+            msg += "La data de finalització no pot ser mes petita que la d'inici.\n";
     }
 
     if (msg) {
