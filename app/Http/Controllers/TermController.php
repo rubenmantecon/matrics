@@ -18,10 +18,13 @@ class TermController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::select("token")->where('token', $request->header('token'))->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
-        if ($user['token'])
-            $data = Term::select("*")->where("active", 1)->get();
+        $token = $request->header('token');
+        if ($token) {
+            $user = User::select("token")->where('token', $token)->get()[0];
+            if ($user['token'])
+                $data = Term::select("*")->where("active", 1)->get();
+        }
         return response()->json($data);
     }
 
@@ -43,25 +46,25 @@ class TermController extends Controller
      */
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
+        $token = $request->header('token');
+        if ($token) {
+            $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
+            if ($user['token']) {
+                $term = new Term;
+                $term->name = $request->name;
+                $term->description = $request->desc;
+                $term->start = $request->start;
+                $term->end = $request->end;
+                $term->active = 1; // NO HARDCODEAR
+                $term->created_at = $request->created;
+                $term->updated_at = $request->updated;
 
-        if ($user['token']) {
-        
-            $term = new Term;
-            $term->name = $request->name;
-            $term->description = $request->desc;
-            $term->start = $request->start;
-            $term->end = $request->end;
-            $term->active = 1; // NO HARDCODEAR
-            $term->created_at = $request->created;
-            $term->updated_at = $request->updated;
-
-            $status = $term->save();
-            if ($status)
-                $data = ["status" => "Nou curs creat correctament."];
+                $status = $term->save();
+                if ($status)
+                    $data = ["status" => "Nou curs creat correctament."];
                 Log::channel('dblogging')->info("Ha creado un nuevo Curso", ["user_id" => 1, "term_id" => $term->id]);
+            }
         }
         return response()->json($data);
     }
@@ -97,31 +100,31 @@ class TermController extends Controller
      */
     public function update(Request $request, Term $term)
     {
-        $token = $request->header('token');
-        $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
+        $token = $request->header('token');
+        if ($token) {
+            $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
+            if ($user['token']) {
+                $term->name = $request->name;
+                $term->description = $request->desc;
+                $term->start = $request->start;
+                $term->end = $request->end;
+                if ($request->type === "softDelete")
+                    $term->active = 0;
+                $term->updated_at = $request->updated;
 
-        if ($user['token']) {
-            $term->name = $request->name;
-            $term->description = $request->desc;
-            $term->start = $request->start;
-            $term->end = $request->end;
-            if ($request->type === "softDelete")
-                $term->active = 0;
-            $term->updated_at = $request->updated;
+                $status = $term->save();
+                if ($status)
+                    $data = ["status" => "Curs actualitzat correctament."];
 
-            $status = $term->save();
-            if ($status)
-                $data = ["status" => "Curs actualitzat correctament."];
-               
-                if ($request->type === "softDelete"){
+                if ($request->type === "softDelete") {
                     $data = ["status" => "Curs eliminat correctament."];
-                     Log::channel('dblogging')->info("Ha eliminado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
-                }
-                else{
+                    Log::channel('dblogging')->info("Ha eliminado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
+                } else {
                     $data = ["status" => "Curs actualitzat correctament."];
                     Log::channel('dblogging')->info("Ha actualizado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
                 }
+            }
         }
         return response()->json($data);
     }

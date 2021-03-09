@@ -18,6 +18,9 @@
                 </tr>
             </thead>
             <tbody style="display: none">
+                <tr>
+                    <td colspan="5" class="loading inverted"></td>
+                </tr>
             </tbody>
             <tfoot>
                 <tr>

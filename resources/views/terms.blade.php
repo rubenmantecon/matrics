@@ -23,7 +23,7 @@
             </thead>
             <tbody style="display: none">
                 <tr>
-                    <td colspan="9" class="loading inverted">Cargando...</td>
+                    <td colspan="9" class="loading inverted"></td>
                 </tr>
             </tbody>
             <tfoot>
