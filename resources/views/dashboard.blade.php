@@ -12,7 +12,7 @@
                 <img src="{{ asset('images/cursos.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <a href="admin/dashboard/terms" class="btn primary-btn">Cursos</a>
+                <a href="/admin/dashboard/terms" class="btn primary-btn">Cursos</a>
             </div>
         </div>
         <div class="flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
