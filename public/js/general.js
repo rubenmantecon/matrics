@@ -93,6 +93,7 @@ function loadTermPage() {
 }
 
 function rowEventEditAndNew(tag) {
+    $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
     const rowSelected = $(tag).closest("tr");
     let dialog = $(".modal-term").dialog({
@@ -102,15 +103,18 @@ function rowEventEditAndNew(tag) {
                 if (validationTermForm()) {
                     dialog.dialog("close");
                     updateTableRowTerm(rowSelected.children());
+                    $("body").css("overflow", "auto");
                     $(".bg-dialog").removeClass("bg-opacity");
                 }
             },
             "Cancela": () => {
                 dialog.dialog("close");
+                $("body").css("overflow", "auto");
                 setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
             }
         },
         close: () => {
+            $("body").css("overflow", "auto");
             $(".bg-dialog").removeClass("bg-opacity");
         },
         show: {

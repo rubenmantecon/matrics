@@ -18,7 +18,7 @@
                 <div class="buttons-group">
                     <a href="/admin/dashboard/terms" class="btn save">Tornar enrere</a>
                     <div class="or"></div>
-                    <button id="remove" type="button" class="btn cancel ">Eliminar</button>
+                    <button id="remove" type="button" class="btn cancel disabled">Eliminar</button>
                 </div>
             </div>
         </div>

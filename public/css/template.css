@@ -25,7 +25,7 @@ body {
 }
 
 .disabled {
-    cursor: default;
+    cursor: default !important;
     opacity: .45 !important;
     background-image: none !important;
     /* pointer-events: none !important; */
@@ -44,7 +44,8 @@ body {
 }
 
 .bg-opacity {
-    z-index: 0;
+    transition: .5s;
+    z-index: 0 !important;
     overflow: hidden;
     background-color: #00000062;
 }
