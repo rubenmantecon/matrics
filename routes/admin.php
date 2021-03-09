@@ -7,6 +7,10 @@
 
     Route::get('/dashboard/terms', function() {
         return view('terms');
+    });
+    
+    Route::get('/dashboard/logs', function() {
+        return view('logs');
     });   
    
     Route::get('/dashboard/terms/delete/{term_id}', function ($term_id) {
