@@ -22,6 +22,9 @@
                 </tr>
             </thead>
             <tbody style="display: none">
+                <tr>
+                    <td colspan="9" class="loading inverted">Cargando...</td>
+                </tr>
             </tbody>
             <tfoot>
                 <tr>
