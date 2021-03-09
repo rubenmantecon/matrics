@@ -161,18 +161,15 @@ function insertNewRow(...params) {
                 <td>${(params[2]) ? params[2] : ''}</td>
                 <td>${params[3]}</td>
                 <td>${params[4]}</td>
-<<<<<<< HEAD
-=======
+
                 <td>${params[5]}</td>
                 <td>${params[6]}</td>
-<<<<<<< HEAD
+                
                 <td><button id="edit" class="btn save" title="Modifica el curs"><i class="fas fa-pen"></i></button></td>
                 <td><button id="remove" class="btn cancel" title="Elimina el curs"><i class="fas fa-trash"></i></button></td>
->>>>>>> origin
-=======
+
                 <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>
->>>>>>> 4ddbbdb13c60ce36d6d2677604a015223fea9a99
             </tr>`;
 }
 
@@ -301,10 +298,8 @@ $(function () {
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
     }
-<<<<<<< HEAD
     else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
-=======
     // DELETE TERM PAGE
     if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
@@ -331,6 +326,5 @@ $(function () {
                 } else $("#remove").addClass("disabled");
             }
         })
->>>>>>> 4ddbbdb13c60ce36d6d2677604a015223fea9a99
     }
 });
