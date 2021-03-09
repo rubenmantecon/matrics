@@ -25,7 +25,7 @@ body {
 }
 
 .disabled {
-    cursor: default;
+    cursor: default !important;
     opacity: .45 !important;
     background-image: none !important;
     /* pointer-events: none !important; */
@@ -44,7 +44,8 @@ body {
 }
 
 .bg-opacity {
-    z-index: 0;
+    transition: .5s;
+    z-index: 0 !important;
     overflow: hidden;
     background-color: #00000062;
 }
@@ -53,12 +54,12 @@ body {
 .loading {
     position: relative;
     cursor: default;
-    text-shadow: none!important;
-    color: transparent!important;
+    text-shadow: none !important;
+    color: transparent !important;
     opacity: 1;
     pointer-events: none !important;
-    -webkit-transition: all 0s linear,opacity .1s ease;
-    transition: all 0s linear,opacity .1s ease;
+    -webkit-transition: all 0s linear, opacity .1s ease;
+    transition: all 0s linear, opacity .1s ease;
 }
 
 
@@ -102,6 +103,7 @@ body {
     To {
         transform: rotate(360deg);
     }
+
     From {
         transform: rotate(0deg);
     }
@@ -219,6 +221,45 @@ body {
 input:focus {
     border: 2px solid #5cbdff;
     box-shadow: 0 0 10px #a6a6e8 !important;
+}
+
+/* INPUT ICON */
+div.icon.input-box {
+    position: relative;
+}
+
+div.icon.input-box>i {
+    pointer-events: none;
+}
+
+div[class*="left icon"].input-box>i {
+    right: auto;
+    left: 1px;
+    border-radius: .28571429rem 0 0 .28571429rem;
+}
+
+div.icon.input-box>i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    position: absolute;
+    line-height: 1;
+    text-align: center;
+    top: 0;
+    right: 0;
+    margin: 0;
+    height: 100%;
+    width: 2.67142857em;
+    opacity: .6;
+    border-radius: 0 .28571429rem .28571429rem 0;
+    -webkit-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
+
+div[class*="left icon"].input-box>input.input {
+    padding-left: 2.67142857em !important;
+    padding-right: 1em !important;
 }
 
 /* MESSAGE */
@@ -509,7 +550,7 @@ ol.list a:before {
 
 /* FORM */
 .container-form {
-    width: 400px;
+    width: 450px;
     background: #fff;
     border-radius: 10px;
     position: relative;
@@ -698,6 +739,29 @@ body.body-term {
 .terms tbody tr:last-child td button.btn i {
     font-size: 24px;
     margin-right: 5px;
+}
+
+.terms tbody td>p {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.terms td.loading {
+    height: 5em;
+}
+
+.terms td.loading:before {
+    width: 4em;
+    height: 4em;
+    border-width: .4em;
+    top: 25%;
+}
+
+.terms td.loading:after {
+    width: 4em;
+    height: 4em;
+    border-width: .4em;
+    top: 25%;
 }
 
 /* DIALOG JQUERY */
@@ -934,6 +998,31 @@ div#ui-datepicker-div table {
     border-radius: 0;
     box-shadow: unset;
     padding: 0;
+}
+
+/* LOGIN */
+main.login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+main.login form.form input {
+    width: 100%;
+}
+
+main.login .container-form {
+    position: relative;
+}
+
+main.login .container-form a img.logo {
+    width: 68px;
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    border-radius: 200px;
 }
 
 /* RESPONSIVE */

@@ -62,14 +62,23 @@ function loadTermPage() {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
-            for (const item of res) {
-                $("tbody").append(insertNewRow(
-                    item.id, item.name, item.description,
-                    momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
-                    momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
-                    momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss")
-                ));
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                for (const item of res) {
+                    $("tbody").append(insertNewRow(
+                        item.id, item.name, item.description,
+                        momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss")
+                    ));
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
+                    </tr>`
+                );
             }
             $("tbody").append(
                 `<tr>
@@ -84,6 +93,7 @@ function loadTermPage() {
 }
 
 function rowEventEditAndNew(tag) {
+    $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
     const rowSelected = $(tag).closest("tr");
     let dialog = $(".modal-term").dialog({
@@ -93,15 +103,18 @@ function rowEventEditAndNew(tag) {
                 if (validationTermForm()) {
                     dialog.dialog("close");
                     updateTableRowTerm(rowSelected.children());
+                    $("body").css("overflow", "auto");
                     $(".bg-dialog").removeClass("bg-opacity");
                 }
             },
             "Cancela": () => {
                 dialog.dialog("close");
+                $("body").css("overflow", "auto");
                 setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
             }
         },
         close: () => {
+            $("body").css("overflow", "auto");
             $(".bg-dialog").removeClass("bg-opacity");
         },
         show: {
@@ -250,7 +263,9 @@ function validationTermForm() {
 }
 
 $(function () {
+    // SHOW TERMS PAGE
     if (location.pathname.endsWith("dashboard/terms/") || location.pathname.endsWith("dashboard/terms")) {
+        $("tbody").fadeIn(300);
         loadTermPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
@@ -258,6 +273,7 @@ $(function () {
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
     }
+    // DELETE TERM PAGE
     if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
