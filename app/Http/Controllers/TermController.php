@@ -114,12 +114,14 @@ class TermController extends Controller
             if ($status)
                 $data = ["status" => "Curs actualitzat correctament."];
                
-                if ($request->type === "softDelete")
+                if ($request->type === "softDelete"){
                     $data = ["status" => "Curs eliminat correctament."];
                      Log::channel('dblogging')->info("Ha eliminado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
-                else
+                }
+                else{
                     $data = ["status" => "Curs actualitzat correctament."];
                     Log::channel('dblogging')->info("Ha actualizado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
+                }
         }
         return response()->json($data);
     }
