@@ -61,7 +61,7 @@ class TermController extends Controller
             $status = $term->save();
             if ($status)
                 $data = ["status" => "Nou curs creat correctament."];
-                Log::channel('dblogging')->debug("Ha creado un nuevo Curso", ["user_id" => 1]);
+                Log::channel('dblogging')->info("Ha creado un nuevo Curso", ["user_id" => 1, "term_id" => $term->id]);
         }
         return response()->json($data);
     }
@@ -111,7 +111,7 @@ class TermController extends Controller
             $status = $term->save();
             if ($status)
                 $data = ["status" => "Curs actualitzat correctament."];
-                Log::channel('dblogging')->debug("Ha actualizado un Curso", ["user_id" => Auth::id()]);
+                Log::channel('dblogging')->info("Ha actualizado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
         }
         return response()->json($data);
     }

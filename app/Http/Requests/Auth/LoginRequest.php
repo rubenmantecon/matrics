@@ -58,7 +58,7 @@ class LoginRequest extends FormRequest
             //Log::channel('dblogging')->debug("Inicio de sesión fallido", ['user_id' => 1]);
         }
         else{
-        	Log::channel('dblogging')->debug("Ha iniciado sesión", ['user_id' => Auth::id()]);
+        	Log::channel('dblogging')->info("Ha iniciado sesión", ['user_id' => Auth::id()]);
         }
 
         RateLimiter::clear($this->throttleKey());
