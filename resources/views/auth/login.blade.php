@@ -1,16 +1,41 @@
 <x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <!-- Validation Errors -->
+    <x-auth-validation-errors class="mb-4" :errors="$errors" />
+    <div class="container-form">
+        <a href="/">
+            <img class="logo" src="{{ asset('images/logo-ieti.png') }}" alt="logo">
+        </a>
+        <form class="form" method="POST" action="{{ route('login') }}">
+            @csrf
+            <span class="title">Login</span>
+            <div class="label-group">
+                <label for="user">Nom usuari: </label>
+                <div class="left icon input-box">
+                    <input class="input" type="text" name="name" placeholder="username" id="name">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="label-group">
+                <label for="password">Contrasenya: </label>
+                <div class="left icon input-box">
+                    <input class="input" type="password" name="password" placeholder="password" id="password">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            <div class="label-group">
+                <button class="btn secondary-btn">Accedir</button>
+            </div>
+        </form>
+    </div>
+    {{-- <x-slot name="logo">
             <a href="/">
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </a>
         </x-slot>
 
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
-
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
@@ -51,6 +76,5 @@
                     {{ __('Log in') }}
                 </x-button>
             </div>
-        </form>
-    </x-auth-card>
+        </form> --}}
 </x-guest-layout>
