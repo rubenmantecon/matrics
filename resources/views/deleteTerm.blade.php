@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <h4>Estas a punt d'esborrar un curs.</h4>
                 <p>Per esborrar el curs introueix el següent text
-                    <span title="ID - NOM" class="code">{{ $term->id . ' - ' . $term->name }}</span> en el camp de
+                    <span title="NOM" class="code">{{ $term->name }}</span> en el camp de
                     text.
                 </p>
                 <input id="name" type="text" class="input" placeholder="Nom">
