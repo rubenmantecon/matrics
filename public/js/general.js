@@ -62,14 +62,23 @@ function loadTermPage() {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
-            for (const item of res) {
-                $("tbody").append(insertNewRow(
-                    item.id, item.name, item.description,
-                    momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
-                    momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
-                    momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss")
-                ));
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                for (const item of res) {
+                    $("tbody").append(insertNewRow(
+                        item.id, item.name, item.description,
+                        momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss")
+                    ));
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
+                    </tr>`
+                );
             }
             $("tbody").append(
                 `<tr>
@@ -104,6 +113,7 @@ function loadLogsPage() {
 }
 
 function rowEventEditAndNew(tag) {
+    $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
     const rowSelected = $(tag).closest("tr");
     let dialog = $(".modal-term").dialog({
@@ -113,15 +123,18 @@ function rowEventEditAndNew(tag) {
                 if (validationTermForm()) {
                     dialog.dialog("close");
                     updateTableRowTerm(rowSelected.children());
+                    $("body").css("overflow", "auto");
                     $(".bg-dialog").removeClass("bg-opacity");
                 }
             },
             "Cancela": () => {
                 dialog.dialog("close");
+                $("body").css("overflow", "auto");
                 setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
             }
         },
         close: () => {
+            $("body").css("overflow", "auto");
             $(".bg-dialog").removeClass("bg-opacity");
         },
         show: {
@@ -152,9 +165,14 @@ function insertNewRow(...params) {
 =======
                 <td>${params[5]}</td>
                 <td>${params[6]}</td>
+<<<<<<< HEAD
                 <td><button id="edit" class="btn save" title="Modifica el curs"><i class="fas fa-pen"></i></button></td>
                 <td><button id="remove" class="btn cancel" title="Elimina el curs"><i class="fas fa-trash"></i></button></td>
 >>>>>>> origin
+=======
+                <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
+                <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>
+>>>>>>> 4ddbbdb13c60ce36d6d2677604a015223fea9a99
             </tr>`;
 }
 
@@ -190,7 +208,7 @@ function insertTermInDB(name, desc, start, end, created, updated) {
     });
 }
 
-function updateTermInDB(id, name, desc, start, end, created, updated) {
+function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete") {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -203,14 +221,22 @@ function updateTermInDB(id, name, desc, start, end, created, updated) {
             token: $("meta[name='_token']").attr("content"),
         },
         data: {
+            type,
             name,
             desc,
             start,
             end,
-            created,
             updated
         },
-        success: (res) => generateMessages("success", res.status, ".container-messages", 3),
+        success: (res) => {
+            generateMessages("success", res.status, ".container-messages", 3)
+            if (type === "softDelete") {
+                setTimeout(() => {
+                    $("#remove").html('Eliminar').removeClass("loading");
+                    location.href = "/admin/dashboard/terms"
+                }, 2000);
+            }
+        },
         error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
     });
 }
@@ -234,7 +260,7 @@ function updateTableRowTerm(cols) {
             $(".label-group input#description").val(),
             momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            now(), now()
+            now(), null
         );
         loadTermPage();
     }
@@ -265,7 +291,9 @@ function validationTermForm() {
 }
 
 $(function () {
-    if (location.pathname.includes("dashboard/terms")) {
+    // SHOW TERMS PAGE
+    if (location.pathname.endsWith("dashboard/terms/") || location.pathname.endsWith("dashboard/terms")) {
+        $("tbody").fadeIn(300);
         loadTermPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
@@ -273,7 +301,36 @@ $(function () {
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
     }
+<<<<<<< HEAD
     else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
+=======
+    // DELETE TERM PAGE
+    if (location.pathname.includes("dashboard/terms/delete/")) {
+        $("#name").focus();
+        const name = $("span.code").text();
+        $("#name").on("input", (e) => {
+            if (e.target.value === name) $("#remove").removeClass("disabled");
+            else $("#remove").addClass("disabled");
+        });
+        $("#remove").on("click", (e) => {
+            if ($("#remove").hasClass("disabled")) {
+                generateMessages("info", "Introdueix el nom del curs.", ".container-messages", 2.5)
+                $("#name").focus();
+            } else {
+                if ($("#name").val() === name) {
+                    $("#remove").html('').addClass("loading");
+                    updateTermInDB(
+                        $(".delete-term").attr("data-id"),
+                        $(".delete-term").attr("data-name"),
+                        $(".delete-term").attr("data-desc"),
+                        $(".delete-term").attr("data-start"),
+                        $(".delete-term").attr("data-end"),
+                        $(".delete-term").attr("data-updated"),
+                    );
+                } else $("#remove").addClass("disabled");
+            }
+        })
+>>>>>>> 4ddbbdb13c60ce36d6d2677604a015223fea9a99
     }
 });

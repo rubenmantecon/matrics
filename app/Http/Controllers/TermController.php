@@ -106,12 +106,21 @@ class TermController extends Controller
             $term->description = $request->desc;
             $term->start = $request->start;
             $term->end = $request->end;
+            if ($request->type === "softDelete")
+                $term->active = 0;
             $term->updated_at = $request->updated;
 
             $status = $term->save();
             if ($status)
+<<<<<<< HEAD
                 $data = ["status" => "Curs actualitzat correctament."];
                 Log::channel('dblogging')->info("Ha actualizado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
+=======
+                if ($request->type === "softDelete")
+                    $data = ["status" => "Curs eliminat correctament."];
+                else
+                    $data = ["status" => "Curs actualitzat correctament."];
+>>>>>>> 4ddbbdb13c60ce36d6d2677604a015223fea9a99
         }
         return response()->json($data);
     }

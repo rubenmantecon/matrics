@@ -6,7 +6,7 @@
     </x-slot>
 
     @if(Auth::user()->role == 'admin')
-    <div class="flex justify-center space-x-4 p-10">
+    <div class="options p-10">
         <div class="flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
             <div class="px-4 py-2">
                 <img src="{{ asset('images/cursos.png') }}" alt="logo" class="logo w-24 m-4"/>
