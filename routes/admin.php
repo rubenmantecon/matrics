@@ -8,7 +8,11 @@
     Route::get('/dashboard/terms', function() {
         return view('terms');
     });
-    
+
+    Route::get('/dashboard/careers', function() {
+        return view('careers');
+    });
+
     Route::get('/dashboard/logs', function() {
         return view('logs');
     });   
