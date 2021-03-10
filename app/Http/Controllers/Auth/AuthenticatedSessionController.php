@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        Log::channel('dblogging')->debug("Ha cerrado sesión", ['user_id' => Auth::id()]);
+        Log::channel('dblogging')->info("Ha cerrado sesión", ['user_id' => Auth::id()]);
         
         Auth::guard('web')->logout();
 

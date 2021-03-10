@@ -26,7 +26,7 @@ body {
 
 .disabled {
     cursor: default !important;
-    opacity: .45 !important;
+    opacity: 0.45 !important;
     background-image: none !important;
     /* pointer-events: none !important; */
 }
@@ -44,7 +44,7 @@ body {
 }
 
 .bg-opacity {
-    transition: .5s;
+    transition: 0.5s;
     z-index: 0 !important;
     overflow: hidden;
     background-color: #00000062;
@@ -58,21 +58,20 @@ body {
     color: transparent !important;
     opacity: 1;
     pointer-events: none !important;
-    -webkit-transition: all 0s linear, opacity .1s ease;
-    transition: all 0s linear, opacity .1s ease;
+    -webkit-transition: all 0s linear, opacity 0.1s ease;
+    transition: all 0s linear, opacity 0.1s ease;
 }
-
 
 .loading:before {
     position: absolute;
-    content: '';
+    content: "";
     top: 50%;
     left: 50%;
-    margin: -.64285714em 0 0 -.64285714em;
+    margin: -0.64285714em 0 0 -0.64285714em;
     width: 1.28571429em;
     height: 1.28571429em;
     border-radius: 500rem;
-    border: .2em solid rgba(0, 0, 0, .15);
+    border: 0.2em solid rgba(0, 0, 0, 0.15);
 }
 
 .loading.inverted:after {
@@ -81,30 +80,48 @@ body {
 
 .loading:after {
     position: absolute;
-    content: '';
+    content: "";
     top: 50%;
     left: 50%;
-    margin: -.64285714em 0 0 -.64285714em;
+    margin: -0.64285714em 0 0 -0.64285714em;
     width: 1.28571429em;
     height: 1.28571429em;
-    -webkit-animation: button-spin .6s linear;
-    animation: button-spin .6s linear;
+    -webkit-animation: button-spin 0.6s linear;
+    animation: button-spin 0.6s linear;
     -webkit-animation-iteration-count: infinite;
     animation-iteration-count: infinite;
     border-radius: 500rem;
     border-color: #fff transparent transparent;
     border-style: solid;
-    border-width: .2em;
+    border-width: 0.2em;
     -webkit-box-shadow: 0 0 0 1px transparent;
     box-shadow: 0 0 0 1px transparent;
 }
 
+table td.loading {
+    height: 5em;
+}
+
+table td.loading:before {
+    width: 4em;
+    height: 4em;
+    border-width: 0.4em;
+    top: 25%;
+}
+
+table td.loading:after {
+    width: 4em;
+    height: 4em;
+    border-width: 0.4em;
+    top: 25%;
+}
+
 @keyframes button-spin {
-    To {
+    to {
         transform: rotate(360deg);
     }
 
-    From {
+    from {
         transform: rotate(0deg);
     }
 }
@@ -235,7 +252,7 @@ div.icon.input-box>i {
 div[class*="left icon"].input-box>i {
     right: auto;
     left: 1px;
-    border-radius: .28571429rem 0 0 .28571429rem;
+    border-radius: 0.28571429rem 0 0 0.28571429rem;
 }
 
 div.icon.input-box>i {
@@ -251,10 +268,10 @@ div.icon.input-box>i {
     margin: 0;
     height: 100%;
     width: 2.67142857em;
-    opacity: .6;
-    border-radius: 0 .28571429rem .28571429rem 0;
-    -webkit-transition: opacity .3s ease;
-    transition: opacity .3s ease;
+    opacity: 0.6;
+    border-radius: 0 0.28571429rem 0.28571429rem 0;
+    -webkit-transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 
 div[class*="left icon"].input-box>input.input {
@@ -368,7 +385,6 @@ header>.items>.item:hover {
 }
 
 header>p.user {
-    font-size: 1.4em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -550,11 +566,12 @@ ol.list a:before {
 
 /* FORM */
 .container-form {
-    width: 450px;
     background: #fff;
     border-radius: 10px;
     position: relative;
     padding: 50px;
+    margin-left: 8px;
+    margin-right: 8px;
     box-shadow: 0 0 12px 2px black;
 }
 
@@ -569,7 +586,6 @@ form.form {
 form.form span.title {
     width: 100%;
     display: block;
-    font-family: Montserrat-Medium;
     font-size: 39px;
     color: #555;
     line-height: 1.2;
@@ -666,6 +682,7 @@ tbody tr:nth-child(even) {
     font-size: 50px;
     font-weight: bold;
     margin: 0;
+    text-align: center;
 }
 
 /* LANDING */
@@ -674,7 +691,6 @@ tbody tr:nth-child(even) {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    height: 57vh;
 }
 
 .landing>.container-title {
@@ -682,25 +698,33 @@ tbody tr:nth-child(even) {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-top: 8em;
+    margin-top: 4em;
 }
 
 .landing>.container-title>.title {
     font-size: 3em;
     margin: 0 15px;
+    text-align: center;
 }
 
 .landing>.container-title>img {
     width: 11%;
 }
 
+.landing>main {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.landing>main * {
+    font-size: 20px;
+}
+
 .landing>main>p.subtitle.text {
-    font-size: 27px;
     margin-top: 2em;
 }
 
 .landing>main>p.text {
-    font-size: 23px;
     text-align: center;
     margin: 7px 0;
 }
@@ -718,7 +742,8 @@ body.body-term {
     align-items: center;
 }
 
-.terms {
+.terms,
+.logs {
     margin: 3% 0;
 }
 
@@ -746,24 +771,6 @@ body.body-term {
     font-weight: 500;
 }
 
-.terms td.loading {
-    height: 5em;
-}
-
-.terms td.loading:before {
-    width: 4em;
-    height: 4em;
-    border-width: .4em;
-    top: 25%;
-}
-
-.terms td.loading:after {
-    width: 4em;
-    height: 4em;
-    border-width: .4em;
-    top: 25%;
-}
-
 /* DIALOG JQUERY */
 .bg-dialog {
     position: fixed;
@@ -779,7 +786,8 @@ body.body-term {
     background-color: #fff;
     top: unset !important;
     left: unset !important;
-    width: 700px !important;
+    max-width: 700px !important;
+    width: 66% !important;
     box-shadow: 0 0 20px 1px black;
     border-radius: 7px;
 }
@@ -818,7 +826,6 @@ body.body-term {
     flex-direction: row;
     justify-content: space-evenly;
 }
-
 
 /* DATAPICKER JQUERY */
 .ui-datepicker .ui-datepicker-header {
@@ -936,7 +943,7 @@ div#ui-datepicker-div table {
 .delete-term .modal-dialog {
     background-color: white;
     min-width: 300px;
-    width: 100%;
+    width: 95%;
     max-width: 620px;
     border-radius: 16px;
     box-shadow: 0 0 10px 0px black;
@@ -959,6 +966,7 @@ div#ui-datepicker-div table {
 .delete-term .modal-dialog .modal-body {
     position: relative;
     padding: 15px;
+    text-align: center;
 }
 
 .delete-term .modal-dialog .modal-body h4 {
@@ -972,6 +980,7 @@ div#ui-datepicker-div table {
     padding: 6px 8px;
     color: #44ffe6;
     font-weight: bold;
+    display: inline-block;
 }
 
 .delete-term .modal-dialog .modal-body input {
@@ -1048,9 +1057,79 @@ main.login .container-form a img.logo {
     }
 }
 
+@media (max-width: 850px) {
+    .ui-dialog .row {
+        flex-direction: column;
+    }
+
+    table caption {
+        font-size: 1.2em !important;
+    }
+
+    .terms thead *,
+    .terms tbody *,
+    .terms tfoot * {
+        font-size: 12px !important;
+    }
+}
+
 @media (max-width: 750px) {
     .options {
         flex-direction: column;
         align-items: center;
+    }
+
+    .buttons-group {
+        width: 100%;
+        border-radius: 0px;
+        border-left: 0px;
+    }
+
+    .buttons-group .btn {
+        width: 50%;
+    }
+
+    .terms td:nth-child(1):not([colspan="9"]),
+    .terms th:nth-child(1) {
+        display: none;
+    }
+
+    .terms thead th:nth-child(2) {
+        border-top-left-radius: 8px;
+    }
+
+    .landing>.container-title>img {
+        width: 30%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .landing>.container-title>.title {
+        margin: 0px;
+    }
+}
+
+@media (max-width: 600px) {
+    .landing>main>p {
+        font-size: 18px !important;
+    }
+
+    .landing .title {
+        font-size: 32px !important;
+    }
+}
+
+@media (max-width: 450px) {
+    .delete-term .modal-dialog .modal-footer .buttons-group {
+        width: 100%;
+    }
+
+    .delete-term .modal-dialog .modal-footer .buttons-group button {
+        width: 50%;
+        flex-grow: 0;
+    }
+
+    .ui-dialog .ui-dialog-titlebar {
+        font-size: 18px;
     }
 }

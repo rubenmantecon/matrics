@@ -42,17 +42,58 @@
             box-shadow: 0 0 10px #a6a6e8;
         }
 
+        .palette {
+            height: 100px;
+            width: 100px;
+            border-radius: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .palette.background {
+            background-color: #f0f8fe;
+            color: black;
+        }
+
+        .palette.text {
+            background-color: #000;
+            color: white;
+        }
+
+        .palette.primary {
+            background-color: #1678c2;
+            color: white;
+        }
+
+        .palette.secondary {
+            background-color: #fff;
+            color: black;
+        }
+
     </style>
 </head>
 
 <body>
+    <div class="container">
+        <h1>Paleta de Colores</h1>
+        <div class="box">
+            <div class="palette background">background<br>#f0f8fe</div>
+            <div class="palette text">texto<br>#000</div>
+            <div class="palette primary">principal<br>#1678c2</div>
+            <div class="palette secondary">secundario<br>#fff</div>
+        </div>
+    </div>
     <div class="container">
         <h1>Font Family</h1>
         <div class="box">
             <p>Roboto</p>
         </div>
     </div>
-	<div class="container">
+    <div class="container">
         <h1>Buttons, Links</h1>
         <div class="box">
             <button class="btn">Default</button>
@@ -152,9 +193,9 @@
                         <label for="password">Contrasenya: </label>
                         <input class="input" type="password" name="password" placeholder="password" id="password">
                     </div>
-					<div class="label-group">
-						<button class="btn secondary-btn">Sign In</button>
-					</div>
+                    <div class="label-group">
+                        <button class="btn secondary-btn">Sign In</button>
+                    </div>
                 </form>
             </div>
         </div>

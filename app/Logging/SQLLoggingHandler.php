@@ -16,9 +16,11 @@ class SQLLoggingHandler extends AbstractProcessingHandler{
 	
 	protected function write(array $record):void{
 
+		$json = json_encode(array("message" => $record['message'], "extra" => $record['context']));
+
 		$data = array(
 			'user_id' => $record['context']['user_id'],
-			'message' => $record['message'],
+			'message' => $json,
 			'level' => $record['level'],
 			'created_at' => $record['datetime'],
 			'updated_at' => $record['datetime'],

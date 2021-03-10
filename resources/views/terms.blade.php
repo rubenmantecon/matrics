@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout page="terms">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
@@ -23,7 +23,7 @@
             </thead>
             <tbody style="display: none">
                 <tr>
-                    <td colspan="9" class="loading inverted">Cargando...</td>
+                    <td colspan="9" class="loading inverted"></td>
                 </tr>
             </tbody>
             <tfoot>

@@ -70,7 +70,8 @@ function loadTermPage() {
                         momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss")
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        "terms"
                     ));
                 }
             } else {
@@ -92,6 +93,44 @@ function loadTermPage() {
     });
 }
 
+function loadLogsPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                for (const item of res) {
+                    console.log(item);
+                    var tmp = JSON.parse(item.message);
+                    var output_badge = "";
+                    if (item.level == 200) {
+                        output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
+                    }
+
+                    $("tbody").append(insertNewRow(
+                        item.id, item.name, output_badge, tmp.message,
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        "logs"
+                    ));
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="5"><p>Sense Logs.</p></td>
+                    </tr>`
+                );
+            }
+
+            $('tbody').fadeIn(300);
+            $("body").addClass("body-logs");
+        }
+    });
+}
+
 function rowEventEditAndNew(tag) {
     $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
@@ -104,7 +143,7 @@ function rowEventEditAndNew(tag) {
                     dialog.dialog("close");
                     updateTableRowTerm(rowSelected.children());
                     $("body").css("overflow", "auto");
-                    $(".bg-dialog").removeClass("bg-opacity");
+                    setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
                 }
             },
             "Cancela": () => {
@@ -135,7 +174,8 @@ function rowEventEditAndNew(tag) {
 }
 
 function insertNewRow(...params) {
-    return `<tr>
+    if (params[params.length - 1] == "terms") {
+        return `<tr>
                 <td>${params[0]}</td>
                 <td>${params[1]}</td>
                 <td>${(params[2]) ? params[2] : ''}</td>
@@ -146,6 +186,15 @@ function insertNewRow(...params) {
                 <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>
             </tr>`;
+    } else if (params[params.length - 1] == "logs") {
+        return `<tr>
+                <td>${params[0]}</td>
+                <td>${params[1]}</td>
+                <td>${params[2]}</td>
+                <td>${params[3]}</td>
+                <td>${params[4]}</td>
+            </tr>`;
+    }
 }
 
 function getInfoForTermModal(cols) {
@@ -175,7 +224,10 @@ function insertTermInDB(name, desc, start, end, created, updated) {
             created,
             updated
         },
-        success: (res) => generateMessages("success", res.status, ".container-messages", 3),
+        success: (res) => {
+            generateMessages("success", res.status, ".container-messages", 3);
+            loadTermPage();
+        },
         error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
     });
 }
@@ -207,7 +259,7 @@ function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete"
                     $("#remove").html('Eliminar').removeClass("loading");
                     location.href = "/admin/dashboard/terms"
                 }, 2000);
-            }
+            } else loadTermPage();
         },
         error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
     });
@@ -223,7 +275,6 @@ function updateTableRowTerm(cols) {
             momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             now(), now()
         );
-        loadTermPage();
     } else {
         $("tbody").html('');
         updateTermInDB(
@@ -234,7 +285,6 @@ function updateTableRowTerm(cols) {
             momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             now(), null
         );
-        loadTermPage();
     }
 }
 
@@ -272,8 +322,10 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
+    } else if (location.pathname.includes("admin/dashboard/logs")) {
+        $("tbody").fadeIn(300);
+        loadLogsPage();
     }
-    // DELETE TERM PAGE
     if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\LogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('api/terms', TermController::class);
+Route::resource('api/logs', LogController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
