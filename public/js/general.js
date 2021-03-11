@@ -1,12 +1,28 @@
 /* FUNCTIONS */
+/**
+ * @description "check if value is null"
+ * @param {String} element 
+ * @return {String} 
+ */
 function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
 }
 
+/**
+ * @description "format date in a new"
+ * @param {String} value "value of a date, time or both"
+ * @param {String} valFormat "format of '@param value' (ex. MM:DD:YYYY)"
+ * @param {String} newFormat "new format for '@param value' (ex. DD:MM:YY)"
+ * @return {String}
+ */
 function momentFormat(value, valFormat, newFormat) {
     return moment(value, valFormat).format(newFormat);
 }
 
+/**
+ * @description "return actual day and time"
+ * @return {String}
+ */
 function now() {
     return moment().format("DD/MM/YYYY HH:mm:ss");
 }
@@ -14,6 +30,13 @@ function now() {
 /* GENERATE MESSAGES */
 let cont = 1;
 
+/**
+ * @description "generate messages with different types"
+ * @param {String} type ("success", "error", "warning", "info")
+ * @param {String} text 
+ * @param {String} parentName (XPath route for JQuery)
+ * @param {Number} seconds 
+ */
 function generateMessages(type, text, parentName, seconds) {
     const icons = {
         success: "far fa-check-circle",
@@ -29,11 +52,63 @@ function generateMessages(type, text, parentName, seconds) {
     }, 1);
 }
 
+/**
+ * @description "countdown for remove the message"
+ * @param {String} parentName (XPath route for JQuery)
+ * @param {Number} id "auto generate ID"
+ * @param {Number} seconds 
+ */
 function countdown(parentName, id, seconds) {
     setTimeout(() => {
         $(parentName + " .message#" + id).fadeOut(400, () => $(parentName + " .message").last().remove());
     }, seconds * 1000);
 }
+
+/* LOGS */
+/**
+ * @description "load all the data of the logs end point in the tbody HTML"
+ */
+function loadLogsPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                console.table(res);
+                for (const item of res) {
+                    var msg = "";
+                    try {
+                        msg = JSON.parse(item.message).message;
+                    } catch (e) {
+                        msg = item.message;
+                    }
+                    var output_badge = (item.level == 200) ? output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>" : output_badge = item.level;
+
+                    $("tbody").append(insertNewRow(
+                        item.id, item.name, output_badge, msg,
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        "logs"
+                    ));
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="5"><p>Sense Logs.</p></td>
+                    </tr>`
+                );
+            }
+
+            $('tbody').fadeIn(300);
+            $("body").addClass("body-logs");
+        }
+    });
+}
+
+/* STUDENTS */
 
 /* TERMS */
 const dataPickerOptions = {
@@ -54,6 +129,9 @@ const dataPickerOptions = {
     yearSuffix: ''
 }
 
+/**
+ * @description "load all the data of the terms end point in the tbody HTML"
+ */
 function loadTermPage() {
     $.ajax({
         url: $("meta[name='url']").attr("content"),
@@ -93,44 +171,10 @@ function loadTermPage() {
     });
 }
 
-function loadLogsPage() {
-    $.ajax({
-        url: $("meta[name='url']").attr("content"),
-        method: 'GET',
-        headers: {
-            token: $("meta[name='_token']").attr("content"),
-        },
-        success: (res) => {
-            $("tbody").css("display", "none").html('');
-            if (res.length > 0) {
-                for (const item of res) {
-                    console.log(item);
-                    var tmp = JSON.parse(item.message);
-                    var output_badge = "";
-                    if (item.level == 200) {
-                        output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
-                    }
-
-                    $("tbody").append(insertNewRow(
-                        item.id, item.name, output_badge, tmp.message,
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                        "logs"
-                    ));
-                }
-            } else {
-                $("tbody").append(
-                    `<tr>
-                        <td colspan="5"><p>Sense Logs.</p></td>
-                    </tr>`
-                );
-            }
-
-            $('tbody').fadeIn(300);
-            $("body").addClass("body-logs");
-        }
-    });
-}
-
+/**
+ * @description "callback function event for create or edit term"
+ * @param {Element} tag "Event onClick: DOM Element tag pressed"
+ */
 function rowEventEditAndNew(tag) {
     $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
@@ -173,6 +217,11 @@ function rowEventEditAndNew(tag) {
     getInfoForTermModal(rowSelected.children());
 }
 
+/**
+ * @description "insert new row in the table body"
+ * @param  {...any} params "num n of parameters (last parameter define the actual page 'terms|logs|students')"
+ * @return {String}
+ */
 function insertNewRow(...params) {
     if (params[params.length - 1] == "terms") {
         return `<tr>
@@ -197,6 +246,10 @@ function insertNewRow(...params) {
     }
 }
 
+/**
+ * @description "get the information of the selected row and put it in the fields to edit"
+ * @param {Element[]} cols "Array of DOM Elements"
+ */
 function getInfoForTermModal(cols) {
     $(".label-group input#name").val($(cols[1]).text()); // NAME
     $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
@@ -204,6 +257,15 @@ function getInfoForTermModal(cols) {
     $(".label-group input#end").val($(cols[4]).text()); // END
 }
 
+/**
+ * @description "insert new row in the terms table of the DB with AJAX"
+ * @param {String} name 
+ * @param {String} desc 
+ * @param {String} start 
+ * @param {String} end 
+ * @param {String} created 
+ * @param {String} updated 
+ */
 function insertTermInDB(name, desc, start, end, created, updated) {
     $.ajaxSetup({
         headers: {
@@ -232,6 +294,16 @@ function insertTermInDB(name, desc, start, end, created, updated) {
     });
 }
 
+/**
+ * @description "update row in the terms table of the DB with AJAX"
+ * @param {Number} id 
+ * @param {String} name 
+ * @param {String} desc 
+ * @param {String} start 
+ * @param {String} end 
+ * @param {String} updated 
+ * @param {String} type "detect if is soft delete or not (default='softDelete')"
+ */
 function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete") {
     $.ajaxSetup({
         headers: {
@@ -265,9 +337,13 @@ function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete"
     });
 }
 
+/**
+ * @description "update tbody of HTML tables"
+ * @param {Element[]} cols 
+ */
 function updateTableRowTerm(cols) {
+    $("tbody").html('');
     if (cols.length === 1) {
-        $("tbody").html('');
         insertTermInDB(
             $(".label-group input#name").val(),
             $(".label-group input#description").val(),
@@ -276,7 +352,6 @@ function updateTableRowTerm(cols) {
             now(), now()
         );
     } else {
-        $("tbody").html('');
         updateTermInDB(
             $(cols[0]).text(),
             $(".label-group input#name").val(),
@@ -288,6 +363,10 @@ function updateTableRowTerm(cols) {
     }
 }
 
+/**
+ * @description "validate if edit or new term form have an errors"
+ * @return {Boolean}
+ */
 function validationTermForm() {
     let msg = "";
     if (isNull($(".label-group input#name").val())) msg += "El camp 'Nom' no pot estar buit.\n";
@@ -312,6 +391,9 @@ function validationTermForm() {
     } else return true;
 }
 
+/**
+ * @description "JQuery DOM Ready: detect what is the current page of the user to load the functions"
+ */
 $(function () {
     // SHOW TERMS PAGE
     if (location.pathname.endsWith("dashboard/terms/") || location.pathname.endsWith("dashboard/terms")) {
@@ -325,8 +407,7 @@ $(function () {
     } else if (location.pathname.includes("admin/dashboard/logs")) {
         $("tbody").fadeIn(300);
         loadLogsPage();
-    }
-    if (location.pathname.includes("dashboard/terms/delete/")) {
+    } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
         $("#name").on("input", (e) => {

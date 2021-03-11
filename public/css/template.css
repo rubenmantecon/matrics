@@ -743,7 +743,8 @@ body.body-term {
 }
 
 .terms,
-.logs {
+.logs,
+.students {
     margin: 3% 0;
 }
 
