@@ -12,6 +12,7 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -21,7 +22,7 @@ class StudentController extends Controller
         if ($token) {
             $user = User::select("token")->where('token', $token)->get()[0];
             if ($user['token'])
-                $data = User::select("id", "name", "email", "created_at", "updated_at")->where("active", 1)->get();
+                $data = User::select("id", "name", "email", "created_at", "updated_at")->where("role", "alumne")->get();
         }
         return response()->json($data);
     }
@@ -76,29 +77,29 @@ class StudentController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
-    {
-        $data = ['status' => 'Unauthorized, error 503'];
-        $token = $request->header('token');
-        if ($token) {
-            $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
-            if ($user['token']) {
-                $user->name = $request->name;
-                $user->email = $request->email;
-                $user->updated_at = $request->updated;
+    // public function update(Request $request, User $user)
+    // {
+    //     $data = ['status' => 'Unauthorized, error 503'];
+    //     $token = $request->header('token');
+    //     if ($token) {
+    //         $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
+    //         if ($user['token']) {
+    //             $user->name = $request->name;
+    //             $user->email = $request->email;
+    //             $user->updated_at = $request->updated;
 
-                $status = $user->save();
-                if ($status) {
-                    $data = ["status" => "Alumne actualitzat correctament."];
-                    Log::channel('dblogging')->info("Ha actualizado un Alumno", ["user_id" => Auth::id(), "student_id" => $user->id]);
-                } else {
-                    $data = ["status" => "No s'ha pogut actualizar correctament l'alumne."];
-                    Log::channel('dblogging')->info("Error al actualizar un Alumno", ["user_id" => Auth::id(), "student_id" => $user->id]);
-                }
-            }
-        }
-        return response()->json($data);
-    }
+    //             $status = $user->save();
+    //             if ($status) {
+    //                 $data = ["status" => "Alumne actualitzat correctament."];
+    //                 Log::channel('dblogging')->info("Ha actualizado un Alumno", ["user_id" => Auth::id(), "student_id" => $user->id]);
+    //             } else {
+    //                 $data = ["status" => "No s'ha pogut actualizar correctament l'alumne."];
+    //                 Log::channel('dblogging')->info("Error al actualizar un Alumno", ["user_id" => Auth::id(), "student_id" => $user->id]);
+    //             }
+    //         }
+    //     }
+    //     return response()->json($data);
+    // }
 
     /**
      * Remove the specified resource from storage.

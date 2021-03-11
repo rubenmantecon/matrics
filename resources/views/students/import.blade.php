@@ -6,6 +6,9 @@
     </x-slot>
 
     <div class="students">
+        <div class="btn-import">
+            <a href="/admin/dashboard/students/import" class="btn save"><i class="fas fa-file-import"></i> Impotació</a>
+        </div>
         <table>
             <caption>Llistat d'alumnes</caption>
             <thead>

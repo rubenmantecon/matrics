@@ -15,7 +15,11 @@
     });
 
     Route::get('/dashboard/students', function() {
-        return view('students');
+        return view('students.index');
+    });  
+
+    Route::get('/dashboard/students/import', function() {
+        return view('students.import');
     });  
     
     Route::get('/dashboard/logs', function() {

@@ -20,7 +20,7 @@
                 <img src="{{ asset('images/icono-alumno.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <a class="btn primary-btn">Alumnes</a>        
+                <a href="/admin/dashboard/students" class="btn primary-btn">Alumnes</a>        
             </div>
         </div>
     </div>

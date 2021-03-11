@@ -1035,6 +1035,12 @@ main.login .container-form a img.logo {
     border-radius: 200px;
 }
 
+/* STUDENTS */
+.students .btn-import {
+    text-align: right;
+    margin-right: 5vw;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1270px) {
     .terms table {

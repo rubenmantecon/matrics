@@ -109,6 +109,40 @@ function loadLogsPage() {
 }
 
 /* STUDENTS */
+/**
+ * @description "load all the data of the students end point in the tbody HTML"
+ */
+function loadStudentsPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                for (const item of res) {
+                    $("tbody").append(insertNewRow(
+                        item.id, item.name, item.email,
+                        momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        "students"
+                    ));
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="5"><p>Sense Logs.</p></td>
+                    </tr>`
+                );
+            }
+
+            $('tbody').fadeIn(300);
+            $("body").addClass("body-logs");
+        }
+    });
+}
 
 /* TERMS */
 const dataPickerOptions = {
@@ -223,27 +257,15 @@ function rowEventEditAndNew(tag) {
  * @return {String}
  */
 function insertNewRow(...params) {
+    let row = "<tr>";
+    for (let i = 0; i < params.length - 1; i++)
+        row += `<td>${(params[i]) ? params[i] : ''}</td>`;
+    
     if (params[params.length - 1] == "terms") {
-        return `<tr>
-                <td>${params[0]}</td>
-                <td>${params[1]}</td>
-                <td>${(params[2]) ? params[2] : ''}</td>
-                <td>${params[3]}</td>
-                <td>${params[4]}</td>
-                <td>${params[5]}</td>
-                <td>${params[6]}</td>
-                <td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>
-            </tr>`;
-    } else if (params[params.length - 1] == "logs") {
-        return `<tr>
-                <td>${params[0]}</td>
-                <td>${params[1]}</td>
-                <td>${params[2]}</td>
-                <td>${params[3]}</td>
-                <td>${params[4]}</td>
-            </tr>`;
+        row += `<td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
+                <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>`;
     }
+    return row + "</tr>";
 }
 
 /**
@@ -395,7 +417,6 @@ function validationTermForm() {
  * @description "JQuery DOM Ready: detect what is the current page of the user to load the functions"
  */
 $(function () {
-    // SHOW TERMS PAGE
     if (location.pathname.endsWith("dashboard/terms/") || location.pathname.endsWith("dashboard/terms")) {
         $("tbody").fadeIn(300);
         loadTermPage();
@@ -404,9 +425,6 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
-    } else if (location.pathname.includes("admin/dashboard/logs")) {
-        $("tbody").fadeIn(300);
-        loadLogsPage();
     } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
@@ -432,5 +450,14 @@ $(function () {
                 } else $("#remove").addClass("disabled");
             }
         })
+    } else if (location.pathname.includes("admin/dashboard/logs")) {
+        $("tbody").fadeIn(300);
+        loadLogsPage();
+    } else if (location.pathname.endsWith("/admin/dashboard/students/") || location.pathname.endsWith("/admin/dashboard/students")) {
+        $("tbody").fadeIn(300);
+        loadStudentsPage();
+    } else if (location.pathname.endsWith("/admin/dashboard/students/import") || location.pathname.endsWith("/admin/dashboard/students/import/")) {
+        $("tbody").fadeIn(300);
+        loadStudentsPage();
     }
 });
