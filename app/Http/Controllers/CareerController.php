@@ -43,29 +43,67 @@ class CareerController extends Controller
      */
     public function store(Request $request)
     {
+        /*
         $token = $request->header('token');
         $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
 
         if ($user['token']) {
+        */
         
-            $career = new Career;
-            $career->code = $request->code;
-            $career->name = $request->name;
-            $career->description = $request->desc;
-            
-            //
-            $career->hours = $request->hours;
-            //
-            
-            $career->start = $request->start;
-            $career->end = $request->end;
+        	//dd($request);
+        	
+        	if(isset($request->import_file)){
+        		$tmp = base64_decode(explode(",", $request->file)[1]);
+        		
+        		$array = array_map("str_getcsv", explode("\n", $tmp));
+        		
+        		$last = "";
+        		$last_wrap = array();
+        		foreach($array as $element){
+        			if($last == ""){
+        				$last = $element[0];
+        			}
+        			else{
+        				if($last == $element[0]){
+        					array_push($last_wrap, $element);
+        					
+        					
+        				}
+        				else{
+        					// Save last wrap
+							
+        				}
+        				$last = $element[0];
+        			}
+        		}
+        		
+				$json = json_encode(array_slice($array, 0, -1));
+        		
+        		return $json;
+        	}
+        	else{
+        		$career = new Career;
+		        $career->code = $request->code;
+		        $career->name = $request->name;
+		        $career->description = $request->desc;
+		        
+		        //
+		        $career->hours = $request->hours;
+		        //
+		        
+		        $career->start = $request->start;
+		        $career->end = $request->end;
 
-            $status = $career->save();
+		        $status = $career->save();
+        	}
+
             if ($status)
                 $data = ["status" => "Nou cicle creat correctament."];
                 Log::channel('dblogging')->info("Ha creado un nuevo Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
+        /*
         }
+        */
         return response()->json($data);
     }
 

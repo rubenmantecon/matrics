@@ -40,6 +40,15 @@
                 </tr>
             </tfoot>
         </table>
+        
+        <div>
+        	<form id="importForm" action="/api/careers" method="POST" enctype="multipart/form-data">
+        		<input id="file" type="file">
+        		<input id="import" value="csv">
+        		<input type="submit">
+        	</form>
+        </div>
+        
         <div class="bg-dialog"></div>
         <div class="modal-term dis-none" title="Nou Curs">
         	<div class="label-group">

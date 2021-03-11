@@ -168,6 +168,51 @@ function loadLogsPage() {
     });
 }
 
+function importCareer() {
+
+	var fr = new FileReader();
+
+	fr.onload = function(){
+		console.log("Loaded");
+		var file = fr.result;
+		
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		
+		var import_file = $('#import').val();
+		
+		$.ajax({
+		    url: $("meta[name='url']").attr("content"),
+		    method: 'POST',
+		    headers: {
+		        token: $("meta[name='_token']").attr("content"),
+		    },
+		    data: {
+		    	import_file,
+		    	file
+		    },
+		    success: (res) => {
+		    	var a = JSON.parse(res);
+		        if (a.length > 0) {
+		            for (const item of a) {
+		            	console.log(item);
+		            }
+		            /*
+		            for (const item of res) {
+		            	console.log(item);
+		            }
+		            */
+		        }
+		    }
+		});
+	}
+
+	fr.readAsDataURL($('#file')[0].files[0]);
+}
+
 function rowEventEditAndNew(tag) {
     $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
