@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Term;
+use App\Models\Career;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -21,7 +21,7 @@ class CareerController extends Controller
         $user = User::select("token")->where('token', $request->header('token'))->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
         if ($user['token'])
-            $data = Term::select("*")->where("active", 1)->get();
+            $data = Career::select("*")->get();
         return response()->json($data);
     }
 
@@ -60,13 +60,11 @@ class CareerController extends Controller
             
             $career->start = $request->start;
             $career->end = $request->end;
-            $career->created_at = $request->created;
-            $career->updated_at = $request->updated;
 
-            $status = $term->save();
+            $status = $career->save();
             if ($status)
                 $data = ["status" => "Nou cicle creat correctament."];
-                Log::channel('dblogging')->info("Ha creado un nuevo Ciclos", ["user_id" => 1, "career_id" => $career->id]);
+                Log::channel('dblogging')->info("Ha creado un nuevo Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
         }
         return response()->json($data);
     }

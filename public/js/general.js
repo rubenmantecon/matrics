@@ -93,6 +93,46 @@ function loadTermPage() {
     });
 }
 
+function loadCareerPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                for (const item of res) {
+                	console.log(item);
+
+                    $("tbody").append(insertNewRow(
+                        item.id, item.code, item.name, item.description, item.hours,
+                        momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        "careers"
+                    ));
+
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
+                    </tr>`
+                );
+            }
+            $("tbody").append(
+                `<tr>
+                    <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
+                </tr>`
+            ).fadeIn(300);
+
+            $("body").addClass("body-term");
+            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target));
+        }
+    });
+}
+
 function loadLogsPage() {
     $.ajax({
         url: $("meta[name='url']").attr("content"),
@@ -167,7 +207,14 @@ function rowEventEditAndNew(tag) {
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou Curs' : 'Modicació de curs');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-    getInfoForTermModal(rowSelected.children());
+    
+    if (location.pathname.includes("admin/dashboard/terms")) {
+    	getInfoForModal(rowSelected.children(), "terms");
+    }
+   	else if (location.pathname.includes("admin/dashboard/careers")) {
+   		getInfoForModal(rowSelected.children(), "careers");
+   	}
+    
 }
 
 function insertNewRow(...params) {
@@ -179,6 +226,22 @@ function insertNewRow(...params) {
                 <td>${params[0]}</td>
                 <td>${params[1]}</td>
                 <td>${(params[2]) ? params[2] : ''}</td>
+                <td>${params[3]}</td>
+                <td>${params[4]}</td>
+
+                <td>${params[5]}</td>
+                <td>${params[6]}</td>
+
+                <td><button id="edit" class="btn save" title="Modificar el cicle"><i class="fas fa-pen"></i></button></td>
+                <td><a href="/admin/dashboard/careers/delete/${params[0]}" class="btn cancel" title="Eliminar el cicle"><i class="fas fa-trash"></i></a></td>
+            </tr>`;
+	}
+	else if(params[params.length-1] == "careers"){
+		console.log("careers");
+		return `<tr>
+                <td>${params[0]}</td>
+                <td>${params[1]}</td>
+                <td>${params[2]}</td>
                 <td>${params[3]}</td>
                 <td>${params[4]}</td>
 
@@ -205,11 +268,22 @@ function insertNewRow(...params) {
     
 }
 
-function getInfoForTermModal(cols) {
-    $(".label-group input#name").val($(cols[1]).text()); // NAME
-    $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
-    $(".label-group input#start").val($(cols[3]).text()); // START
-    $(".label-group input#end").val($(cols[4]).text()); // END
+function getInfoForModal(cols, page) {
+	if(page == "terms"){
+		$(".label-group input#name").val($(cols[1]).text()); // NAME
+		$(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
+		$(".label-group input#start").val($(cols[3]).text()); // START
+		$(".label-group input#end").val($(cols[4]).text()); // END
+	}
+	else if(page == "careers"){
+		$(".label-group input#codi").val($(cols[1]).text()); // CODE
+		$(".label-group input#name").val($(cols[2]).text()); // NAME
+		$(".label-group input#description").val($(cols[3]).text()); // DESCRIPTION
+		$(".label-group input#hores").val($(cols[4]).text()); // 
+		$(".label-group input#start").val($(cols[5]).text()); // START
+		$(".label-group input#end").val($(cols[6]).text()); // END
+	}
+    
 }
 
 function insertTermInDB(name, desc, start, end, created, updated) {
@@ -329,6 +403,14 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
+    }
+    else if (location.pathname.includes("admin/dashboard/careers")) {
+        loadCareerPage();
+        $("#start, #end").datepicker(dataPickerOptions);
+        $("#start, #end").on("focus", () => {
+            $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
+            $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
+            })
     }
     else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();

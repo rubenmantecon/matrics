@@ -5,18 +5,18 @@
         </h2>
     </x-slot>
 
-    <div class="terms">
+    <div class="careers">
         <table>
             <caption>Llistat de cursos</caption>
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Codi</th>
                     <th>Nom</th>
                     <th>Descripció</th>
+                    <th>Hores</th>
                     <th>Data d'inici</th>
                     <th>Data de finalització</th>
-                    <th>Creació</th>
-                    <th>Darrera modificació</th>
                     <th>Edita</th>
                     <th>Elimina</th>
                 </tr>
@@ -29,12 +29,12 @@
             <tfoot>
                 <tr>
                     <th>ID</th>
+                    <th>Codi</th>
                     <th>Nom</th>
                     <th>Descripció</th>
+                    <th>Hores</th>
                     <th>Data d'inici</th>
                     <th>Data de finalització</th>
-                    <th>Creació</th>
-                    <th>Darrera modificació</th>
                     <th>Edita</th>
                     <th>Elimina</th>
                 </tr>
@@ -42,6 +42,10 @@
         </table>
         <div class="bg-dialog"></div>
         <div class="modal-term dis-none" title="Nou Curs">
+        	<div class="label-group">
+                <label for="codi">Codi: <span class="text-red">*</span></label>
+                <input type="text" id="codi" class="input">
+            </div>
             <div class="label-group">
                 <label for="name">Nom: <span class="text-red">*</span></label>
                 <input type="text" id="name" class="input">
@@ -49,6 +53,10 @@
             <div class="label-group">
                 <label for="description">Descripció: <span class="text-red">*</span></label>
                 <input type="text" id="description" class="input">
+            </div>
+            <div class="label-group">
+                <label for="hores">Hores: <span class="text-red">*</span></label>
+                <input type="text" id="hores" class="input">
             </div>
             <div class="row">
                 <div class="label-group">

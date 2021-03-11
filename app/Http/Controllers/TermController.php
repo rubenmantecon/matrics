@@ -61,7 +61,7 @@ class TermController extends Controller
             $status = $term->save();
             if ($status)
                 $data = ["status" => "Nou curs creat correctament."];
-                Log::channel('dblogging')->info("Ha creado un nuevo Curso", ["user_id" => 1, "term_id" => $term->id]);
+                Log::channel('dblogging')->info("Ha creado un nuevo Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
         }
         return response()->json($data);
     }
