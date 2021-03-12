@@ -24,11 +24,14 @@ body {
     width: 100vw;
 }
 
+.no-click {
+    pointer-events: none !important;
+}
+
 .disabled {
     cursor: default !important;
     opacity: 0.45 !important;
     background-image: none !important;
-    /* pointer-events: none !important; */
 }
 
 .label-group {
@@ -1039,6 +1042,118 @@ main.login .container-form a img.logo {
 .students .btn-import {
     text-align: right;
     margin-right: 5vw;
+}
+
+/* IMPORT */
+.import .ui.placeholder.segment {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    max-width: initial;
+    animation: none;
+    overflow: visible;
+    padding: 1em 1em;
+    min-height: 18rem;
+    background: #f9fafb;
+    border-color: #22242626;
+    box-shadow: 0 2px 25px 0 rgb(34 36 38 / 5%) inset;
+}
+
+.ui.segment {
+    position: relative;
+    background: #fff;
+    box-shadow: 0 1px 2px 0 rgb(34 36 38 / 15%);
+    margin: 1rem 0;
+    padding: 1em 1em;
+    border-radius: .28571429rem;
+    border: 1px solid #22242626;
+}
+
+.ui.icon.header:first-child {
+    margin-top: 0;
+}
+
+.ui.placeholder .header {
+    position: relative;
+    overflow: hidden;
+}
+
+.ui.icon.header {
+    display: inline-block;
+    text-align: center;
+    margin: 2rem 0 1rem;
+}
+
+.ui.icon.header .icon {
+    float: none;
+    display: block;
+    width: auto;
+    height: auto;
+    line-height: 1;
+    padding: 0;
+    font-size: 3em;
+    margin: 0 auto .5rem;
+    opacity: 1;
+}
+
+.import label.btn {
+    max-width: 15rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #2185d0;
+    color: #fff;
+    text-shadow: none;
+    background-image: none;
+}
+
+/* PAGINATION */
+ul.pagination {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 50px;
+    user-select: none;
+    margin-top: 10px;
+}
+
+ul.pagination li.pageNumber {
+    list-style: none;
+    line-height: 50px;
+    margin: 0 5px;
+}
+
+ul.pagination li.pageNumber {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+ul.pagination li.pageNumber a {
+    display: block;
+    text-decoration: none;
+    color: #383838;
+    font-weight: 600;
+    border-radius: 50%;
+    transition: .15s;
+}
+
+ul.pagination li.pageNumber:hover a,
+ul.pagination li.pageNumber.active a {
+    background: #383838;
+    color: #fff;
+}
+
+ul.pagination li.pageNumber:first-child {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+ul.pagination li.pageNumber:last-child {
+    font-weight: 700;
+    font-size: 20px;
 }
 
 /* RESPONSIVE */

@@ -5,36 +5,17 @@
         </h2>
     </x-slot>
 
-    <div class="students">
-        <div class="btn-import">
-            <a href="/admin/dashboard/students/import" class="btn save"><i class="fas fa-file-import"></i> Impotació</a>
-        </div>
-        <table>
-            <caption>Llistat d'alumnes</caption>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Creació</th>
-                    <th>Darrera modificació</th>
-                </tr>
-            </thead>
-            <tbody style="display: none">
-                <tr>
-                    <td colspan="5" class="loading inverted"></td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Creació</th>
-                    <th>Darrera modificació</th>
-                </tr>
-            </tfoot>
-        </table>
-
+    <div class="import">
+        <form method="post" action="https://css-tricks.com/examples/DragAndDropFileUploading//?"
+            enctype="multipart/form-data" novalidate="" class="box has-advanced-upload">
+            <div id="drag" class="ui placeholder segment">
+                <div class="ui icon header">
+                    <i class="fas fa-file-csv icon"></i>
+                    Arrossega l'arxiu o selecciona-ho amb el botó per començar amb la importació.
+                </div>
+                <input type="file" name="file-csv" id="file-csv" class="dis-none">
+                <label class="btn primary-btn" for="file-csv">Seleccionar .CSV</label>
+            </div>
+        </form>
     </div>
 </x-app-layout>

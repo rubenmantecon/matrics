@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="overflow-x: hidden;">
 
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="_token" content="{{ Auth::user()->token }}">
     <title>{{ config('app.name', 'IETI-matricula') }}</title>
-    <meta name="url" content="{{ $page ?? ''}}">
+    <meta name="url" content="{{ $page ?? '' }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/template.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://kit.fontawesome.com/92479866c9.js" crossorigin="anonymous"></script>
@@ -31,4 +31,5 @@
         </main>
     </div>
 </body>
+
 </html>

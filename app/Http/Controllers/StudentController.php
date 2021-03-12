@@ -22,7 +22,7 @@ class StudentController extends Controller
         if ($token) {
             $user = User::select("token")->where('token', $token)->get()[0];
             if ($user['token'])
-                $data = User::select("id", "name", "email", "created_at", "updated_at")->where("role", "alumne")->get();
+                $data = User::select("id", "name", "email", "created_at", "updated_at")->where("role", "alumne")->paginate(20)->onEachSide(2);
         }
         return response()->json($data);
     }

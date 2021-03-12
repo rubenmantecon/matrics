@@ -7,7 +7,10 @@
 
     <div class="students">
         <div class="btn-import">
-            <a href="/admin/dashboard/students/import" class="btn save"><i class="fas fa-file-import"></i> Impotació</a>
+            <form enctype="multipart/form-data" action="/api/students/import" method="post" id="form-file">
+                <input type="file" name="file" id="file" class="dis-none">
+                <label class="btn save" for="file"><i class="fas fa-file-import"></i> Impotació</label>
+            </form>
         </div>
         <table>
             <caption>Llistat d'alumnes</caption>
@@ -35,6 +38,6 @@
                 </tr>
             </tfoot>
         </table>
-
+        <ul class="pagination"></ul>
     </div>
 </x-app-layout>

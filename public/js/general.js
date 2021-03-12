@@ -9,6 +9,15 @@ function isNull(element) {
 }
 
 /**
+ * @description "get parameter value from url"
+ * @param {String} param 
+ */
+function getUrlParameter(param) {
+    let searchParams = new URLSearchParams(window.location.search);
+    return searchParams.get(param);
+}
+
+/**
  * @description "format date in a new"
  * @param {String} value "value of a date, time or both"
  * @param {String} valFormat "format of '@param value' (ex. MM:DD:YYYY)"
@@ -111,18 +120,20 @@ function loadLogsPage() {
 /* STUDENTS */
 /**
  * @description "load all the data of the students end point in the tbody HTML"
+ * @param {String} url "URL of endpoint"
  */
-function loadStudentsPage() {
+function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
     $.ajax({
-        url: $("meta[name='url']").attr("content"),
+        url: url,
         method: 'GET',
         headers: {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
+            console.log(res);
             $("tbody").css("display", "none").html('');
-            if (res.length > 0) {
-                for (const item of res) {
+            if (res.data.length > 0) {
+                for (const item of res.data) {
                     $("tbody").append(insertNewRow(
                         item.id, item.name, item.email,
                         momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
@@ -130,16 +141,31 @@ function loadStudentsPage() {
                         "students"
                     ));
                 }
+                for (const item of res.links) {
+                    console.log(item.label);
+                    if (item.label === "&laquo; Previous") item.label = '<i class="fas fa-angle-left"></i>';
+                    else if (item.label === "Next &raquo;") item.label = '<i class="fas fa-angle-right"></i>';
+
+                    if (item.active)
+                        $("ul.pagination").append(`<li class="pageNumber active no-click"><a>${item.label}</a></li>`);
+                    else if (!item.url)
+                        $("ul.pagination").append(`<li class="pageNumber no-click"><a>${item.label}</a></li>`);
+                    else
+                        $("ul.pagination").append(`<li class="pageNumber"><a href="${location.pathname}?page=${item.url.split("?page=")[1]}">${item.label}</a></li>`);
+                }
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="5"><p>Sense Logs.</p></td>
+                        <td colspan="5"><p>Sense Alumnes.</p></td>
                     </tr>`
                 );
             }
 
             $('tbody').fadeIn(300);
             $("body").addClass("body-logs");
+        },
+        error: (res) => {
+            console.log(res);
         }
     });
 }
@@ -260,7 +286,7 @@ function insertNewRow(...params) {
     let row = "<tr>";
     for (let i = 0; i < params.length - 1; i++)
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
-    
+
     if (params[params.length - 1] == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>`;
@@ -455,9 +481,45 @@ $(function () {
         loadLogsPage();
     } else if (location.pathname.endsWith("/admin/dashboard/students/") || location.pathname.endsWith("/admin/dashboard/students")) {
         $("tbody").fadeIn(300);
-        loadStudentsPage();
+        const page = getUrlParameter("page");
+        if (page)
+            loadStudentsPage($("meta[name='url']").attr("content") + `?page=${page}`);
+        else
+            loadStudentsPage();
+        // $("#file").on("change", (e) => {
+        //     if (e.target.files[0].type === "text/csv")
+        //         $("#form-file").submit();
+        //     else
+        //         generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
+        // })
+        // $("#form-file").submit((e) => {
+        //     e.preventDefault();
+        //     var formData = new FormData(document.getElementById("form-file"));
+        //     $.ajaxSetup({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         }
+        //     });
+        //     $.ajax({
+        //         url: "/api/import",
+        //         method: 'POST',
+        //         headers: {
+        //             token: $("meta[name='_token']").attr("content"),
+        //         },
+        //         data: formData,
+        //         contentType: false,
+        //         processData: false,
+        //         success: (data) => {
+        //             // $("#form-file").reset();
+        //             // alert('File has been uploaded successfully');
+        //             console.log(data);
+        //         },
+        //         error: function (data) {
+        //             console.log(data);
+        //         }
+        //     });
+        // })
     } else if (location.pathname.endsWith("/admin/dashboard/students/import") || location.pathname.endsWith("/admin/dashboard/students/import/")) {
-        $("tbody").fadeIn(300);
-        loadStudentsPage();
+
     }
 });
