@@ -48,7 +48,7 @@ body {
 
 .bg-opacity {
     transition: 0.5s;
-    z-index: 0 !important;
+    z-index: 2 !important;
     overflow: hidden;
     background-color: #00000062;
 }
@@ -885,6 +885,7 @@ body.body-term {
     width: 66% !important;
     box-shadow: 0 0 20px 1px black;
     border-radius: 7px;
+    z-index: 3;
 }
 
 .ui-dialog .ui-dialog-titlebar {
