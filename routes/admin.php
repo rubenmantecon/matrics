@@ -13,15 +13,19 @@ use BabDev\Breadcrumbs\Contracts\BreadcrumbsManager;
     Route::get('/dashboard/terms', function() {
         return view('terms');
     });
-    
-    Route::get('/dashboard/terms/delete/{term_id}', function ($term_id) {
-        $term = Term::select("*")->where('id', $term_id)->get()[0];
-        return view('deleteTerm', ["term" => $term]);
+
+    Route::get('/dashboard/careers', function() {
+        return view('careers');
     });
 
     Route::get('/dashboard/logs', function() {
         return view('logs');
     });   
+    
+    Route::get('/dashboard/terms/delete/{term_id}', function ($term_id) {
+        $term = Term::select("*")->where('id', $term_id)->get()[0];
+        return view('deleteTerm', ["term" => $term]);
+    }); 
 
     Route::get('/dashboard/students', function() {
         return view('students.index');
