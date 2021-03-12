@@ -41,19 +41,19 @@ class MyImportController extends Controller
         // ]);
 
         if ($files = $request->file('file')) {
+            //store file into document folder
+            $request->file->store('public/documents');
 
-        //store file into document folder
-        $request->file->store('public/documents');
+            //store your file into database
+            //$document = new Document();
+            //$document->title = $file;
+            //$document->save();
+            $file = $request->file('file');
+            $name = time() . '-' . $file->getClientOriginalName();
 
-        //store your file into database
-        //$document = new Document();
-        //$document->title = $file;
-        //$document->save();
-        $file = $request->file('file');
-        $name = time().'-'.$file->getClientOriginalName();
-
-        return response()->json($name);
-        // }
+            return response()->json($name);
+            // }
+        }
 
         // return Response()->json([
         //     "success" => false,
