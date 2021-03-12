@@ -4,7 +4,9 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('terms') }}
+    @endsection
     <div class="terms">
         <table>
             <caption>Llistat de cursos</caption>

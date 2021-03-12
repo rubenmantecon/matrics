@@ -3,6 +3,9 @@
         data-desc="{{ $term->description }}" data-start="{{ $term->start }}" data-end="{{ $term->end }}"
         data-updated="{{ $term->updated_at }}">
         <div class="modal-dialog">
+        @section('breadcrumbs')
+            {{ Breadcrumbs::render('term', $term) }}
+        @endsection
             <div class="modal-header">
                 <h4 class="modal-title">Eliminació de curs</h4>
             </div>

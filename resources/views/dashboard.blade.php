@@ -6,6 +6,9 @@
     </x-slot>
 
     @if(Auth::user()->role == 'admin')
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('dashboard') }}
+    @endsection
     <div class="options p-10">
         <div class="flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
             <div class="px-4 py-2">

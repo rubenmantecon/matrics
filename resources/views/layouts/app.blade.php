@@ -24,6 +24,9 @@
 <body class="">
     <div class="min-h-screen min-w-screen">
         @include('layouts.navigation')
+        <div class="col-md-8">
+            @yield('breadcrumbs')
+        </div>
         <!-- Page Content -->
         <main>
             <div class="container-messages"></div>
