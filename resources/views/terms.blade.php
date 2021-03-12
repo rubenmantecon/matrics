@@ -4,7 +4,9 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('terms') }}
+    @endsection
     <div class="terms">
         <table>
             <caption>Llistat de cursos</caption>
@@ -23,7 +25,7 @@
             </thead>
             <tbody style="display: none">
                 <tr>
-                    <td colspan="9" class="loading inverted">Cargando...</td>
+                    <td colspan="9" class="loading inverted"></td>
                 </tr>
             </tbody>
             <tfoot>

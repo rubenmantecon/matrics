@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="overflow-x: hidden;">
 
 <head>
     <meta charset="UTF-8">
@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="_token" content="{{ Auth::user()->token }}">
-    <meta name="url" content="{{ $page ?? ''}}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'IETI-matricula') }}</title>
+    <meta name="url" content="{{ $page ?? '' }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/template.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://kit.fontawesome.com/92479866c9.js" crossorigin="anonymous"></script>
@@ -24,6 +24,9 @@
 <body class="">
     <div class="min-h-screen min-w-screen">
         @include('layouts.navigation')
+        <div class="col-md-8">
+            @yield('breadcrumbs')
+        </div>
         <!-- Page Content -->
         <main>
             <div class="container-messages"></div>
@@ -31,4 +34,5 @@
         </main>
     </div>
 </body>
+
 </html>

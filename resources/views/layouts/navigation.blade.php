@@ -20,6 +20,12 @@
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Panell de control') }}
                 </x-nav-link>
+                <x-nav-link href="/admin/dashboard/terms" :active="request()->routeIs('terms')">
+                    {{ __('Cursos') }}
+                </x-nav-link>
+                <x-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
+                    {{ __('Alumnes') }}
+                </x-nav-link>
             </div>
             @if(Auth::user()->role == 'admin')
             <p class="user"><i class="fas fa-user"></i> Admin</p>
@@ -76,6 +82,12 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Panell de control') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="/admin/dashboard/terms" :active="request()->routeIs('terms')">
+                {{ __('Cursos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
+                {{ __('Alumnes') }}
             </x-responsive-nav-link>
         </div>
 

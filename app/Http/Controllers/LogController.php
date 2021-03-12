@@ -19,11 +19,13 @@ class LogController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::select("token")->where('token', $request->header('token'))->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
-        if ($user['token'])
-            $data = DB::table('logs')->join('users', 'logs.user_id', '=', 'users.id')->select('logs.*', 'users.name')->orderBy('logs.updated_at', 'desc')->get();
+        $token = $request->header('token');
+        if ($token) {
+            $user = User::select("token")->where('token', $token)->get()[0];
+            if ($user['token'])
+                $data = DB::table('logs')->join('users', 'logs.user_id', '=', 'users.id')->select('logs.*', 'users.name')->orderBy('logs.updated_at', 'desc')->get();
+        }
         return response()->json($data);
     }
-
 }
