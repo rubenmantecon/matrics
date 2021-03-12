@@ -48,9 +48,9 @@ use BabDev\Breadcrumbs\Contracts\BreadcrumbsManager;
     });
 
     // Dashboard > Terms > [Term]
-    Breadcrumbs::for('term', static function ($trail) {
+    Breadcrumbs::for('term', function ($trail, $term) {
         $trail->parent('terms');
-        $trail->push('Curs', '/dashboard/terms/delete/{term_id}');
+        $trail->push($term->name, '/dashboard/terms/delete/{term_id}');
     });
 
     // Dashboard > Terms > [Term] > [Career]
