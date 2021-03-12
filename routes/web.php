@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\MyImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,12 @@ Route::get('/dashboard', function () {
 
 Route::resource('api/terms', TermController::class);
 Route::resource('api/logs', LogController::class);
+Route::resource('api/students', StudentController::class);
+
+
+
+
+Route::resource('api/import', MyImportController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
