@@ -4,7 +4,9 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('students') }}
+    @endsection
     <div class="students">
         <div class="btn-import">
             <form enctype="multipart/form-data" action="/api/students/import" method="post" id="form-file">
