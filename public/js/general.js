@@ -232,9 +232,133 @@ function loadTermPage() {
 }
 
 /**
+ * @description "load all the data of the career end point in the tbody HTML"
+ */
+function loadCareerPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                for (const item of res) {
+                	console.log(item);
+
+                    $("tbody").append(insertNewRow(
+                        item.id, item.code, item.name, item.description, item.hours,
+                        momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
+                        "careers"
+                    ));
+
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
+                    </tr>`
+                );
+            }
+            $("tbody").append(
+                `<tr>
+                    <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
+                </tr>`
+            ).fadeIn(300);
+
+            $("body").addClass("body-term");
+            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target));
+        }
+    });
+}
+
+function loadLogsPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            //console.log(res);
+            for (const item of res) {
+                console.log(item);
+                
+		var tmp = JSON.parse(item.message);
+                
+                var output_badge = "";
+                
+                if(item.level == 200){
+                	output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
+                }
+                
+                $("tbody").append(insertNewRow(
+                	item.id, item.name, output_badge, tmp.message,
+
+			momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+			"logs"
+                    ));
+            }
+
+		$('tbody').fadeIn(300);
+
+            $("body").addClass("body-logs");
+        }
+    });
+}
+
+function importCareer() {
+
+	var fr = new FileReader();
+
+	fr.onload = function(){
+		console.log("Loaded");
+		var file = fr.result;
+		
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		
+		var import_file = $('#import').val();
+		
+		$.ajax({
+		    url: $("meta[name='url']").attr("content"),
+		    method: 'POST',
+		    headers: {
+		        token: $("meta[name='_token']").attr("content"),
+		    },
+		    data: {
+		    	import_file,
+		    	file
+		    },
+		    success: (res) => {
+		    	var a = JSON.parse(res);
+		        if (a.length > 0) {
+		            for (const item of a) {
+		            	console.log(item);
+		            }
+		            /*
+		            for (const item of res) {
+		            	console.log(item);
+		            }
+		            */
+		        }
+		    }
+		});
+	}
+
+	fr.readAsDataURL($('#file')[0].files[0]);
+}
+
+/**
  * @description "callback function event for create or edit term"
  * @param {Element} tag "Event onClick: DOM Element tag pressed"
  */
+
 function rowEventEditAndNew(tag) {
     $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
@@ -274,7 +398,14 @@ function rowEventEditAndNew(tag) {
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou Curs' : 'Modicació de curs');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-    getInfoForTermModal(rowSelected.children());
+    
+    if (location.pathname.includes("admin/dashboard/terms")) {
+    	getInfoForModal(rowSelected.children(), "terms");
+    }
+   	else if (location.pathname.includes("admin/dashboard/careers")) {
+   		getInfoForModal(rowSelected.children(), "careers");
+   	}
+    
 }
 
 /**
@@ -286,23 +417,12 @@ function insertNewRow(...params) {
     let row = "<tr>";
     for (let i = 0; i < params.length - 1; i++)
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
-
+        
     if (params[params.length - 1] == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>`;
     }
     return row + "</tr>";
-}
-
-/**
- * @description "get the information of the selected row and put it in the fields to edit"
- * @param {Element[]} cols "Array of DOM Elements"
- */
-function getInfoForTermModal(cols) {
-    $(".label-group input#name").val($(cols[1]).text()); // NAME
-    $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
-    $(".label-group input#start").val($(cols[3]).text()); // START
-    $(".label-group input#end").val($(cols[4]).text()); // END
 }
 
 /**
@@ -451,7 +571,19 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
-    } else if (location.pathname.includes("dashboard/terms/delete/")) {
+    }
+    else if (location.pathname.includes("admin/dashboard/careers")) {
+        loadCareerPage();
+        $("#start, #end").datepicker(dataPickerOptions);
+        $("#start, #end").on("focus", () => {
+            $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
+            $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
+            })
+    }
+    else if (location.pathname.includes("admin/dashboard/logs")) {
+        loadLogsPage();
+    }
+    else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
         $("#name").on("input", (e) => {

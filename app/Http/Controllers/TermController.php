@@ -50,22 +50,24 @@ class TermController extends Controller
         $token = $request->header('token');
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
-            if ($user['token']) {
-                $term = new Term;
-                $term->name = $request->name;
-                $term->description = $request->desc;
-                $term->start = $request->start;
-                $term->end = $request->end;
-                $term->active = 1; // NO HARDCODEAR
-                $term->created_at = $request->created;
-                $term->updated_at = $request->updated;
 
-                $status = $term->save();
-                if ($status)
-                    $data = ["status" => "Nou curs creat correctament."];
-                Log::channel('dblogging')->info("Ha creado un nuevo Curso", ["user_id" => 1, "term_id" => $term->id]);
-            }
-        }
+		    if ($user['token']) {
+		    
+		        $term = new Term;
+		        $term->name = $request->name;
+		        $term->description = $request->desc;
+		        $term->start = $request->start;
+		        $term->end = $request->end;
+		        $term->active = 1; // NO HARDCODEAR
+		        $term->created_at = $request->created;
+		        $term->updated_at = $request->updated;
+
+		        $status = $term->save();
+		        if ($status){
+		            $data = ["status" => "Nou curs creat correctament."];
+		            Log::channel('dblogging')->info("Ha creado un nuevo Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
+		        }
+		    }
         return response()->json($data);
     }
 
