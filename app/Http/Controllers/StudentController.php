@@ -43,10 +43,69 @@ class StudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
+    public function store(Request $request)
+    {
+        $data = ['status' => 'Unauthorized, error 503'];
+        $token = $request->header('token');
+        if ($token) {
+            $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
+
+		    if ($user['token']) {
+		    
+		    	if(isset($request->import_file)){
+		    		$tmp = base64_decode(explode(",", $request->file)[1]);
+		    		
+		    		$array = array_map("str_getcsv", explode("\n", $tmp));
+		    		
+		    		$stash_control = array();
+		    		$stash = array();
+		    		
+		    		$array = array_slice(array_slice($array, 1), 0, -1);
+		    		
+		    		$q = 0;
+		    		$status_controller = ["okey" => 0, "failed" => 0];
+		    		
+		    		$interesting_index = ["name" => null, "lastname1" => null, "lastname2" => null
+		    		
+		    		foreach($array as $element){
+		    			if($q == 0){
+		    				// search for certain column names
+		    				$interesting_index["name"] = array_search("Nom", $element);
+		    				$interesting_index["lastname1"] = array_search("Primer cognom", $element);
+		    				$interesting_index["lastname2"] = array_search("Segon cognom", $element);
+		    			}
+		    			else{
+		    				// validate, if someone is not valid add to $status_controller["failed"] and skip it
+		    				
+		    				// Insert in the db
+		    				
+		    			}
+		    			$q++;
+		    			/*
+		    			$user = new User;
+						$user->name = $request->name;
+						$user->description = $request->desc;
+						$user->start = $request->start;
+						$user->end = $request->end;
+						$user->active = 1; // NO HARDCODEAR
+						$user->created_at = $request->created;
+						$user->updated_at = $request->updated;
+
+						$status = $user->save();
+						if ($status){
+						    $data = ["status" => "Importació d'usuaris completada correctament."];
+						    Log::channel('dblogging')->info("Ha importado N alumnos", ["user_id" => Auth::id(), "term_id" => $term->id]);
+						}
+		    			*/
+		    		}
+		    	}
+		    	else{
+		    	
+		    	}
+		    }
+        	return response()->json($data);
+    	}
+    }
 
     /**
      * Display the specified resource.

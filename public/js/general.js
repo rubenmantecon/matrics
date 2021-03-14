@@ -426,6 +426,17 @@ function insertNewRow(...params) {
 }
 
 /**
+ * @description "get the information of the selected row and put it in the fields to edit"
+ * @param {Element[]} cols "Array of DOM Elements"
+ */
+function getInfoForTermModal(cols) {
+    $(".label-group input#name").val($(cols[1]).text()); // NAME
+    $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
+    $(".label-group input#start").val($(cols[3]).text()); // START
+    $(".label-group input#end").val($(cols[4]).text()); // END
+}
+
+/**
  * @description "insert new row in the terms table of the DB with AJAX"
  * @param {String} name 
  * @param {String} desc 
@@ -517,7 +528,8 @@ function updateTableRowTerm(cols) {
             $(".label-group input#description").val(),
             momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            now(), now()
+            momentFormat(now(), "DD/MM/YYYY HH:mm:ss","YYYY-MM-DD HH:mm:ss"),
+            momentFormat(now(), "DD/MM/YYYY HH:mm:ss","YYYY-MM-DD HH:mm:ss")
         );
     } else {
         updateTermInDB(

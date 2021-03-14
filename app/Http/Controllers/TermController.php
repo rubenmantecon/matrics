@@ -70,6 +70,7 @@ class TermController extends Controller
 		    }
         return response()->json($data);
     }
+    }
 
     /**
      * Display the specified resource.
