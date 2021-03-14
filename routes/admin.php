@@ -18,6 +18,10 @@ use BabDev\Breadcrumbs\Contracts\BreadcrumbsManager;
         return view('careers');
     });
 
+    Route::get('/dashboard/careers/import', function() {
+        return view('pages.careers.import');
+    });  
+
     Route::get('/dashboard/logs', function() {
         return view('logs');
     });   
@@ -31,9 +35,6 @@ use BabDev\Breadcrumbs\Contracts\BreadcrumbsManager;
         return view('students.index');
     });  
 
-    Route::get('/dashboard/students/import', function() {
-        return view('students.import');
-    });  
 
     /*
     * You may use either the Breadcrumbs facade or the $breadcrumbs variable in this file,

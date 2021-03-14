@@ -6,6 +6,12 @@
     </x-slot>
 
     <div class="careers">
+        <div class="btn-import">
+            <form enctype="multipart/form-data" action="/admin/dashboard/careers/import" method="POST" id="form-file">
+                <input type="file" name="file-csv" id="file-csv" class="dis-none">
+                <label class="btn save" for="file-csv"><i class="fas fa-file-import"></i> Importació</label>
+            </form>
+        </div>
         <table>
             <caption>Llistat de cursos</caption>
             <thead>
@@ -40,14 +46,6 @@
                 </tr>
             </tfoot>
         </table>
-        
-        <div>
-        	<form id="importForm" action="/api/careers" method="POST" enctype="multipart/form-data">
-        		<input id="file" type="file">
-        		<input id="import" value="csv">
-        		<input type="submit">
-        	</form>
-        </div>
         
         <div class="bg-dialog"></div>
         <div class="modal-term dis-none" title="Nou Curs">

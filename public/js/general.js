@@ -2,7 +2,7 @@
 /**
  * @description "check if value is null"
  * @param {String} element 
- * @return {String} 
+ * @return {Boolean} 
  */
 function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
@@ -245,7 +245,7 @@ function loadCareerPage() {
             $("tbody").css("display", "none").html('');
             if (res.length > 0) {
                 for (const item of res) {
-                	console.log(item);
+                    console.log(item);
 
                     $("tbody").append(insertNewRow(
                         item.id, item.code, item.name, item.description, item.hours,
@@ -285,73 +285,65 @@ function loadLogsPage() {
             //console.log(res);
             for (const item of res) {
                 console.log(item);
-                
-		var tmp = JSON.parse(item.message);
-                
-                var output_badge = "";
-                
-                if(item.level == 200){
-                	output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
-                }
-                
-                $("tbody").append(insertNewRow(
-                	item.id, item.name, output_badge, tmp.message,
 
-			momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-			"logs"
-                    ));
+                var tmp = JSON.parse(item.message);
+
+                var output_badge = "";
+
+                if (item.level == 200) {
+                    output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
+                }
+
+                $("tbody").append(insertNewRow(
+                    item.id, item.name, output_badge, tmp.message,
+
+                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                    "logs"
+                ));
             }
 
-		$('tbody').fadeIn(300);
+            $('tbody').fadeIn(300);
 
             $("body").addClass("body-logs");
         }
     });
 }
 
-function importCareer() {
+function getCsvRowsCareer() {
+    $("#remove").html('').addClass("loading");
+    var fr = new FileReader();
+    fr.onload = function () {
+        var file = fr.result;
 
-	var fr = new FileReader();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-	fr.onload = function(){
-		console.log("Loaded");
-		var file = fr.result;
-		
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-		
-		var import_file = $('#import').val();
-		
-		$.ajax({
-		    url: $("meta[name='url']").attr("content"),
-		    method: 'POST',
-		    headers: {
-		        token: $("meta[name='_token']").attr("content"),
-		    },
-		    data: {
-		    	import_file,
-		    	file
-		    },
-		    success: (res) => {
-		    	var a = JSON.parse(res);
-		        if (a.length > 0) {
-		            for (const item of a) {
-		            	console.log(item);
-		            }
-		            /*
-		            for (const item of res) {
-		            	console.log(item);
-		            }
-		            */
-		        }
-		    }
-		});
-	}
+        var import_file = "csv";
+        console.log(import_file, $("meta[name='url']").attr("content"));
+        $.ajax({
+            url: $("meta[name='url']").attr("content"),
+            method: 'POST',
+            headers: {
+                token: $("meta[name='_token']").attr("content"),
+            },
+            data: {
+                import_file,
+                file
+            },
+            success: (res) => {
+                localStorage.setItem('careers_json', res);
+                location.href = "/admin/dashboard/careers/import";
+            },
+            error: (res) => {
+                console.log(res);
+            }
+        });
+    }
 
-	fr.readAsDataURL($('#file')[0].files[0]);
+    fr.readAsDataURL($('#file-csv')[0].files[0]);
 }
 
 /**
@@ -398,26 +390,25 @@ function rowEventEditAndNew(tag) {
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou Curs' : 'Modicació de curs');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-    
+
     if (location.pathname.includes("admin/dashboard/terms")) {
-    	getInfoForModal(rowSelected.children(), "terms");
+        getInfoForModal(rowSelected.children(), "terms");
+    } else if (location.pathname.includes("admin/dashboard/careers")) {
+        getInfoForModal(rowSelected.children(), "careers");
     }
-   	else if (location.pathname.includes("admin/dashboard/careers")) {
-   		getInfoForModal(rowSelected.children(), "careers");
-   	}
-    
+
 }
 
 /**
  * @description "insert new row in the table body"
- * @param  {...any} params "num n of parameters (last parameter define the actual page 'terms|logs|students')"
+ * @param  {...any} params "num n of parameters (last parameter define the actual page 'terms|logs|students|import')"
  * @return {String}
  */
 function insertNewRow(...params) {
     let row = "<tr>";
     for (let i = 0; i < params.length - 1; i++)
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
-        
+
     if (params[params.length - 1] == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>`;
@@ -571,19 +562,9 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
-    }
-    else if (location.pathname.includes("admin/dashboard/careers")) {
-        loadCareerPage();
-        $("#start, #end").datepicker(dataPickerOptions);
-        $("#start, #end").on("focus", () => {
-            $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
-            $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
-            })
-    }
-    else if (location.pathname.includes("admin/dashboard/logs")) {
+    } else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
-    }
-    else if (location.pathname.includes("dashboard/terms/delete/")) {
+    } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
         $("#name").on("input", (e) => {
@@ -618,40 +599,111 @@ $(function () {
             loadStudentsPage($("meta[name='url']").attr("content") + `?page=${page}`);
         else
             loadStudentsPage();
-        // $("#file").on("change", (e) => {
-        //     if (e.target.files[0].type === "text/csv")
-        //         $("#form-file").submit();
-        //     else
-        //         generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
-        // })
-        // $("#form-file").submit((e) => {
-        //     e.preventDefault();
-        //     var formData = new FormData(document.getElementById("form-file"));
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         }
-        //     });
-        //     $.ajax({
-        //         url: "/api/import",
-        //         method: 'POST',
-        //         headers: {
-        //             token: $("meta[name='_token']").attr("content"),
-        //         },
-        //         data: formData,
-        //         contentType: false,
-        //         processData: false,
-        //         success: (data) => {
-        //             // $("#form-file").reset();
-        //             // alert('File has been uploaded successfully');
-        //             console.log(data);
-        //         },
-        //         error: function (data) {
-        //             console.log(data);
-        //         }
-        //     });
-        // })
-    } else if (location.pathname.endsWith("/admin/dashboard/students/import") || location.pathname.endsWith("/admin/dashboard/students/import/")) {
+        $("#file-csv").on("change", (e) => {
+            if (e.target.files[0].type === "text/csv")
+                $("#form-file").submit();
+            else
+                generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
+        })
+        $("#form-file").submit((e) => {
+            // e.preventDefault();
+            // importCareer();
+            // var formData = new FormData(document.getElementById("form-file"));
+            //     $.ajaxSetup({
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         }
+            //     });
+            //     $.ajax({
+            //         url: "/api/import",
+            //         method: 'POST',
+            //         headers: {
+            //             token: $("meta[name='_token']").attr("content"),
+            //         },
+            //         data: formData,
+            //         contentType: false,
+            //         processData: false,
+            //         success: (data) => {
+            //             // $("#form-file").reset();
+            //             // alert('File has been uploaded successfully');
+            //             console.log(data);
+            //         },
+            //         error: function (data) {
+            //             console.log(data);
+            //         }
+            //     });
+        })
+    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
+        loadCareerPage();
+        $("#start, #end").datepicker(dataPickerOptions);
+        $("#start, #end").on("focus", () => {
+            $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
+            $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
+        });
+        $("#file-csv").on("change", (e) => {
+            if (e.target.files[0].type === "text/csv")
+                getCsvRowsCareer();
+            else
+                generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
+        })
+    } else if (location.pathname.endsWith("/admin/dashboard/careers/import") || location.pathname.endsWith("/admin/dashboard/careers/import/")) {
+        const careers = JSON.parse(localStorage.getItem("careers_json"));
+        if (!careers) {
+            generateMessages("warning", "No s'ha trobat cap importació.", ".container-messages", 2.5);
+            setTimeout(() => location.href = "/admin/dashboard/careers", 2500);
+        } else {
+            let arrayCareers = [];
+            let cont = 0;
+            let rows = "";
+            for (const key in careers) {
+                if (Object.hasOwnProperty.call(careers, key)) {
+                    arrayCareers.push(careers[key]);
+                    let dataRow = `
+                    <div class="container-cb">
+                        <input name="check-${cont}" id="check-${cont}" type="checkbox">
+                        <label for="check-${cont}">
+                            <i class="fa fa-check"></i>
+                        </label>
+                    </div>
+                    <label class="text" for="check-${cont}">${key} - ${careers[key]['NOM_CICLE_FORMATIU']}</label>
+                    <div class="row-bg"></div>`;
+                    rows += insertNewRow(dataRow, "import");
+                    cont++;
+                }
+            }
+            $("tbody").css("display", "none").html(rows).fadeIn(300);
+            $("label").click(function () {
+                let rowBackground = $(this).closest('td').children(".row-bg");
+                let input = $(this).closest('td').children(".container-cb").children("input");
+                if (input.is(':checked')) {
+                    rowBackground.animate({
+                        width: "0vw"
+                    });
+                } else {
+                    rowBackground.animate({
+                        width: "100vw"
+                    });
+                }
+            });
+            $(".btn-start-import button").on("click", () => {
+                const checkboxes = $("input[type='checkbox']:checked");
+                let selectedRows = [];
+                if (checkboxes.length > 0) {
+                    generateMessages("info", "La importació a començat.", ".container-messages", 2.5);
+                    $(".btn-start-import button").html('').addClass("loading no-click");
+                    for (const item of checkboxes) {
+                        const index = $(item).prop("name").split("-")[1];
+                        selectedRows.push(arrayCareers[index]);
+                    }
+                    console.table(selectedRows);
+                    // AJAX
+                    //.success {}
+                    localStorage.removeItem("careers_json");
+                    // location.href = "/admin/dashboard/careers";
 
+                } else generateMessages("error", "No s'ha seleccionat cap cicle.", ".container-messages", 2.5);
+            });
+            generateMessages("success", "Arxiu carregat correctament.", ".container-messages", 2.5);
+        }
     }
 });
