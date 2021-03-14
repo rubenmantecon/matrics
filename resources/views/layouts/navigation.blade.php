@@ -63,6 +63,16 @@
                         </form>
                     </x-slot>
                 </x-dropdown>
+                <div class="toggle night-mode-available">
+                    <div class="night-mode-button">
+                        <input type="checkbox" class="dark-mode" id="night-mode">
+                        <label for="night-mode" class="label-dark-mode">
+                            <i class="fas fa-moon"></i>
+                            <i class="fas fa-sun"></i>
+                            <div class="blob"></div>
+                        </label>
+                    </div>
+                </div>
             </div>
         </header>
     </div>
