@@ -40,20 +40,20 @@ class MyImportController extends Controller
         //     'file'  => 'required|mimes:csv|max:2048',
         // ]);
 
-        if ($files = $request->file('file')) {
+        // if ($files = $request->file('file')) {
             //store file into document folder
-            $request->file->store('public/documents');
+            // $request->file->store('public/documents');
 
             //store your file into database
             //$document = new Document();
             //$document->title = $file;
             //$document->save();
-            $file = $request->file('file');
-            $name = time() . '-' . $file->getClientOriginalName();
+            // $file = $request->file('file');
+            // $name = time() . '-' . $file->getClientOriginalName();
 
-            return response()->json($name);
+            // return response()->json($name);
             // }
-        }
+        // }
 
         // return Response()->json([
         //     "success" => false,

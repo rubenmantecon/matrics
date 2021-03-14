@@ -16,7 +16,7 @@ body {
     display: none;
 }
 
-.text-red {
+span.red {
     color: red;
 }
 
@@ -114,22 +114,26 @@ body {
     background: lightblue;
     color: black;
 }
+
 .breadcrumb li {
     color: white;
     text-decoration: none;
     padding: 5px 0 5px 40px;
-    background: #5b76a0; /* fallback color */
+    background: #5b76a0;
+    /* fallback color */
     background: #5b76a0;
     position: relative;
     display: block;
     float: left;
 }
+
 .breadcrumb li:after {
     content: " ";
     display: block;
     width: 0;
     height: 0;
-    border-top: 50px solid transparent; /* Go big on the size, and let overflow hide */
+    border-top: 50px solid transparent;
+    /* Go big on the size, and let overflow hide */
     border-bottom: 50px solid transparent;
     border-left: 30px solid #5b76a0;
     position: absolute;
@@ -138,12 +142,14 @@ body {
     left: 100%;
     z-index: 2;
 }
+
 .breadcrumb li.active:after {
     content: " ";
     display: block;
     width: 0;
     height: 0;
-    border-top: 50px solid transparent; /* Go big on the size, and let overflow hide */
+    border-top: 50px solid transparent;
+    /* Go big on the size, and let overflow hide */
     border-bottom: 50px solid transparent;
     border-left: 30px solid lightblue;
     position: absolute;
@@ -152,12 +158,14 @@ body {
     left: 100%;
     z-index: 2;
 }
+
 .breadcrumb li a:before {
     content: " ";
     display: block;
     width: 0;
     height: 0;
-    border-top: 50px solid transparent; /* Go big on the size, and let overflow hide */
+    border-top: 50px solid transparent;
+    /* Go big on the size, and let overflow hide */
     border-bottom: 50px solid transparent;
     border-left: 30px solid white;
     position: absolute;
@@ -167,27 +175,34 @@ body {
     left: 100%;
     z-index: 1;
 }
+
 .breadcrumb li:first-child a {
     padding-left: 10px;
 }
+
 .breadcrumb li:last-child a {
     background: transparent !important;
     color: black;
     pointer-events: none;
     cursor: default;
 }
+
 .breadcrumb li:last-child a:after {
     border: 0;
 }
+
 .breadcrumb li:hover {
     background: lightgray;
 }
+
 .breadcrumb li:hover:after {
     border-left-color: lightgray !important;
 }
+
 .breadcrumb li.active:hover {
     background: lightblue;
 }
+
 .breadcrumb li.active:hover:after {
     border-left-color: lightblue !important;
 }
@@ -339,17 +354,17 @@ div.icon.input-box {
     position: relative;
 }
 
-div.icon.input-box > i {
+div.icon.input-box>i {
     pointer-events: none;
 }
 
-div[class*="left icon"].input-box > i {
+div[class*="left icon"].input-box>i {
     right: auto;
     left: 1px;
     border-radius: 0.28571429rem 0 0 0.28571429rem;
 }
 
-div.icon.input-box > i {
+div.icon.input-box>i {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -368,7 +383,7 @@ div.icon.input-box > i {
     transition: opacity 0.3s ease;
 }
 
-div[class*="left icon"].input-box > input.input {
+div[class*="left icon"].input-box>input.input {
     padding-left: 2.67142857em !important;
     padding-right: 1em !important;
 }
@@ -393,7 +408,7 @@ div.container-messages {
     place-self: center;
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    z-index: 2;
 }
 
 .message i {
@@ -443,23 +458,23 @@ header {
     height: 100px;
 }
 
-header > .logo-box {
+header>.logo-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-header > .logo-box > img.logo {
+header>.logo-box>img.logo {
     border-radius: 100px;
 }
 
-header > .items {
+header>.items {
     display: flex;
     flex-flow: row nowrap;
 }
 
-header > .items > .item {
+header>.items>.item {
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -470,15 +485,15 @@ header > .items > .item {
     color: #023382;
 }
 
-header > .items > .item.active {
+header>.items>.item.active {
     font-weight: bold;
 }
 
-header > .items > .item:hover {
+header>.items>.item:hover {
     color: #000000;
 }
 
-header > p.user {
+header>p.user {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -496,7 +511,7 @@ div.list {
     padding: 0 0;
 }
 
-div.list > .item {
+div.list>.item {
     display: flex;
     table-layout: fixed;
     list-style-type: none;
@@ -505,21 +520,21 @@ div.list > .item {
     line-height: 1.14285714em;
 }
 
-div.list > .item > .content {
+div.list>.item>.content {
     display: table-cell;
     width: 100%;
     padding: 0 0 0 0.5em;
     vertical-align: top;
 }
 
-div.list > .item > .content > .header {
+div.list>.item>.content>.header {
     display: block;
     margin: 0;
     font-weight: 700;
     color: rgba(0, 0, 0, 0.87);
 }
 
-div.list > .item > .content > .description {
+div.list>.item>.content>.description {
     display: block;
     color: rgba(0, 0, 0, 0.7);
 }
@@ -765,14 +780,14 @@ tbody tr:nth-child(even) {
     align-items: center;
 }
 
-.error-page > .number {
+.error-page>.number {
     font-size: 200px;
     font-weight: bold;
     margin: 0;
     user-select: none;
 }
 
-.error-page > .description {
+.error-page>.description {
     font-size: 50px;
     font-weight: bold;
     margin: 0;
@@ -787,7 +802,7 @@ tbody tr:nth-child(even) {
     align-items: center;
 }
 
-.landing > .container-title {
+.landing>.container-title {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -795,35 +810,35 @@ tbody tr:nth-child(even) {
     margin-top: 4em;
 }
 
-.landing > .container-title > .title {
+.landing>.container-title>.title {
     font-size: 3em;
     margin: 0 15px;
     text-align: center;
 }
 
-.landing > .container-title > img {
+.landing>.container-title>img {
     width: 11%;
 }
 
-.landing > main {
+.landing>main {
     padding-left: 2rem;
     padding-right: 2rem;
 }
 
-.landing > main * {
+.landing>main * {
     font-size: 20px;
 }
 
-.landing > main > p.subtitle.text {
+.landing>main>p.subtitle.text {
     margin-top: 2em;
 }
 
-.landing > main > p.text {
+.landing>main>p.text {
     text-align: center;
     margin: 7px 0;
 }
 
-.landing > main > .btn-container {
+.landing>main>.btn-container {
     text-align: center;
     font-size: 25px;
     margin-top: 70px;
@@ -838,7 +853,8 @@ body.body-term {
 
 .terms,
 .logs,
-.students {
+.students,
+.import {
     margin: 3% 0;
 }
 
@@ -861,7 +877,7 @@ body.body-term {
     margin-right: 5px;
 }
 
-.terms tbody td > p {
+.terms tbody td>p {
     font-size: 18px;
     font-weight: 500;
 }
@@ -1131,72 +1147,122 @@ main.login .container-form a img.logo {
 }
 
 /* STUDENTS */
-.students .btn-import {
+.btn-import {
     text-align: right;
     margin-right: 5vw;
 }
 
 /* IMPORT */
-.import .ui.placeholder.segment {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
-    max-width: initial;
-    animation: none;
-    overflow: visible;
-    padding: 1em 1em;
-    min-height: 18rem;
-    background: #f9fafb;
-    border-color: #22242626;
-    box-shadow: 0 2px 25px 0 rgb(34 36 38 / 5%) inset;
+.import .text {
+    font-size: 18px;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: 400;
 }
 
-.ui.segment {
-    position: relative;
-    background: #fff;
-    box-shadow: 0 1px 2px 0 rgb(34 36 38 / 15%);
-    margin: 1rem 0;
-    padding: 1em 1em;
-    border-radius: .28571429rem;
-    border: 1px solid #22242626;
+.import tr {
+    text-align: left;
 }
 
-.ui.icon.header:first-child {
-    margin-top: 0;
-}
-
-.ui.placeholder .header {
+.import td {
+    width: 100%;
+    padding: 0;
+    margin: auto;
     position: relative;
     overflow: hidden;
+    display: flex;
 }
 
-.ui.icon.header {
-    display: inline-block;
-    text-align: center;
-    margin: 2rem 0 1rem;
-}
-
-.ui.icon.header .icon {
-    float: none;
+.import td:before {
+    content: '';
+    width: 100%;
+    height: 100%;
     display: block;
-    width: auto;
-    height: auto;
-    line-height: 1;
-    padding: 0;
-    font-size: 3em;
-    margin: 0 auto .5rem;
-    opacity: 1;
+    background: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
 }
 
-.import label.btn {
-    max-width: 15rem;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: #2185d0;
-    color: #fff;
-    text-shadow: none;
-    background-image: none;
+.import td label.text {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 17px;
+    margin: 0;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    transition: .5s;
+    padding: 18px 0;
+    cursor: pointer;
+    width: 90%;
+    text-align: left;
+}
+
+.import td .container-cb {
+    width: 10%;
+    display: flex;
+}
+
+.import td .container-cb input {
+    vertical-align: middle !important;
+    display: none !important;
+}
+
+.import td .container-cb input+label {
+    display: inline-block;
+    background: #ccc;
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+    position: relative;
+    text-align: center;
+    padding-top: 3px;
+    color: #0000;
+    cursor: pointer;
+    transition: all .2s;
+    margin: auto;
+    z-index: 1;
+}
+
+.import td .container-cb input:after {
+    content: '';
+    background: rgba(3, 169, 244, .5);
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    border-radius: 9999px;
+    transition: 3s;
+    z-index: -1;
+}
+
+.import td .container-cb input:checked+label {
+    background: white;
+    color: rgb(3, 169, 244);
+}
+
+.import td div.row-bg {
+    position: absolute;
+    left: 0vw;
+    top: 0px;
+    width: 0vw;
+    height: 40vh;
+    background-color: #00ff0894;
+}
+
+.import .btn-start-import {
+    text-align: right;
+    margin: 3vh 5vw 0 0;
+    position: relative;
+    z-index: 3;
+}
+
+.import .btn-start-import button {
+    width: 215px;
+    height: 45px;
 }
 
 /* PAGINATION */
@@ -1312,19 +1378,19 @@ ul.pagination li.pageNumber:last-child {
         border-top-left-radius: 8px;
     }
 
-    .landing > .container-title > img {
+    .landing>.container-title>img {
         width: 30%;
         padding-left: 16px;
         padding-right: 16px;
     }
 
-    .landing > .container-title > .title {
+    .landing>.container-title>.title {
         margin: 0px;
     }
 }
 
 @media (max-width: 600px) {
-    .landing > main > p {
+    .landing>main>p {
         font-size: 18px !important;
     }
 
