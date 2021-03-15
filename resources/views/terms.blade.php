@@ -8,6 +8,11 @@
         {{ Breadcrumbs::render('terms') }}
     @endsection
     <div class="terms">
+        <p class="text">
+            <span class="red">*</span>
+            Per veure els cicles del curs selecciona el nom del curs
+            <span class="red">*</span>
+        </p>
         <table>
             <caption>Llistat de cursos</caption>
             <thead>

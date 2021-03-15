@@ -40,6 +40,13 @@ span.red {
     padding: 15px 30px;
 }
 
+a.link {
+    color: #004dff;
+    font-size: 17px;
+    text-decoration: 2px underline;
+    transition: .1s;
+}
+
 .options {
     display: flex;
     flex-direction: row;
@@ -101,6 +108,35 @@ span.red {
     box-shadow: 0 0 0 1px transparent;
 }
 
+table td.loading {
+    height: 5em;
+}
+
+table td.loading:before {
+    width: 4em;
+    height: 4em;
+    border-width: 0.4em;
+    top: 25%;
+}
+
+table td.loading:after {
+    width: 4em;
+    height: 4em;
+    border-width: 0.4em;
+    top: 25%;
+}
+
+@keyframes button-spin {
+    to {
+        transform: rotate(360deg);
+    }
+
+    from {
+        transform: rotate(0deg);
+    }
+}
+
+/* BREADCRUMB */
 .breadcrumb {
     list-style: none;
     overflow: hidden;
@@ -205,34 +241,6 @@ span.red {
 
 .breadcrumb li.active:hover:after {
     border-left-color: lightblue !important;
-}
-
-table td.loading {
-    height: 5em;
-}
-
-table td.loading:before {
-    width: 4em;
-    height: 4em;
-    border-width: 0.4em;
-    top: 25%;
-}
-
-table td.loading:after {
-    width: 4em;
-    height: 4em;
-    border-width: 0.4em;
-    top: 25%;
-}
-
-@keyframes button-spin {
-    to {
-        transform: rotate(360deg);
-    }
-
-    from {
-        transform: rotate(0deg);
-    }
 }
 
 /* BUTTON, LINK */
@@ -856,6 +864,13 @@ body.body-term {
 .students,
 .import {
     margin: 3% 0;
+}
+
+.terms .text {
+    font-size: 18px;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: 400;
 }
 
 .terms td button.btn,

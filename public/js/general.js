@@ -204,7 +204,8 @@ function loadTermPage() {
             if (res.length > 0) {
                 for (const item of res) {
                     $("tbody").append(insertNewRow(
-                        item.id, item.name, item.description,
+                        item.id, `<a class="link" href="/admin/dashboard/careers?term=${item.id}">${item.name}</a>`,
+                        item.description,
                         momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.created_at, "", "DD/MM/YYYY HH:mm:ss"),
@@ -235,38 +236,49 @@ function loadTermPage() {
  * @description "load all the data of the career end point in the tbody HTML"
  */
 function loadCareerPage() {
+    const term_id = getUrlParameter("term");
     $.ajax({
         url: $("meta[name='url']").attr("content"),
         method: 'GET',
         headers: {
             token: $("meta[name='_token']").attr("content"),
+            term_id: (!term_id) ? 'empty' : term_id,
         },
         success: (res) => {
-            $("tbody").css("display", "none").html('');
-            if (res.length > 0) {
-                for (const item of res) {
-                    $("tbody").append(insertNewRow(
-                        item.id, item.code, item.name, item.description, item.hours,
-                        momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
-                        momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
-                        "careers"
-                    ));
-                }
+            console.log(res);
+            if (res.status) {
+                generateMessages(res.status, res.text, ".container-messages", 3)
+                setTimeout(() => location.href = "/admin/dashboard/terms", 3000);
             } else {
-                $("tbody").append(
-                    `<tr>
+                $("tbody").css("display", "none").html('');
+                if (res.length > 0) {
+                    for (const item of res) {
+                        $("tbody").append(insertNewRow(
+                            item.id, item.code, item.name, item.description, item.hours,
+                            momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
+                            momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
+                            "careers"
+                        ));
+                    }
+                } else {
+                    $("tbody").append(
+                        `<tr>
                         <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
                     </tr>`
-                );
-            }
-            $("tbody").append(
-                `<tr>
+                    );
+                }
+                $("tbody").append(
+                    `<tr>
                     <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
                 </tr>`
-            ).fadeIn(300);
+                ).fadeIn(300);
 
-            $("body").addClass("body-term");
-            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target));
+                $("body").addClass("body-term");
+                $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target));
+            }
+        },
+        error: (res) => {
+            console.log(res.responseJSON);
         }
     });
 }
@@ -289,7 +301,6 @@ function loadLogsPage() {
                 }
                 $("tbody").append(insertNewRow(
                     item.id, item.name, output_badge, tmp.message,
-
                     momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
                     "logs"
                 ));
@@ -648,14 +659,13 @@ $(function () {
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         });
         $("#file-csv").on("change", (e) => {
-            console.log(e.target.files[0].name.split('.').pop());
             if (e.target.files[0].name.split('.').pop() === "csv") {
                 getCsvRowsCareer();
             } else {
                 generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
                 $(e.target).trigger("reset");
             }
-        })
+        });
     } else if (location.pathname.endsWith("/admin/dashboard/careers/import") || location.pathname.endsWith("/admin/dashboard/careers/import/")) {
         const careers = JSON.parse(localStorage.getItem("careers_json"));
         if (!careers) {
