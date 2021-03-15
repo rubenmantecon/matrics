@@ -307,14 +307,15 @@ function importCSV(page) {
 		}
 	});
 	
-	if(page == "career"){
+	if(page == "careers"){
+		$("#remove").html('').addClass("loading");
 		var fr = new FileReader();
 
 		fr.onload = function(){
 			console.log("Loaded");
 			var file = fr.result;
 			
-			var import_file = $('#import').val();
+			var import_file = "csv";
 			
 			$.ajax({
 				url: $("meta[name='url']").attr("content"),
@@ -327,22 +328,18 @@ function importCSV(page) {
 					file
 				},
 				success: (res) => {
-					var a = JSON.parse(res);
-				    if (a.length > 0) {
-				        for (const item of a) {
-				        	console.log(item);
-				        }
-				        /*
-				        for (const item of res) {
-				        	console.log(item);
-				        }
-				        */
-				    }
-				}
+					$("#form-file").trigger("reset");
+		            localStorage.setItem('careers_json', res);
+		            location.href = "/admin/dashboard/careers/import";
+				},
+				error: (res) => {
+		            $("#form-file").trigger("reset");
+		            console.log(res);
+		        }
 			});
 		}
 
-		fr.readAsDataURL($('#file')[0].files[0]);
+		fr.readAsDataURL($('#file-csv')[0].files[0]);
 	}
 	else if(page == "students"){
 		var fr = new FileReader();
@@ -604,14 +601,6 @@ $(function () {
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
     }
-    else if (location.pathname.includes("admin/dashboard/careers")) {
-        loadCareerPage();
-        $("#start, #end").datepicker(dataPickerOptions);
-        $("#start, #end").on("focus", () => {
-            $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
-            $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
-            })
-    }
     else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
     }
@@ -688,7 +677,7 @@ $(function () {
             //         }
             //     });
         })
-    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
+    } else if (location.pathname.endsWith("/admin/dashboard/careers") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
@@ -698,7 +687,8 @@ $(function () {
         $("#file-csv").on("change", (e) => {
             console.log(e.target.files[0].name.split('.').pop());
             if (e.target.files[0].name.split('.').pop() === "csv") {
-                getCsvRowsCareer();
+                console.log("hey");
+                importCSV("careers");
             } else {
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
                 $(e.target).trigger("reset");
@@ -755,6 +745,33 @@ $(function () {
                     }
                     console.table(selectedRows);
                     // AJAX
+                    $.ajaxSetup({
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+						}
+					});
+					
+					var term_id = 1;
+					var data = JSON.stringify(selectedRows);
+					
+                    $.ajax({
+						url: $("meta[name='url']").attr("content"),
+						method: 'POST',
+						headers: {
+							token: $("meta[name='_token']").attr("content"),
+						},
+						data: {
+							data,
+							term_id
+						},
+						success: (res) => {
+							localStorage.removeItem("careers_json");
+                    		location.href = "/admin/dashboard/careers";
+						},
+						error: (res) => {
+							console.log(res);
+						}
+					});
                     //.success {}
                     localStorage.removeItem("careers_json");
                     // location.href = "/admin/dashboard/careers";
