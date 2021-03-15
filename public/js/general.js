@@ -706,4 +706,10 @@ $(function () {
             generateMessages("success", "Arxiu carregat correctament.", ".container-messages", 2.5);
         }
     }
+    document.querySelector('.dark-mode').addEventListener('change',()=>{
+        document.querySelectorAll('body').forEach(ele=>{
+          ele.classList.toggle('night');
+        })
+    });
 });
+
