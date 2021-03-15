@@ -4,7 +4,9 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('career') }}
+    @endsection
     <div class="import">
         <div class="btn-start-import">
             <button type="button" class="btn save"><i class="fas fa-upload"></i> Començar Importació</button>
