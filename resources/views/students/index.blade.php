@@ -20,9 +20,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Nom</th>
+                    <th>Cognoms</th>
                     <th>Email</th>
-                    <th>Creació</th>
-                    <th>Darrera modificació</th>
+                    <th>Cicle</th>
                 </tr>
             </thead>
             <tbody style="display: none">
@@ -34,9 +34,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Nom</th>
+                    <th>Cognoms</th>
                     <th>Email</th>
-                    <th>Creació</th>
-                    <th>Darrera modificació</th>
+                    <th>Cicle</th>
                 </tr>
             </tfoot>
         </table>

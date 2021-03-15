@@ -4,7 +4,9 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('careers') }}
+    @endsection
     <div class="careers">
         <div class="btn-import">
             <form enctype="multipart/form-data" action="/admin/dashboard/careers/import" method="POST" id="form-file">
@@ -13,7 +15,7 @@
             </form>
         </div>
         <table>
-            <caption>Llistat de cursos</caption>
+            <caption>Llistat de cicles</caption>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -46,7 +48,6 @@
                 </tr>
             </tfoot>
         </table>
-        
         <div class="bg-dialog"></div>
         <div class="modal-term dis-none" title="Nou Curs">
         	<div class="label-group">

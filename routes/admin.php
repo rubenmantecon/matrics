@@ -48,25 +48,38 @@ use BabDev\Breadcrumbs\Contracts\BreadcrumbsManager;
         $trail->push('Panell de control', route('dashboard'));
     });
 
+    // Dashboard > Students
+    Breadcrumbs::for('students', static function ($trail) {
+        $trail->parent('dashboard');
+        $trail->push('Alumnes', '/admin/dashboard/students');
+    });
+
     // Dashboard > Terms
     Breadcrumbs::for('terms', static function ($trail) {
         $trail->parent('dashboard');
         $trail->push('Cursos', '/admin/dashboard/terms');
     });
 
-    Breadcrumbs::for('students', static function ($trail) {
-        $trail->parent('dashboard');
-        $trail->push('Alumnes', '/admin/dashboard/students');
-    });
-
-    // Dashboard > Terms > [Term]
+    // Dashboard > Terms > Delete[Term]
     Breadcrumbs::for('term', function ($trail, $term) {
         $trail->parent('terms');
         $trail->push($term->name, '/dashboard/terms/delete/{term_id}');
     });
 
-    // Dashboard > Terms > [Term] > [Career]
-    /* Breadcrumbs::for('career', static function ($trail, Career $career) {
-        $trail->parent('term', $career->term_id);
-        $trail->push($career->name, route('career', $career->career_id));
-    }); */
+    // Dashboard > Terms > [Term]
+    Breadcrumbs::for('term_career', function ($trail, $term) {
+        $trail->parent('terms');
+        $trail->push($term->name, '/dashboard/terms/{term_id}');
+    });
+
+    // Dashboard > Careers
+    Breadcrumbs::for('careers', function ($trail) {
+        $trail->parent('term_career');
+        $trail->push("Cicles", '/dashboard/careers');
+    });
+
+    // Dashboard > Import careers
+    Breadcrumbs::for('career', function ($trail) {
+        $trail->parent('careers');
+        $trail->push("Importar cicles", '/dashboard/careers/import');
+    });
