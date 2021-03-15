@@ -17,6 +17,7 @@
 
             <!-- Navigation Links -->
             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+            @if(Auth::user()->role == 'admin')
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Panell de control') }}
                 </x-nav-link>
@@ -26,6 +27,7 @@
                 <x-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
                     {{ __('Alumnes') }}
                 </x-nav-link>
+            @endif
             </div>
             @if(Auth::user()->role == 'admin')
             <p class="user"><i class="fas fa-user"></i> Admin</p>
