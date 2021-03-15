@@ -7,7 +7,7 @@
 
     <div class="import">
         <div class="btn-start-import">
-            <button type="button" class="btn save">Començar Importació</button>
+            <button type="button" class="btn save"><i class="fas fa-upload"></i> Començar Importació</button>
         </div>
         <p class="text">
             <span class="red">*</span>
@@ -33,7 +33,7 @@
             </tfoot>
         </table>
         <div class="btn-start-import">
-            <button type="button" class="btn save">Començar Importació</button>
+            <button type="button" class="btn save"><i class="fas fa-upload"></i> Començar Importació</button>
         </div>
     </div>
 </x-app-layout>
