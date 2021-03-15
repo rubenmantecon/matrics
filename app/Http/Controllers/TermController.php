@@ -50,7 +50,6 @@ class TermController extends Controller
         $token = $request->header('token');
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
-
             if ($user['token']) {
 
                 $term = new Term;
@@ -58,9 +57,7 @@ class TermController extends Controller
                 $term->description = $request->desc;
                 $term->start = $request->start;
                 $term->end = $request->end;
-                $term->active = 1; // NO HARDCODEAR
-                $term->created_at = $request->created;
-                $term->updated_at = $request->updated;
+                $term->active = 1;
 
                 $status = $term->save();
                 if ($status) {
@@ -114,7 +111,7 @@ class TermController extends Controller
                 $term->end = $request->end;
                 if ($request->type === "softDelete")
                     $term->active = 0;
-                $term->updated_at = $request->updated;
+                $term->touch();
 
                 $status = $term->save();
                 if ($status)

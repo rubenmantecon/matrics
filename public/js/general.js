@@ -207,8 +207,8 @@ function loadTermPage() {
                         item.id, item.name, item.description,
                         momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
-                        momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.created_at, "", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.updated_at, "", "DD/MM/YYYY HH:mm:ss"),
                         "terms"
                     ));
                 }
@@ -245,15 +245,12 @@ function loadCareerPage() {
             $("tbody").css("display", "none").html('');
             if (res.length > 0) {
                 for (const item of res) {
-                    console.log(item);
-
                     $("tbody").append(insertNewRow(
                         item.id, item.code, item.name, item.description, item.hours,
                         momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
                         "careers"
                     ));
-
                 }
             } else {
                 $("tbody").append(
@@ -285,15 +282,11 @@ function loadLogsPage() {
             //console.log(res);
             for (const item of res) {
                 console.log(item);
-
                 var tmp = JSON.parse(item.message);
-
                 var output_badge = "";
-
                 if (item.level == 200) {
                     output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
                 }
-
                 $("tbody").append(insertNewRow(
                     item.id, item.name, output_badge, tmp.message,
 
@@ -301,9 +294,7 @@ function loadLogsPage() {
                     "logs"
                 ));
             }
-
             $('tbody').fadeIn(300);
-
             $("body").addClass("body-logs");
         }
     });
@@ -322,7 +313,6 @@ function getCsvRowsCareer() {
         });
 
         var import_file = "csv";
-        console.log(import_file, $("meta[name='url']").attr("content"));
         $.ajax({
             url: $("meta[name='url']").attr("content"),
             method: 'POST',
@@ -334,10 +324,12 @@ function getCsvRowsCareer() {
                 file
             },
             success: (res) => {
+                $("#form-file").trigger("reset");
                 localStorage.setItem('careers_json', res);
                 location.href = "/admin/dashboard/careers/import";
             },
             error: (res) => {
+                $("#form-file").trigger("reset");
                 console.log(res);
             }
         });
@@ -399,6 +391,15 @@ function rowEventEditAndNew(tag) {
 
 }
 
+function getInfoForModal(cols, page) {
+    if (page === "terms") {
+        $(".label-group input#name").val($(cols[1]).text()); // NAME
+        $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
+        $(".label-group input#start").val($(cols[3]).text()); // START
+        $(".label-group input#end").val($(cols[4]).text()); // END
+    }
+}
+
 /**
  * @description "insert new row in the table body"
  * @param  {...any} params "num n of parameters (last parameter define the actual page 'terms|logs|students|import')"
@@ -449,7 +450,10 @@ function insertTermInDB(name, desc, start, end, created, updated) {
             generateMessages("success", res.status, ".container-messages", 3);
             loadTermPage();
         },
-        error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
+        error: (res) => {
+            console.log(res.responseJSON.message);
+            generateMessages("error", "Error en el servidor", ".container-messages", 3)
+        }
     });
 }
 
@@ -492,7 +496,10 @@ function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete"
                 }, 2000);
             } else loadTermPage();
         },
-        error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
+        error: (res) => {
+            console.log(res.responseJSON.message);
+            generateMessages("error", "Error en el servidor", ".container-messages", 3)
+        }
     });
 }
 
@@ -642,10 +649,12 @@ $(function () {
         });
         $("#file-csv").on("change", (e) => {
             console.log(e.target.files[0].name.split('.').pop());
-            if (e.target.files[0].name.split('.').pop() === "csv")
+            if (e.target.files[0].name.split('.').pop() === "csv") {
                 getCsvRowsCareer();
-            else
+            } else {
                 generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
+                $(e.target).trigger("reset");
+            }
         })
     } else if (location.pathname.endsWith("/admin/dashboard/careers/import") || location.pathname.endsWith("/admin/dashboard/careers/import/")) {
         const careers = JSON.parse(localStorage.getItem("careers_json"));
