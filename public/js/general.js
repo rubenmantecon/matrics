@@ -720,7 +720,7 @@ $(function () {
     //"DARK-MODE"
     $('.dark-mode').on('change',()=>{
         $('body').toggleClass('night');
-        $('.dark-mode').toggleClass('night');
+        $('.dark-mode').toggleClass('active');
 
         if($('body').hasClass('night')){ //cuando el cuerpo tiene la clase 'dark' actualmente
             localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
@@ -728,8 +728,15 @@ $(function () {
             localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
         }
     });
+
     if(localStorage.getItem('darkMode') == 'enabled'){
-        $('body').toggleClass('night');
-        $('.dark-mode').toggleClass('night');
+        $('.dark-mode').toggleClass('active').prop('checked',true);
     }
+
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    if (prefersDarkScheme.matches) {
+        if(!$('body').hasClass('night')){
+            $('body').addClass('night');
+        }
+    } 
 });

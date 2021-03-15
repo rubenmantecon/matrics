@@ -63,15 +63,15 @@
                         </form>
                     </x-slot>
                 </x-dropdown>
-                <div class="toggle night-mode-available">
-                    <div class="night-mode-button">
-                        <input type="checkbox" class="dark-mode" id="night-mode">
-                        <label for="night-mode" class="label-dark-mode">
-                            <i class="fas fa-moon"></i>
-                            <i class="fas fa-sun"></i>
-                            <div class="blob"></div>
-                        </label>
-                    </div>
+            </div>
+            <div class="toggle night-mode-available">
+                <div class="night-mode-button">
+                    <input type="checkbox" class="dark-mode" id="night-mode">
+                    <label for="night-mode" class="label-dark-mode">
+                        <i class="fas fa-moon"></i>
+                        <i class="fas fa-sun"></i>
+                        <div class="blob"></div>
+                    </label>
                 </div>
             </div>
         </header>
@@ -118,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="mt-3 space-y-1">
+            <div class="auth mt-3 space-y-1">
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
