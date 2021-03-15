@@ -134,10 +134,9 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
+                	console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.id, item.name, item.email,
-                        momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        item.id, item.firstname, item.lastname1 + " " + item.lastname2, item.email,
                         "students"
                     ));
                 }
@@ -300,42 +299,73 @@ function loadLogsPage() {
     });
 }
 
-function getCsvRowsCareer() {
-    $("#remove").html('').addClass("loading");
-    var fr = new FileReader();
-    fr.onload = function () {
-        var file = fr.result;
+function importCSV(page) {
+	
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		}
+	});
+	
+	if(page == "careers"){
+		$("#remove").html('').addClass("loading");
+		var fr = new FileReader();
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+		fr.onload = function(){
+			console.log("Loaded");
+			var file = fr.result;
+			
+			var import_file = "csv";
+			
+			$.ajax({
+				url: $("meta[name='url']").attr("content"),
+				method: 'POST',
+				headers: {
+				    token: $("meta[name='_token']").attr("content"),
+				},
+				data: {
+					import_file,
+					file
+				},
+				success: (res) => {
+					$("#form-file").trigger("reset");
+		            localStorage.setItem('careers_json', res);
+		            location.href = "/admin/dashboard/careers/import";
+				},
+				error: (res) => {
+		            $("#form-file").trigger("reset");
+		            console.log(res);
+		        }
+			});
+		}
 
-        var import_file = "csv";
-        $.ajax({
-            url: $("meta[name='url']").attr("content"),
-            method: 'POST',
-            headers: {
-                token: $("meta[name='_token']").attr("content"),
-            },
-            data: {
-                import_file,
-                file
-            },
-            success: (res) => {
-                $("#form-file").trigger("reset");
-                localStorage.setItem('careers_json', res);
-                location.href = "/admin/dashboard/careers/import";
-            },
-            error: (res) => {
-                $("#form-file").trigger("reset");
-                console.log(res);
-            }
-        });
-    }
+		fr.readAsDataURL($('#file-csv')[0].files[0]);
+	}
+	else if(page == "students"){
+		var fr = new FileReader();
 
-    fr.readAsDataURL($('#file-csv')[0].files[0]);
+		fr.onload = function(){
+			console.log("Loaded");
+			var file = fr.result;
+
+			var import_file = "csv";
+			
+			$.ajax({
+				url: $("meta[name='url']").attr("content"),
+				method: 'POST',
+				headers: {
+				    token: $("meta[name='_token']").attr("content"),
+				},
+				data: {
+					import_file,
+					file
+				},
+				success: (res) => {generateMessages(res.status, res.text, ".container-messages", 3)}
+			});
+		}
+
+		fr.readAsDataURL($('#file')[0].files[0]);
+	}
 }
 
 /**
@@ -409,7 +439,7 @@ function insertNewRow(...params) {
     let row = "<tr>";
     for (let i = 0; i < params.length - 1; i++)
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
-
+        
     if (params[params.length - 1] == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>`;
@@ -515,7 +545,8 @@ function updateTableRowTerm(cols) {
             $(".label-group input#description").val(),
             momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            now(), now()
+            momentFormat(now(), "DD/MM/YYYY HH:mm:ss","YYYY-MM-DD HH:mm:ss"),
+            momentFormat(now(), "DD/MM/YYYY HH:mm:ss","YYYY-MM-DD HH:mm:ss")
         );
     } else {
         updateTermInDB(
@@ -569,9 +600,11 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
-    } else if (location.pathname.includes("admin/dashboard/logs")) {
+    }
+    else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
-    } else if (location.pathname.includes("dashboard/terms/delete/")) {
+    }
+    else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
         $("#name").on("input", (e) => {
@@ -600,6 +633,10 @@ $(function () {
         $("tbody").fadeIn(300);
         loadLogsPage();
     } else if (location.pathname.endsWith("/admin/dashboard/students/") || location.pathname.endsWith("/admin/dashboard/students")) {
+        $('#file').change(function(){
+        	console.log("Hey!")
+        	importCSV("students");
+        })
         $("tbody").fadeIn(300);
         const page = getUrlParameter("page");
         if (page)
@@ -640,7 +677,7 @@ $(function () {
             //         }
             //     });
         })
-    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
+    } else if (location.pathname.endsWith("/admin/dashboard/careers") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
@@ -650,7 +687,8 @@ $(function () {
         $("#file-csv").on("change", (e) => {
             console.log(e.target.files[0].name.split('.').pop());
             if (e.target.files[0].name.split('.').pop() === "csv") {
-                getCsvRowsCareer();
+                console.log("hey");
+                importCSV("careers");
             } else {
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
                 $(e.target).trigger("reset");
@@ -707,6 +745,33 @@ $(function () {
                     }
                     console.table(selectedRows);
                     // AJAX
+                    $.ajaxSetup({
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+						}
+					});
+					
+					var term_id = 1;
+					var data = JSON.stringify(selectedRows);
+					
+                    $.ajax({
+						url: $("meta[name='url']").attr("content"),
+						method: 'POST',
+						headers: {
+							token: $("meta[name='_token']").attr("content"),
+						},
+						data: {
+							data,
+							term_id
+						},
+						success: (res) => {
+							localStorage.removeItem("careers_json");
+                    		location.href = "/admin/dashboard/careers";
+						},
+						error: (res) => {
+							console.log(res);
+						}
+					});
                     //.success {}
                     localStorage.removeItem("careers_json");
                     // location.href = "/admin/dashboard/careers";

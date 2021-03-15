@@ -48,7 +48,6 @@
                 </tr>
             </tfoot>
         </table>
-        
         <div class="bg-dialog"></div>
         <div class="modal-term dis-none" title="Nou Curs">
         	<div class="label-group">

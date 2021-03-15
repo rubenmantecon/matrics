@@ -97,24 +97,37 @@ class CareerController extends Controller
         		return $json;
         	}
         	else{
-        		$career = new Career;
-		        $career->code = $request->code;
-		        $career->name = $request->name;
-		        $career->description = $request->desc;
-		        
-		        //
-		        $career->hours = $request->hours;
-		        //
-		        
-		        $career->start = $request->start;
-		        $career->end = $request->end;
+        		
+        		// Check if term_id exist
+        		
+        		
+        		
+	        	$careers = json_decode($request->data, true);
+	        	
+	        	foreach($careers as $career){
+	        		
+	        		$c = new Career;
+	        		
+	        		$c->term_id = $request->term_id;
+				    $c->code = "xdd";
+				    $c->name = $career["NOM_CICLE_FORMATIU"];
+				    $c->description = "";
+				    $c->hours = $career["HORES_CICLE_FORMATIU"];
+				    $c->start = $career["DATA_INICI_CICLE_FORMATIU"];
+				    if(empty($career["DATA_FI_CICLE_FORMATIU"])){
+				    	$c->end = null;
+				    }
+				    else{
+				    	$c->end = $career["DATA_FI_CICLE_FORMATIU"];
+				    }
 
-		        $status = $career->save();
+				    $status = $c->save();
+	        	}
         	}
 
             if ($status)
                 $data = ["status" => "Nou cicle creat correctament."];
-                Log::channel('dblogging')->info("Ha creado un nuevo Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
+                Log::channel('dblogging')->info("Ha creado un nuevo Ciclo", ["user_id" => Auth::id(), "career_id" => $c->id]);
         /*
         }
         */
