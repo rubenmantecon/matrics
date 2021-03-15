@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Career;
+use App\Models\Enrolment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
@@ -22,7 +25,7 @@ class StudentController extends Controller
         if ($token) {
             $user = User::select("token")->where('token', $token)->get()[0];
             if ($user['token'])
-                $data = User::select("id", "name", "email", "created_at", "updated_at")->where("role", "alumne")->paginate(20)->onEachSide(2);
+                $data = User::select("id", "firstname", "lastname1", "lastname2", "email")->where("role", "alumne")->paginate(20)->onEachSide(2);
         }
         return response()->json($data);
     }
@@ -47,6 +50,7 @@ class StudentController extends Controller
     {
         $data = ['status' => 'Unauthorized, error 503'];
         $token = $request->header('token');
+
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
 
@@ -57,47 +61,117 @@ class StudentController extends Controller
 		    		
 		    		$array = array_map("str_getcsv", explode("\n", $tmp));
 		    		
-		    		$stash_control = array();
-		    		$stash = array();
-		    		
-		    		$array = array_slice(array_slice($array, 1), 0, -1);
+		    		$array = array_slice($array, 0, -1);
 		    		
 		    		$q = 0;
 		    		$status_controller = ["okey" => 0, "failed" => 0];
 		    		
-		    		$interesting_index = ["name" => null, "lastname1" => null, "lastname2" => null
+		    		$interesting_index = ["firstname" => null, "lastname1" => null, "lastname2" => null, "email" => null];
 		    		
 		    		foreach($array as $element){
 		    			if($q == 0){
 		    				// search for certain column names
-		    				$interesting_index["name"] = array_search("Nom", $element);
+		    				$interesting_index["firstname"] = array_search("Nom", $element);
 		    				$interesting_index["lastname1"] = array_search("Primer cognom", $element);
 		    				$interesting_index["lastname2"] = array_search("Segon cognom", $element);
+		    				$interesting_index["email"] = array_search("Correu electrònic", $element);
+		    				$interesting_index["career_id"] = array_search("Codi ensenyament P1
+", $element);
 		    			}
 		    			else{
 		    				// validate, if someone is not valid add to $status_controller["failed"] and skip it
+		    				if(empty($element[$interesting_index["firstname"]])){
+		    					$status_controller["failed"]++;
+		    					continue;
+		    				}
+		    				if(empty($element[$interesting_index["lastname1"]])){
+		    					$status_controller["failed"]++;
+		    					continue;
+		    				}
+		    				if(empty($element[$interesting_index["lastname2"]])){
+		    					$status_controller["failed"]++;
+		    					continue;
+		    				}
+		    				if(empty($element[$interesting_index["email"]])){
+		    					$status_controller["failed"]++;
+		    					continue;
+		    				}
+		    				if(empty($element[$interesting_index["career_id"]])){
+		    					$status_controller["failed"]++;
+		    					continue;
+		    				}
 		    				
-		    				// Insert in the db
+		    				// lets check if the career exists
+		    				$response = Career::select("code", "term_id")->where('code', $element[$interesting_index["career_id"]])->orderBy("term_id", "desc")->get();
 		    				
+		    				if(sizeof($response) == 0){
+								// We don't have that actual career, just skip it for now
+		    					$status_controller["failed"]++;
+		    					continue;
+		    				}
+		    				
+		    				// Insert user in the db
+							$user = new User;
+							$user->name = strtolower(str_replace(" ", "", substr($element[$interesting_index["firstname"]], 0, 1) . $element[$interesting_index["firstname"]] . $element[$interesting_index["lastname2"]]));
+							$user->firstname = $element[$interesting_index["firstname"]];
+							$user->lastname1 = $element[$interesting_index["lastname1"]];
+							$user->lastname2 = $element[$interesting_index["lastname2"]];
+							$user->email = $element[$interesting_index["email"]];
+							/* TODO Mejorar contraseña default a DNI */
+							$user->password = Hash::make("ieti" . date("Y"));
+							/* Para salir del paso */
+							$user->token = hash("sha256", $element[$interesting_index["email"]]);
+							
+							$user->created_at = $request->created;
+							$user->updated_at = $request->updated;
+
+							$status = $user->save();
+							if ($status){
+								$enrollment = new Enrolment;
+								$enrollment->user_id = $user->id;
+								$enrollment->term_id = $response["term_id"];
+								$enrollment->career_id = $response["code"];
+								$enrollment->dni = $element[$interesting_index["dni"]];
+								$enrollment->state = "unregistered";
+								$enrollment->created_at = $request->created;
+								$enrollment->updated_at = $request->updated;
+								
+								$enrollment->save();
+								
+								$status_controller["okey"]++;
+
+							}
+							else{
+								$status_controller["failed"]++;
+							}
+
 		    			}
 		    			$q++;
-		    			/*
-		    			$user = new User;
-						$user->name = $request->name;
-						$user->description = $request->desc;
-						$user->start = $request->start;
-						$user->end = $request->end;
-						$user->active = 1; // NO HARDCODEAR
-						$user->created_at = $request->created;
-						$user->updated_at = $request->updated;
-
-						$status = $user->save();
-						if ($status){
-						    $data = ["status" => "Importació d'usuaris completada correctament."];
-						    Log::channel('dblogging')->info("Ha importado N alumnos", ["user_id" => Auth::id(), "term_id" => $term->id]);
-						}
-		    			*/
+		    			
 		    		}
+		    		
+		    		if($status_controller["okey"] + $status_controller["failed"] > 0){
+		    			if($status_controller["okey"] > 0){
+							if($status_controller["failed"] > 0){
+								$data = ["status" => "warning", "text" => "Importació d'usuaris completada correctament.<br>{$status_controller["okey"]} afegits<br>{$status_controller["failed"]} no s'han afegit."];
+							}
+							else{
+								$data = ["status" => "success", "text" => "Importació d'usuaris completada correctament.<br>{$status_controller["okey"]} afegits."];
+							}		    			
+		    			}
+		    			else{
+		    				$data = ["status" => "error", "text" => "Importació d'usuaris fallida.<br>{$status_controller["failed"]} no s'han afegit."];
+		    			}
+
+		    			
+		    		}
+		    		else{
+		    			$data = ["status" => "error", "text" => "Importació d'usuaris fallida, no s'han trobat alumnes al CSV."];
+		    		}
+		    		
+		    		
+								//Log::channel('dblogging')->info("Ha importado alumnos (", ["user_id" => Auth::id(), "term_id" => $term->id]);
+		    		
 		    	}
 		    	else{
 		    	

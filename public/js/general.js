@@ -134,10 +134,9 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
+                	console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.id, item.name, item.email,
-                        momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        item.id, item.firstname, item.lastname1 + " " + item.lastname2, item.email,
                         "students"
                     ));
                 }
@@ -309,49 +308,78 @@ function loadLogsPage() {
     });
 }
 
-function importCareer() {
+function importCSV(page) {
+	
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		}
+	});
+	
+	if(page == "career"){
+		var fr = new FileReader();
 
-	var fr = new FileReader();
+		fr.onload = function(){
+			console.log("Loaded");
+			var file = fr.result;
+			
+			var import_file = $('#import').val();
+			
+			$.ajax({
+				url: $("meta[name='url']").attr("content"),
+				method: 'POST',
+				headers: {
+				    token: $("meta[name='_token']").attr("content"),
+				},
+				data: {
+					import_file,
+					file
+				},
+				success: (res) => {
+					var a = JSON.parse(res);
+				    if (a.length > 0) {
+				        for (const item of a) {
+				        	console.log(item);
+				        }
+				        /*
+				        for (const item of res) {
+				        	console.log(item);
+				        }
+				        */
+				    }
+				}
+			});
+		}
 
-	fr.onload = function(){
-		console.log("Loaded");
-		var file = fr.result;
-		
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-		
-		var import_file = $('#import').val();
-		
-		$.ajax({
-		    url: $("meta[name='url']").attr("content"),
-		    method: 'POST',
-		    headers: {
-		        token: $("meta[name='_token']").attr("content"),
-		    },
-		    data: {
-		    	import_file,
-		    	file
-		    },
-		    success: (res) => {
-		    	var a = JSON.parse(res);
-		        if (a.length > 0) {
-		            for (const item of a) {
-		            	console.log(item);
-		            }
-		            /*
-		            for (const item of res) {
-		            	console.log(item);
-		            }
-		            */
-		        }
-		    }
-		});
+		fr.readAsDataURL($('#file')[0].files[0]);
+	}
+	else if(page == "students"){
+		var fr = new FileReader();
+
+		fr.onload = function(){
+			console.log("Loaded");
+			var file = fr.result;
+
+			var import_file = "csv";
+			
+			$.ajax({
+				url: $("meta[name='url']").attr("content"),
+				method: 'POST',
+				headers: {
+				    token: $("meta[name='_token']").attr("content"),
+				},
+				data: {
+					import_file,
+					file
+				},
+				success: (res) => {generateMessages(res.status, res.text, ".container-messages", 3)}
+			});
+		}
+
+		fr.readAsDataURL($('#file')[0].files[0]);
 	}
 
-	fr.readAsDataURL($('#file')[0].files[0]);
+	
 }
 
 /**
@@ -624,6 +652,10 @@ $(function () {
         $("tbody").fadeIn(300);
         loadLogsPage();
     } else if (location.pathname.endsWith("/admin/dashboard/students/") || location.pathname.endsWith("/admin/dashboard/students")) {
+        $('#file').change(function(){
+        	console.log("Hey!")
+        	importCSV("students");
+        })
         $("tbody").fadeIn(300);
         const page = getUrlParameter("page");
         if (page)
@@ -666,4 +698,5 @@ $(function () {
     } else if (location.pathname.endsWith("/admin/dashboard/students/import") || location.pathname.endsWith("/admin/dashboard/students/import/")) {
 
     }
+    
 });
