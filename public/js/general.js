@@ -711,5 +711,16 @@ $(function () {
     //"DARK-MODE"
     $('.dark-mode').on('change',()=>{
         $('body').toggleClass('night');
-      });
+        $('.dark-mode').toggleClass('night');
+
+        if($('body').hasClass('night')){ //cuando el cuerpo tiene la clase 'dark' actualmente
+            localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
+        }else{
+            localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
+        }
+    });
+    if(localStorage.getItem('darkMode') == 'enabled'){
+        $('body').toggleClass('night');
+        $('.dark-mode').toggleClass('night');
+    }
 });
