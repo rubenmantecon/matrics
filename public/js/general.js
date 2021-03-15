@@ -641,7 +641,8 @@ $(function () {
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         });
         $("#file-csv").on("change", (e) => {
-            if (e.target.files[0].type === "text/csv")
+            console.log(e.target.files[0].name.split('.').pop());
+            if (e.target.files[0].name.split('.').pop() === "csv")
                 getCsvRowsCareer();
             else
                 generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
