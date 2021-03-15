@@ -2,7 +2,7 @@
 /**
  * @description "check if value is null"
  * @param {String} element 
- * @return {String} 
+ * @return {Boolean} 
  */
 function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
@@ -206,8 +206,8 @@ function loadTermPage() {
                         item.id, item.name, item.description,
                         momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
-                        momentFormat(item.created_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.created_at, "", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.updated_at, "", "DD/MM/YYYY HH:mm:ss"),
                         "terms"
                     ));
                 }
@@ -244,15 +244,12 @@ function loadCareerPage() {
             $("tbody").css("display", "none").html('');
             if (res.length > 0) {
                 for (const item of res) {
-                	console.log(item);
-
                     $("tbody").append(insertNewRow(
                         item.id, item.code, item.name, item.description, item.hours,
                         momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
                         "careers"
                     ));
-
                 }
             } else {
                 $("tbody").append(
@@ -284,25 +281,19 @@ function loadLogsPage() {
             //console.log(res);
             for (const item of res) {
                 console.log(item);
-                
-		var tmp = JSON.parse(item.message);
-                
+                var tmp = JSON.parse(item.message);
                 var output_badge = "";
-                
-                if(item.level == 200){
-                	output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
+                if (item.level == 200) {
+                    output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
                 }
-                
                 $("tbody").append(insertNewRow(
-                	item.id, item.name, output_badge, tmp.message,
+                    item.id, item.name, output_badge, tmp.message,
 
-			momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-			"logs"
-                    ));
+                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                    "logs"
+                ));
             }
-
-		$('tbody').fadeIn(300);
-
+            $('tbody').fadeIn(300);
             $("body").addClass("body-logs");
         }
     });
@@ -378,8 +369,6 @@ function importCSV(page) {
 
 		fr.readAsDataURL($('#file')[0].files[0]);
 	}
-
-	
 }
 
 /**
@@ -426,19 +415,27 @@ function rowEventEditAndNew(tag) {
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou Curs' : 'Modicació de curs');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-    
+
     if (location.pathname.includes("admin/dashboard/terms")) {
-    	getInfoForModal(rowSelected.children(), "terms");
+        getInfoForModal(rowSelected.children(), "terms");
+    } else if (location.pathname.includes("admin/dashboard/careers")) {
+        getInfoForModal(rowSelected.children(), "careers");
     }
-   	else if (location.pathname.includes("admin/dashboard/careers")) {
-   		getInfoForModal(rowSelected.children(), "careers");
-   	}
-    
+
+}
+
+function getInfoForModal(cols, page) {
+    if (page === "terms") {
+        $(".label-group input#name").val($(cols[1]).text()); // NAME
+        $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
+        $(".label-group input#start").val($(cols[3]).text()); // START
+        $(".label-group input#end").val($(cols[4]).text()); // END
+    }
 }
 
 /**
  * @description "insert new row in the table body"
- * @param  {...any} params "num n of parameters (last parameter define the actual page 'terms|logs|students')"
+ * @param  {...any} params "num n of parameters (last parameter define the actual page 'terms|logs|students|import')"
  * @return {String}
  */
 function insertNewRow(...params) {
@@ -451,17 +448,6 @@ function insertNewRow(...params) {
                 <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>`;
     }
     return row + "</tr>";
-}
-
-/**
- * @description "get the information of the selected row and put it in the fields to edit"
- * @param {Element[]} cols "Array of DOM Elements"
- */
-function getInfoForTermModal(cols) {
-    $(".label-group input#name").val($(cols[1]).text()); // NAME
-    $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
-    $(".label-group input#start").val($(cols[3]).text()); // START
-    $(".label-group input#end").val($(cols[4]).text()); // END
 }
 
 /**
@@ -497,7 +483,10 @@ function insertTermInDB(name, desc, start, end, created, updated) {
             generateMessages("success", res.status, ".container-messages", 3);
             loadTermPage();
         },
-        error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
+        error: (res) => {
+            console.log(res.responseJSON.message);
+            generateMessages("error", "Error al servidor", ".container-messages", 3)
+        }
     });
 }
 
@@ -540,7 +529,10 @@ function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete"
                 }, 2000);
             } else loadTermPage();
         },
-        error: (res) => generateMessages("error", res.responseJSON.message, ".container-messages", 3)
+        error: (res) => {
+            console.log(res.responseJSON.message);
+            generateMessages("error", "Error al servidor", ".container-messages", 3)
+        }
     });
 }
 
@@ -586,9 +578,9 @@ function validationTermForm() {
         let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
         let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
         if (start === "Invalid date")
-            msg += "Data d'inici invalida 'DD-MM-AAAA'.\n";
+            msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
         else if (end === "Invalid date")
-            msg += "Data de finalització invalida 'DD-MM-AAAA'.\n";
+            msg += "Data de finalització invàlida 'DD-MM-AAAA'.\n";
         else if (end < start)
             msg += "La data de finalització no pot ser mes petita que la d'inici.\n";
     }
@@ -662,41 +654,137 @@ $(function () {
             loadStudentsPage($("meta[name='url']").attr("content") + `?page=${page}`);
         else
             loadStudentsPage();
-        // $("#file").on("change", (e) => {
-        //     if (e.target.files[0].type === "text/csv")
-        //         $("#form-file").submit();
-        //     else
-        //         generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
-        // })
-        // $("#form-file").submit((e) => {
-        //     e.preventDefault();
-        //     var formData = new FormData(document.getElementById("form-file"));
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         }
-        //     });
-        //     $.ajax({
-        //         url: "/api/import",
-        //         method: 'POST',
-        //         headers: {
-        //             token: $("meta[name='_token']").attr("content"),
-        //         },
-        //         data: formData,
-        //         contentType: false,
-        //         processData: false,
-        //         success: (data) => {
-        //             // $("#form-file").reset();
-        //             // alert('File has been uploaded successfully');
-        //             console.log(data);
-        //         },
-        //         error: function (data) {
-        //             console.log(data);
-        //         }
-        //     });
-        // })
-    } else if (location.pathname.endsWith("/admin/dashboard/students/import") || location.pathname.endsWith("/admin/dashboard/students/import/")) {
+        $("#file-csv").on("change", (e) => {
+            if (e.target.files[0].type === "text/csv")
+                $("#form-file").submit();
+            else
+                generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
+        })
+        $("#form-file").submit((e) => {
+            // e.preventDefault();
+            // importCareer();
+            // var formData = new FormData(document.getElementById("form-file"));
+            //     $.ajaxSetup({
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         }
+            //     });
+            //     $.ajax({
+            //         url: "/api/import",
+            //         method: 'POST',
+            //         headers: {
+            //             token: $("meta[name='_token']").attr("content"),
+            //         },
+            //         data: formData,
+            //         contentType: false,
+            //         processData: false,
+            //         success: (data) => {
+            //             // $("#form-file").reset();
+            //             // alert('File has been uploaded successfully');
+            //             console.log(data);
+            //         },
+            //         error: function (data) {
+            //             console.log(data);
+            //         }
+            //     });
+        })
+    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
+        loadCareerPage();
+        $("#start, #end").datepicker(dataPickerOptions);
+        $("#start, #end").on("focus", () => {
+            $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
+            $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
+        });
+        $("#file-csv").on("change", (e) => {
+            console.log(e.target.files[0].name.split('.').pop());
+            if (e.target.files[0].name.split('.').pop() === "csv") {
+                getCsvRowsCareer();
+            } else {
+                generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
+                $(e.target).trigger("reset");
+            }
+        })
+    } else if (location.pathname.endsWith("/admin/dashboard/careers/import") || location.pathname.endsWith("/admin/dashboard/careers/import/")) {
+        const careers = JSON.parse(localStorage.getItem("careers_json"));
+        if (!careers) {
+            generateMessages("warning", "No s'ha trobat cap importació.", ".container-messages", 2.5);
+            setTimeout(() => location.href = "/admin/dashboard/careers", 2500);
+        } else {
+            let arrayCareers = [];
+            let cont = 0;
+            let rows = "";
+            for (const key in careers) {
+                if (Object.hasOwnProperty.call(careers, key)) {
+                    arrayCareers.push(careers[key]);
+                    let dataRow = `
+                    <div class="container-cb">
+                        <input name="check-${cont}" id="check-${cont}" type="checkbox">
+                        <label for="check-${cont}">
+                            <i class="fa fa-check"></i>
+                        </label>
+                    </div>
+                    <label class="text" for="check-${cont}">${key} - ${careers[key]['NOM_CICLE_FORMATIU']}</label>
+                    <div class="row-bg"></div>`;
+                    rows += insertNewRow(dataRow, "import");
+                    cont++;
+                }
+            }
+            $("tbody").css("display", "none").html(rows).fadeIn(300);
+            $("label").click(function () {
+                let rowBackground = $(this).closest('td').children(".row-bg");
+                let input = $(this).closest('td').children(".container-cb").children("input");
+                if (input.is(':checked')) {
+                    rowBackground.animate({
+                        width: "0vw"
+                    });
+                } else {
+                    rowBackground.animate({
+                        width: "100vw"
+                    });
+                }
+            });
+            $(".btn-start-import button").on("click", () => {
+                const checkboxes = $("input[type='checkbox']:checked");
+                let selectedRows = [];
+                if (checkboxes.length > 0) {
+                    generateMessages("info", "La importació ha començat.", ".container-messages", 2.5);
+                    $(".btn-start-import button").html('').addClass("loading no-click");
+                    for (const item of checkboxes) {
+                        const index = $(item).prop("name").split("-")[1];
+                        selectedRows.push(arrayCareers[index]);
+                    }
+                    console.table(selectedRows);
+                    // AJAX
+                    //.success {}
+                    localStorage.removeItem("careers_json");
+                    // location.href = "/admin/dashboard/careers";
 
+                } else generateMessages("error", "No s'ha seleccionat cap cicle.", ".container-messages", 2.5);
+            });
+            generateMessages("success", "Arxiu carregat correctament.", ".container-messages", 2.5);
+        }
     }
     
+    //"DARK-MODE"
+    $('.dark-mode').on('change',()=>{
+        $('body').toggleClass('night');
+        $('.dark-mode').toggleClass('active');
+
+        if($('body').hasClass('night')){ //cuando el cuerpo tiene la clase 'dark' actualmente
+            localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
+        }else{
+            localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
+        }
+    });
+
+    if(localStorage.getItem('darkMode') == 'enabled'){
+        $('.dark-mode').toggleClass('active').prop('checked',true);
+    }
+
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    if (prefersDarkScheme.matches) {
+        if(!$('body').hasClass('night')){
+            $('body').addClass('night');
+        }
+    } 
 });
