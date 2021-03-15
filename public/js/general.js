@@ -452,7 +452,7 @@ function insertTermInDB(name, desc, start, end, created, updated) {
         },
         error: (res) => {
             console.log(res.responseJSON.message);
-            generateMessages("error", "Error en el servidor", ".container-messages", 3)
+            generateMessages("error", "Error al servidor", ".container-messages", 3)
         }
     });
 }
@@ -498,7 +498,7 @@ function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete"
         },
         error: (res) => {
             console.log(res.responseJSON.message);
-            generateMessages("error", "Error en el servidor", ".container-messages", 3)
+            generateMessages("error", "Error al servidor", ".container-messages", 3)
         }
     });
 }
@@ -544,9 +544,9 @@ function validationTermForm() {
         let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
         let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
         if (start === "Invalid date")
-            msg += "Data d'inici invalida 'DD-MM-AAAA'.\n";
+            msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
         else if (end === "Invalid date")
-            msg += "Data de finalització invalida 'DD-MM-AAAA'.\n";
+            msg += "Data de finalització invàlida 'DD-MM-AAAA'.\n";
         else if (end < start)
             msg += "La data de finalització no pot ser mes petita que la d'inici.\n";
     }
@@ -610,7 +610,7 @@ $(function () {
             if (e.target.files[0].type === "text/csv")
                 $("#form-file").submit();
             else
-                generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
+                generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
         })
         $("#form-file").submit((e) => {
             // e.preventDefault();
@@ -652,7 +652,7 @@ $(function () {
             if (e.target.files[0].name.split('.').pop() === "csv") {
                 getCsvRowsCareer();
             } else {
-                generateMessages("error", "Els arxius tenen que ser .CSV", ".container-messages", 2.5)
+                generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
                 $(e.target).trigger("reset");
             }
         })
@@ -699,7 +699,7 @@ $(function () {
                 const checkboxes = $("input[type='checkbox']:checked");
                 let selectedRows = [];
                 if (checkboxes.length > 0) {
-                    generateMessages("info", "La importació a començat.", ".container-messages", 2.5);
+                    generateMessages("info", "La importació ha començat.", ".container-messages", 2.5);
                     $(".btn-start-import button").html('').addClass("loading no-click");
                     for (const item of checkboxes) {
                         const index = $(item).prop("name").split("-")[1];
