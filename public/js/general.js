@@ -492,7 +492,7 @@ function rowEventEditAndNew(tag, page) {
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou' : 'Modicació');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-    $(".ui-dialog").prev().addClass(page)
+    $(".ui-dialog").prev().addClass(page);
     const cols = rowSelected.children();
     if (page === "terms") {
         const colsValues = [cols[1], cols[2], cols[3], cols[4]];
