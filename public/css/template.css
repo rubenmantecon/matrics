@@ -4,6 +4,25 @@
 * {
     font-family: "Roboto", sans-serif;
 }
+
+/* CSS VARIABLES */
+:root {
+    --BGgeneral: aliceblue;
+    --BGsecundary: #5b76a0;
+    --BGterciary: lightblue;
+    --BGadmin: #ffa500;
+    --BGtable: #214093;
+    --loading: rgba(0, 0, 0, 0.15);
+    --primaryText: ;
+    --darkText: rgb(250, 250, 250);
+    --saveBtn: #21ba45;
+    --saveBtnHover: #20973c;
+    --selectedRow: #b1ffb494;
+    --cancelBtn: #ff695e;
+    --cancelBtnHover: #c92b20;
+    --pagination: #383838;
+}
+
 /* DARK MODE */
 .toggle {
     display: flex;
@@ -31,7 +50,7 @@
     border: 2px solid black;
 }
 .label-dark-mode .fa-moon {
-    color: rgb(250, 250, 250);
+    color: var(--darkText);
 }
 label .fa-sun {
     color: rgb(243, 188, 36);
@@ -41,7 +60,7 @@ label .fa-sun {
     left: 50%;
     width: 50%;
     height: 100%;
-    background: rgb(169, 241, 243);
+    background: var(--BGterciary);
     border-radius: 50px;
     transition: 0.5s ease all;
 }
@@ -55,11 +74,11 @@ label .fa-sun {
 }
 body.night header {
     background-color: rgba(17, 16, 34, 0.911);
-    color: white;
+    color: var(--darkText);
 }
 body.night {
     background-color: rgba(17, 16, 34, 0.85);
-    color: white;
+    color: var(--darkText);
 }
 body.night .option {
     background-color: rgba(42, 42, 66, 0.911);
@@ -69,44 +88,44 @@ body.night a {
 }
 body.night tr {
     background-color: rgba(17, 16, 34, 0.911);
-    color: white;
+    color: var(--darkText);
 }
 body.night tr:nth-child(even) {
     background-color: rgba(42, 42, 66, 0.85);
-    color: white;
+    color: var(--darkText);
 }
 body.night ul.pagination a i {
     color: rgba(255, 255, 255, 0.8);
 }
 body.night ul.pagination li.pageNumber.active a {
     background: rgba(255, 255, 255, 0.8);
-    color: #383838;
+    color: var(--pagination);
 }
 body.night .ui-dialog {
     background-color: rgba(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 body.night .ui-dialog .ui-dialog-titlebar {
     background-color: rgb(23, 22, 37) !important;
-    color: white;
+    color: var(--darkText);
 }
 body.night .ui-dialog .buttons-group {
     background-color: rgb(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 body.night .ui-dialog .buttons-group .or:before {
     background-color: rgb(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 body.night .modal-header {
     background-color: rgba(23, 22, 37) !important;
-    color: white;
+    color: var(--darkText);
 }
 body.night .modal-body,
 body.night .modal-footer,
 body.night .buttons-group .or:before {
     background-color: rgba(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 .dark-mode:checked + .label-dark-mode .blob {
     left: 0;
@@ -117,11 +136,11 @@ body.night .buttons-group .or:before {
 @media (prefers-color-scheme: dark) {
     header {
         background-color: rgba(17, 16, 34, 0.911);
-        color: white;
+        color: var(--darkText);
     }
     body {
         background-color: rgba(17, 16, 34, 0.85) !important;
-        color: white;
+        color: var(--darkText);
     }
     .option {
         background-color: rgba(42, 42, 66, 0.911);
@@ -143,44 +162,44 @@ body.night .buttons-group .or:before {
     }
     tr {
         background-color: rgba(17, 16, 34, 0.911);
-        color: white;
+        color: var(--darkText);
     }
     tr:nth-child(even) {
         background-color: rgba(42, 42, 66, 0.85);
-        color: white;
+        color: var(--darkText);
     }
     ul.pagination a i {
         color: rgba(255, 255, 255, 0.8);
     }
     ul.pagination li.pageNumber.active a {
         background: rgba(255, 255, 255, 0.8);
-        color: #383838;
+        color: var(--pagination);
     }
     .ui-dialog {
         background-color: rgba(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
     .ui-dialog .ui-dialog-titlebar {
         background-color: rgb(23, 22, 37) !important;
-        color: white;
+        color: var(--darkText);
     }
     .ui-dialog .buttons-group {
         background-color: rgb(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
     .ui-dialog .buttons-group .or:before {
         background-color: rgb(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
     .modal-header {
         background-color: rgba(23, 22, 37) !important;
-        color: white;
+        color: var(--darkText);
     }
     .modal-body,
     .modal-footer,
     .buttons-group .or:before {
         background-color: rgba(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
 }
 
@@ -188,7 +207,7 @@ body.night .buttons-group .or:before {
 body {
     margin: 0;
     padding: 0;
-    background-color: aliceblue;
+    background-color: var(--BGgeneral);
 }
 
 .dis-none {
@@ -253,7 +272,7 @@ span.red {
     width: 1.28571429em;
     height: 1.28571429em;
     border-radius: 500rem;
-    border: 0.2em solid rgba(0, 0, 0, 0.15);
+    border: 0.2em solid var(--loading);
 }
 
 .loading.inverted:after {
@@ -280,6 +299,8 @@ span.red {
     box-shadow: 0 0 0 1px transparent;
 }
 
+/* BREADCRUMB */
+
 .breadcrumb {
     list-style: none;
     overflow: hidden;
@@ -290,7 +311,7 @@ span.red {
 
 .breadcrumb li.active {
     float: left;
-    background: lightblue;
+    background: var(--BGterciary);
     color: black;
 }
 
@@ -298,9 +319,9 @@ span.red {
     color: white;
     text-decoration: none;
     padding: 5px 0 5px 40px;
-    background: #5b76a0;
+    background: var(--BGsecundary);
     /* fallback color */
-    background: #5b76a0;
+    background: var(--BGsecundary);
     position: relative;
     display: block;
     float: left;
@@ -314,7 +335,7 @@ span.red {
     border-top: 50px solid transparent;
     /* Go big on the size, and let overflow hide */
     border-bottom: 50px solid transparent;
-    border-left: 30px solid #5b76a0;
+    border-left: 30px solid var(--BGsecundary);
     position: absolute;
     top: 50%;
     margin-top: -50px;
@@ -330,7 +351,7 @@ span.red {
     border-top: 50px solid transparent;
     /* Go big on the size, and let overflow hide */
     border-bottom: 50px solid transparent;
-    border-left: 30px solid lightblue;
+    border-left: 30px solid var(--BGterciary);
     position: absolute;
     top: 50%;
     margin-top: -50px;
@@ -379,12 +400,14 @@ span.red {
 }
 
 .breadcrumb li.active:hover {
-    background: lightblue;
+    background: var(--BGterciary);
 }
 
 .breadcrumb li.active:hover:after {
-    border-left-color: lightblue !important;
+    border-left-color: var(--BGterciary) !important;
 }
+
+/* TABLE */
 
 table td.loading {
     height: 5em;
@@ -436,23 +459,23 @@ table td.loading:after {
 }
 
 .btn.save {
-    background-color: #21ba45 !important;
+    background-color: var(--saveBtn) !important;
     color: #fff !important;
     text-shadow: none !important;
 }
 
 .btn.save:hover {
-    background-color: #20973c !important;
+    background-color: var(--saveBtnHover) !important;
 }
 
 .btn.cancel {
-    background-color: #ff695e !important;
+    background-color: var(--cancelBtn) !important;
     color: #fff !important;
     text-shadow: none !important;
 }
 
 .btn.cancel:hover {
-    background-color: #c92b20 !important;
+    background-color: var(--cancelBtnHover) !important;
 }
 
 .btn {
@@ -624,13 +647,13 @@ div.container-messages {
     box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
 }
 
-/* HEADER */
+/* HEADER #ffa500 */
 header.admin {
-    background-color: #ffa500;
+    background-color: var(--BGadmin);
 }
 
 header {
-    background-color: #64b7ff;
+    background-color: var(--BGterciary);
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -923,9 +946,9 @@ table thead th:last-child {
 table thead th,
 table tfoot th {
     height: 60px;
-    background: #1838a0;
+    background: var(--BGtable);
     font-size: 18px;
-    color: #fff;
+    color: var(--darkText);
     line-height: 1.2;
     font-weight: unset;
     text-align: center;
@@ -1429,7 +1452,7 @@ main.login .container-form a img.logo {
     top: 0px;
     width: 0vw;
     height: 40vh;
-    background-color: #00ff0894;
+    background-color: var(--selectedRow);
 }
 
 .import .btn-start-import {
@@ -1471,7 +1494,7 @@ ul.pagination li.pageNumber {
 ul.pagination li.pageNumber a {
     display: block;
     text-decoration: none;
-    color: #383838;
+    color: var(--pagination);
     font-weight: 600;
     border-radius: 50%;
     transition: 0.15s;
@@ -1479,7 +1502,7 @@ ul.pagination li.pageNumber a {
 
 ul.pagination li.pageNumber:hover a,
 ul.pagination li.pageNumber.active a {
-    background: #383838;
+    background: var(--pagination);
     color: #fff;
 }
 

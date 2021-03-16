@@ -74,11 +74,12 @@ use BabDev\Breadcrumbs\Contracts\BreadcrumbsManager;
 
     // Dashboard > Careers
     Breadcrumbs::for('careers', function ($trail) {
-        $trail->parent('term_career');
+        //$trail->parent('term_career');
+        $trail->parent('dashboard');
         $trail->push("Cicles", '/dashboard/careers');
     });
 
-    // Dashboard > Import careers
+    // Dashboard > Careers > Import careers
     Breadcrumbs::for('career', function ($trail) {
         $trail->parent('careers');
         $trail->push("Importar cicles", '/dashboard/careers/import');
