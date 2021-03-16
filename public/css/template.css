@@ -5,6 +5,24 @@
     font-family: "Roboto", sans-serif;
 }
 
+/* CSS COLORS VARIABLES */
+:root {
+    --BGgeneral: aliceblue;
+    --BGsecundary: #5b76a0;
+    --BGterciary: lightblue;
+    --BGadmin: #ffa500;
+    --BGtable: #214093;
+    --loading: rgba(0, 0, 0, 0.15);
+    --primaryText: ;
+    --darkText: rgb(250, 250, 250);
+    --saveBtn: #21ba45;
+    --saveBtnHover: #20973c;
+    --selectedRow: #b1ffb494;
+    --cancelBtn: #ff695e;
+    --cancelBtnHover: #c92b20;
+    --pagination: #383838;
+}
+
 /* DARK MODE */
 .toggle {
     display: flex;
@@ -12,7 +30,6 @@
     justify-content: center;
     align-items: center;
     margin-left: 40px;
-    margin-right: -30px;
 }
 
 .toggle.night {
@@ -35,7 +52,7 @@
 }
 
 .label-dark-mode .fa-moon {
-    color: rgb(250, 250, 250);
+    color: var(--darkText);
 }
 
 label .fa-sun {
@@ -47,7 +64,7 @@ label .fa-sun {
     left: 50%;
     width: 50%;
     height: 100%;
-    background: rgb(169, 241, 243);
+    background: var(--BGterciary);
     border-radius: 50px;
     transition: 0.5s ease all;
 }
@@ -64,12 +81,12 @@ label .fa-sun {
 
 body.night header {
     background-color: rgba(17, 16, 34, 0.911);
-    color: white;
+    color: var(--darkText);
 }
 
 body.night {
     background-color: rgba(17, 16, 34, 0.85);
-    color: white;
+    color: var(--darkText);
 }
 
 body.night .option {
@@ -86,12 +103,12 @@ body.night a.link {
 
 body.night tr {
     background-color: rgba(17, 16, 34, 0.911);
-    color: white;
+    color: var(--darkText);
 }
 
 body.night tr:nth-child(even) {
     background-color: rgba(42, 42, 66, 0.85);
-    color: white;
+    color: var(--darkText);
 }
 
 body.night ul.pagination a i {
@@ -100,39 +117,39 @@ body.night ul.pagination a i {
 
 body.night ul.pagination li.pageNumber.active a {
     background: rgba(255, 255, 255, 0.8);
-    color: #383838;
+    color: var(--pagination);
 }
 
 body.night .ui-dialog {
     background-color: rgba(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 
 body.night .ui-dialog .ui-dialog-titlebar {
     background-color: rgb(23, 22, 37) !important;
-    color: white;
+    color: var(--darkText);
 }
 
 body.night .ui-dialog .buttons-group {
     background-color: rgb(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 
 body.night .ui-dialog .buttons-group .or:before {
     background-color: rgb(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 
 body.night .modal-header {
     background-color: rgba(23, 22, 37) !important;
-    color: white;
+    color: var(--darkText);
 }
 
 body.night .modal-body,
 body.night .modal-footer,
 body.night .buttons-group .or:before {
     background-color: rgba(42, 42, 66) !important;
-    color: white;
+    color: var(--darkText);
 }
 
 .dark-mode:checked+.label-dark-mode .blob {
@@ -147,7 +164,7 @@ body.night .buttons-group .or:before {
 body {
     margin: 0;
     padding: 0;
-    background-color: aliceblue;
+    background-color: var(--BGgeneral);
 }
 
 .dis-none {
@@ -223,7 +240,7 @@ a.return-term.link {
     width: 1.28571429em;
     height: 1.28571429em;
     border-radius: 500rem;
-    border: 0.2em solid rgba(0, 0, 0, 0.15);
+    border: 0.2em solid var(--loading);
 }
 
 .loading.inverted:after {
@@ -289,7 +306,7 @@ table td.loading:after {
 
 .breadcrumb li.active {
     float: left;
-    background: lightblue;
+    background: var(--BGterciary);
     color: black;
 }
 
@@ -297,9 +314,9 @@ table td.loading:after {
     color: white;
     text-decoration: none;
     padding: 5px 0 5px 40px;
-    background: #5b76a0;
+    background: var(--BGsecundary);
     /* fallback color */
-    background: #5b76a0;
+    background: var(--BGsecundary);
     position: relative;
     display: block;
     float: left;
@@ -313,7 +330,7 @@ table td.loading:after {
     border-top: 50px solid transparent;
     /* Go big on the size, and let overflow hide */
     border-bottom: 50px solid transparent;
-    border-left: 30px solid #5b76a0;
+    border-left: 30px solid var(--BGsecundary);
     position: absolute;
     top: 50%;
     margin-top: -50px;
@@ -329,7 +346,7 @@ table td.loading:after {
     border-top: 50px solid transparent;
     /* Go big on the size, and let overflow hide */
     border-bottom: 50px solid transparent;
-    border-left: 30px solid lightblue;
+    border-left: 30px solid var(--BGterciary);
     position: absolute;
     top: 50%;
     margin-top: -50px;
@@ -378,11 +395,11 @@ table td.loading:after {
 }
 
 .breadcrumb li.active:hover {
-    background: lightblue;
+    background: var(--BGterciary);
 }
 
 .breadcrumb li.active:hover:after {
-    border-left-color: lightblue !important;
+    border-left-color: var(--BGterciary) !important;
 }
 
 /* BUTTON, LINK */
@@ -407,23 +424,23 @@ table td.loading:after {
 }
 
 .btn.save {
-    background-color: #21ba45 !important;
+    background-color: var(--saveBtn) !important;
     color: #fff !important;
     text-shadow: none !important;
 }
 
 .btn.save:hover {
-    background-color: #20973c !important;
+    background-color: var(--saveBtnHover) !important;
 }
 
 .btn.cancel {
-    background-color: #ff695e !important;
+    background-color: var(--cancelBtn) !important;
     color: #fff !important;
     text-shadow: none !important;
 }
 
 .btn.cancel:hover {
-    background-color: #c92b20 !important;
+    background-color: var(--cancelBtnHover) !important;
 }
 
 .btn {
@@ -595,13 +612,13 @@ div.container-messages {
     box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
 }
 
-/* HEADER */
+/* HEADER #ffa500 */
 header.admin {
-    background-color: #ffa500;
+    background-color: var(--BGadmin);
 }
 
 header {
-    background-color: #64b7ff;
+    background-color: var(--BGterciary);
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -894,9 +911,9 @@ table thead th:last-child {
 table thead th,
 table tfoot th {
     height: 60px;
-    background: #1838a0;
+    background: var(--BGtable);
     font-size: 18px;
-    color: #fff;
+    color: var(--darkText);
     line-height: 1.2;
     font-weight: unset;
     text-align: center;
@@ -1412,7 +1429,7 @@ main.login .container-form a img.logo {
     top: 0px;
     width: 0vw;
     height: 40vh;
-    background-color: #00ff0894;
+    background-color: var(--selectedRow);
 }
 
 .import .btn-start-import {
@@ -1454,7 +1471,7 @@ ul.pagination li.pageNumber {
 ul.pagination li.pageNumber a {
     display: block;
     text-decoration: none;
-    color: #383838;
+    color: var(--pagination);
     font-weight: 600;
     border-radius: 50%;
     transition: 0.15s;
@@ -1462,7 +1479,7 @@ ul.pagination li.pageNumber a {
 
 ul.pagination li.pageNumber:hover a,
 ul.pagination li.pageNumber.active a {
-    background: #383838;
+    background: var(--pagination);
     color: #fff;
 }
 
@@ -1486,9 +1503,27 @@ ul.pagination li.pageNumber:last-child {
     .terms th:nth-child(7) {
         display: none;
     }
+
+    .careers table {
+        width: 90vw;
+    }
+
+    .careers td:nth-child(7),
+    .careers th:nth-child(7) {
+        display: none;
+    }
+}
+
+@media (max-width: 1100px) {
+    .toggle {
+        margin-left: 20px;
+    }
 }
 
 @media (max-width: 1000px) {
+    .toggle {
+        margin-left: 0px;
+    }
     .terms table {
         width: 90vw;
     }
@@ -1497,11 +1532,28 @@ ul.pagination li.pageNumber:last-child {
     .terms th:nth-child(6) {
         display: none;
     }
+
+    .careers table {
+        width: 90vw;
+    }
+
+    .careers td:nth-child(4),
+    .careers th:nth-child(4) {
+        display: none;
+    }
+
+    .import table {
+        width: 90vw;
+    }
 }
 
 @media (max-width: 850px) {
     .ui-dialog .row {
         flex-direction: column;
+    }
+
+    .breadcrumb {
+        font-size: 12px !important;
     }
 
     table caption {
@@ -1511,6 +1563,31 @@ ul.pagination li.pageNumber:last-child {
     .terms thead *,
     .terms tbody *,
     .terms tfoot * {
+        font-size: 12px !important;
+    }
+
+    .careers thead *,
+    .careers tbody *,
+    .careers tfoot *,
+    .careers .btn.save {
+        font-size: 12px !important;
+    }
+
+    .import thead *,
+    .import tbody *,
+    .import tfoot *,
+    .import .btn.save {
+        font-size: 12px !important;
+    }
+
+    .import .btn-start-import button {
+        width: 175px !important;
+    }
+
+    .students thead *,
+    .students tbody *,
+    .students tfoot *,
+    .students .btn.save {
         font-size: 12px !important;
     }
 }
@@ -1540,6 +1617,15 @@ ul.pagination li.pageNumber:last-child {
         border-top-left-radius: 8px;
     }
 
+    .careers td:nth-child(1):not([colspan="9"]),
+    .careers th:nth-child(1) {
+        display: none;
+    }
+
+    .careers thead th:nth-child(2) {
+        border-top-left-radius: 8px;
+    }
+
     .landing>.container-title>img {
         width: 30%;
         padding-left: 16px;
@@ -1551,6 +1637,12 @@ ul.pagination li.pageNumber:last-child {
     }
 }
 
+@media (max-width: 640px) {
+    .toggle {
+        margin-right: -30px !important;
+    }
+}
+
 @media (max-width: 600px) {
     .landing>main>p {
         font-size: 18px !important;
@@ -1558,6 +1650,15 @@ ul.pagination li.pageNumber:last-child {
 
     .landing .title {
         font-size: 32px !important;
+    }
+
+    .students td:nth-child(1):not([colspan="9"]),
+    .students th:nth-child(1) {
+        display: none;
+    }
+
+    .students thead th:nth-child(2) {
+        border-top-left-radius: 8px;
     }
 }
 
@@ -1576,90 +1677,88 @@ ul.pagination li.pageNumber:last-child {
     }
 }
 
-/* MEDIA QUERY DARK MODE */
+@media (max-width: 400px) {
+    .toggle {
+        margin-right: -20px !important;
+    }
+    .label-dark-mode {
+        width: 80px !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .students td:nth-child(4),
+    .students th:nth-child(4) {
+        display: none;
+    }
+}
+  
 @media (prefers-color-scheme: dark) {
     header {
         background-color: rgba(17, 16, 34, 0.911);
-        color: white;
+        color: var(--darkText);
     }
-
     body {
         background-color: rgba(17, 16, 34, 0.85) !important;
-        color: white;
+        color: var(--darkText);
     }
-
     .option {
         background-color: rgba(42, 42, 66, 0.911);
     }
-
     .container-form {
         background-color: rgba(42, 42, 66, 0.85) !important;
     }
-
     .form span.title {
         color: rgba(255, 255, 255, 0.8) !important;
     }
-
-    div.icon.input-box>i {
+    div.icon.input-box > i {
         color: black;
     }
-
     a {
         color: rgba(255, 255, 255, 0.8);
     }
-
     .link-nav {
         color: black !important;
     }
-
     tr {
         background-color: rgba(17, 16, 34, 0.911);
-        color: white;
+        color: var(--darkText);
     }
-
     tr:nth-child(even) {
         background-color: rgba(42, 42, 66, 0.85);
-        color: white;
+        color: var(--darkText);
     }
-
     ul.pagination a i {
         color: rgba(255, 255, 255, 0.8);
     }
-
     ul.pagination li.pageNumber.active a {
         background: rgba(255, 255, 255, 0.8);
-        color: #383838;
+        color: var(--pagination);
     }
-
     .ui-dialog {
         background-color: rgba(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
-
     .ui-dialog .ui-dialog-titlebar {
         background-color: rgb(23, 22, 37) !important;
-        color: white;
+        color: var(--darkText);
     }
-
     .ui-dialog .buttons-group {
         background-color: rgb(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
-
     .ui-dialog .buttons-group .or:before {
         background-color: rgb(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
-
     .modal-header {
         background-color: rgba(23, 22, 37) !important;
-        color: white;
+        color: var(--darkText);
     }
-
     .modal-body,
     .modal-footer,
     .buttons-group .or:before {
         background-color: rgba(42, 42, 66) !important;
-        color: white;
+        color: var(--darkText);
     }
 }
