@@ -133,7 +133,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
-                	console.log(item);
+                    console.log(item);
                     $("tbody").append(insertNewRow(
                         item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name,
                         "students"
@@ -291,7 +291,6 @@ function loadLogsPage() {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
-            //console.log(res);
             for (const item of res) {
                 console.log(item);
                 var tmp = JSON.parse(item.message);
@@ -390,7 +389,6 @@ function importCSV(page) {
         $("#remove").html('').addClass("loading");
         var fr = new FileReader();
         fr.onload = function () {
-            console.log("Loaded");
             var file = fr.result;
             $.ajax({
                 url: "/api/import",
@@ -417,7 +415,6 @@ function importCSV(page) {
     } else if (page == "students") {
         var fr = new FileReader();
         fr.onload = function () {
-            console.log("Loaded");
             var file = fr.result;
             $.ajax({
                 url: $("meta[name='url']").attr("content"),
@@ -430,7 +427,6 @@ function importCSV(page) {
                     file
                 },
                 success: (res) => {
-                    console.log(res);
                     $("#form-file").trigger("reset");
                     generateMessages(res.status, res.text, ".container-messages", 3);
                     $("tbody").html('');
@@ -438,7 +434,8 @@ function importCSV(page) {
                 },
                 error: (res) => {
                     $("#form-file").trigger("reset");
-                    console.log(res);
+                    console.log(res.responseJSON.message);
+                    generateMessages("error", "Alguns usuaris ja existeixen", ".container-messages", 3)
                 }
             });
         }
@@ -452,11 +449,12 @@ function importCSV(page) {
  */
 
 function rowEventEditAndNew(tag, page) {
-    $("body").css("overflow", "hidden");
+    $("html").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
     const rowSelected = $(tag).closest("tr");
     let dialog = $(".modal-term").dialog({
         modal: true,
+        dialogClass: "dialog-top",
         buttons: {
             "Desa": () => {
                 if (validationTermForm(page)) {
@@ -466,18 +464,18 @@ function rowEventEditAndNew(tag, page) {
                     } else if (page === "careers") {
                         updateTableRowCareers(rowSelected.children());
                     }
-                    $("body").css("overflow", "auto");
+                    $("html").css("overflow", "auto");
                     setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
                 }
             },
             "Cancela": () => {
                 dialog.dialog("close");
-                $("body").css("overflow", "auto");
+                $("html").css("overflow", "auto");
                 setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
             }
         },
         close: () => {
-            $("body").css("overflow", "auto");
+            $("html").css("overflow", "auto");
             $(".bg-dialog").removeClass("bg-opacity");
         },
         show: {
@@ -494,7 +492,7 @@ function rowEventEditAndNew(tag, page) {
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou' : 'Modicació');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-
+    $(".ui-dialog").prev().addClass(page)
     const cols = rowSelected.children();
     if (page === "terms") {
         const colsValues = [cols[1], cols[2], cols[3], cols[4]];

@@ -20,20 +20,16 @@ Route::get('/dashboard/terms', function () {
 });
 
 Route::get('/dashboard/careers', function (Request $request) {
-	if(!isset($request->term)){
-		// redirect
-		return redirect('/admin/dashboard/terms');
-	}
-	$result = Term::select("name")->where('id', $request->term)->get()[0];
-	
-	if($result){
-		return view('careers', ['term' => $result["name"]]);	
-	}
-	else{
-		// redirect
-		return redirect('/admin/dashboard/terms');
-	}
-    
+    if (!isset($request->term)) {
+        return redirect('/admin/dashboard/terms');
+    }
+
+    $result = Term::select("name")->where('id', $request->term)->get()[0];
+    if ($result) {
+        return view('careers', ['term' => $result["name"]]);
+    } else {
+        return redirect('/admin/dashboard/terms');
+    }
 });
 
 Route::get('/dashboard/careers/import', function () {
@@ -72,45 +68,45 @@ Route::get('/dashboard/students', function () {
     * both of which reference the `BreadcrumbsManager` service
     */
 
-    /** @var $breadcrumbs BreadcrumbsManager */
+/** @var $breadcrumbs BreadcrumbsManager */
 
-    // Dashboard
-    Breadcrumbs::for('dashboard', static function ($trail) {
-        $trail->push('Panell de control', route('dashboard'));
-    });
+// Dashboard
+Breadcrumbs::for('dashboard', static function ($trail) {
+    $trail->push('Panell de control', route('dashboard'));
+});
 
-    // Dashboard > Students
-    Breadcrumbs::for('students', static function ($trail) {
-        $trail->parent('dashboard');
-        $trail->push('Alumnes', '/admin/dashboard/students');
-    });
+// Dashboard > Students
+Breadcrumbs::for('students', static function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Alumnes', '/admin/dashboard/students');
+});
 
-    // Dashboard > Terms
-    Breadcrumbs::for('terms', static function ($trail) {
-        $trail->parent('dashboard');
-        $trail->push('Cursos', '/admin/dashboard/terms');
-    });
+// Dashboard > Terms
+Breadcrumbs::for('terms', static function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push('Cursos', '/admin/dashboard/terms');
+});
 
-    // Dashboard > Terms > Delete[Term]
-    Breadcrumbs::for('term_delete', function ($trail, $term) {
-        $trail->parent('terms');
-        $trail->push($term->name, '/dashboard/terms/delete/{term_id}');
-    });
+// Dashboard > Terms > Delete[Term]
+Breadcrumbs::for('term_delete', function ($trail, $term) {
+    $trail->parent('terms');
+    $trail->push($term->name, '/dashboard/terms/delete/{term_id}');
+});
 
-    // Dashboard > Terms > [Term]
-    Breadcrumbs::for('term', function ($trail, $term) {
-        $trail->parent('terms');
-        $trail->push($term, '/admin/dashboard/careers?term={term_id}');
-    }); 
+// Dashboard > Terms > [Term]
+Breadcrumbs::for('term', function ($trail, $term) {
+    $trail->parent('terms');
+    $trail->push($term, '/admin/dashboard/careers?term={term_id}');
+});
 
-    // Dashboard > Careers > Import
-    Breadcrumbs::for('career_import', function ($trail) {
-        $trail->parent('terms');
-        $trail->push("Cicles", '/admin/dashboard/careers/import?term={term_id}');
-    });
+// Dashboard > Careers > Import
+Breadcrumbs::for('career_import', function ($trail) {
+    $trail->parent('terms');
+    $trail->push("Cicles", '/admin/dashboard/careers/import?term={term_id}');
+});
 
-    // Dashboard > Careers > Delete[Term]
-    Breadcrumbs::for('career_delete', function ($trail, $career) {
-        $trail->parent('careers');
-        $trail->push($career->name, '/dashboard/careers/delete/{career_id}');
-    });
+// Dashboard > Careers > Delete[Term]
+Breadcrumbs::for('career_delete', function ($trail, $career) {
+    $trail->parent('terms');
+    $trail->push($career->name, '/dashboard/careers/delete/{career_id}');
+});
