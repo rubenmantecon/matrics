@@ -5,7 +5,7 @@
     font-family: "Roboto", sans-serif;
 }
 
-/* CSS VARIABLES */
+/* CSS COLORS VARIABLES */
 :root {
     --BGgeneral: aliceblue;
     --BGsecundary: #5b76a0;
@@ -30,7 +30,6 @@
     justify-content: center;
     align-items: center;
     margin-left: 40px;
-    margin-right: -30px;
 }
 .toggle.night {
     background-color: rgba(17, 16, 34, 0.911);
@@ -1526,9 +1525,27 @@ ul.pagination li.pageNumber:last-child {
     .terms th:nth-child(7) {
         display: none;
     }
+
+    .careers table {
+        width: 90vw;
+    }
+
+    .careers td:nth-child(7),
+    .careers th:nth-child(7) {
+        display: none;
+    }
+}
+
+@media (max-width: 1100px) {
+    .toggle {
+        margin-left: 20px;
+    }
 }
 
 @media (max-width: 1000px) {
+    .toggle {
+        margin-left: 0px;
+    }
     .terms table {
         width: 90vw;
     }
@@ -1537,11 +1554,28 @@ ul.pagination li.pageNumber:last-child {
     .terms th:nth-child(6) {
         display: none;
     }
+
+    .careers table {
+        width: 90vw;
+    }
+
+    .careers td:nth-child(4),
+    .careers th:nth-child(4) {
+        display: none;
+    }
+
+    .import table {
+        width: 90vw;
+    }
 }
 
 @media (max-width: 850px) {
     .ui-dialog .row {
         flex-direction: column;
+    }
+
+    .breadcrumb {
+        font-size: 12px !important;
     }
 
     table caption {
@@ -1551,6 +1585,31 @@ ul.pagination li.pageNumber:last-child {
     .terms thead *,
     .terms tbody *,
     .terms tfoot * {
+        font-size: 12px !important;
+    }
+
+    .careers thead *,
+    .careers tbody *,
+    .careers tfoot *,
+    .careers .btn.save {
+        font-size: 12px !important;
+    }
+
+    .import thead *,
+    .import tbody *,
+    .import tfoot *,
+    .import .btn.save {
+        font-size: 12px !important;
+    }
+
+    .import .btn-start-import button {
+        width: 175px !important;
+    }
+
+    .students thead *,
+    .students tbody *,
+    .students tfoot *,
+    .students .btn.save {
         font-size: 12px !important;
     }
 }
@@ -1580,6 +1639,15 @@ ul.pagination li.pageNumber:last-child {
         border-top-left-radius: 8px;
     }
 
+    .careers td:nth-child(1):not([colspan="9"]),
+    .careers th:nth-child(1) {
+        display: none;
+    }
+
+    .careers thead th:nth-child(2) {
+        border-top-left-radius: 8px;
+    }
+
     .landing > .container-title > img {
         width: 30%;
         padding-left: 16px;
@@ -1591,6 +1659,12 @@ ul.pagination li.pageNumber:last-child {
     }
 }
 
+@media (max-width: 640px) {
+    .toggle {
+        margin-right: -30px !important;
+    }
+}
+
 @media (max-width: 600px) {
     .landing > main > p {
         font-size: 18px !important;
@@ -1598,6 +1672,15 @@ ul.pagination li.pageNumber:last-child {
 
     .landing .title {
         font-size: 32px !important;
+    }
+
+    .students td:nth-child(1):not([colspan="9"]),
+    .students th:nth-child(1) {
+        display: none;
+    }
+
+    .students thead th:nth-child(2) {
+        border-top-left-radius: 8px;
     }
 }
 
@@ -1613,5 +1696,21 @@ ul.pagination li.pageNumber:last-child {
 
     .ui-dialog .ui-dialog-titlebar {
         font-size: 18px;
+    }
+}
+
+@media (max-width: 400px) {
+    .toggle {
+        margin-right: -20px !important;
+    }
+    .label-dark-mode {
+        width: 80px !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .students td:nth-child(4),
+    .students th:nth-child(4) {
+        display: none;
     }
 }
