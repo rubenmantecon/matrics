@@ -15,7 +15,7 @@
             </form>
         </div>
         <table>
-            <caption>Llistat de cicles del curs <a class="return-term link" href="/admin/dashboard/terms">{{ 'CURSO' }}</a></caption>
+            <caption>Llistat de cicles del curs <a class="return-term link" href="/admin/dashboard/terms">{{ $term }}</a></caption>
             <thead>
                 <tr>
                     <th>ID</th>

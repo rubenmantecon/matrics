@@ -25,7 +25,7 @@ class StudentController extends Controller
 		if ($token) {
 			$user = User::select("token")->where('token', $token)->get()[0];
 			if ($user['token'])
-				$data = User::select("id", "firstname", "lastname1", "lastname2", "email")->where("role", "alumne")->paginate(20)->onEachSide(2);
+				$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
 		}
 		return response()->json($data);
 	}
@@ -76,6 +76,9 @@ class StudentController extends Controller
 							$interesting_index["lastname2"] = array_search("Segon cognom", $element);
 							$interesting_index["email"] = array_search("Correu electrònic", $element);
 							$interesting_index["career_id"] = array_search("Codi ensenyament P1", $element);
+							$interesting_index["identificacion"]["dni"] = array_search("DNI", $element);
+							$interesting_index["identificacion"]["nie"] = array_search("NIE", $element);
+							$interesting_index["identificacion"]["pass"] = array_search("PASS", $element);
 						} else {
 							// validate, if someone is not valid add to $status_controller["failed"] and skip it
 							if (empty($element[$interesting_index["firstname"]])) {
@@ -98,9 +101,27 @@ class StudentController extends Controller
 								$status_controller["failed"]++;
 								continue;
 							}
+							if (empty($interesting_index["identificacion"]["dni"])) {
+								if (empty($interesting_index["identificacion"]["nie"])) {
+									if (empty($interesting_index["identificacion"]["pass"])) {
+										$status_controller["failed"]++;
+										continue;
+									}
+									else{
+										$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["pass"];
+									}
+								}
+								else{
+									$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["nie"];
+								}
+								
+							}
+							else{
+								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["dni"];
+							}
 
 							// lets check if the career exists
-							$response = Career::select("code", "term_id")->where('code', $element[$interesting_index["career_id"]])->orderBy("term_id", "desc")->get();
+							$response = Career::select("id", "term_id")->where('code', $element[$interesting_index["career_id"]])->orderBy("term_id", "desc")->get();
 
 							if (sizeof($response) == 0) {
 								// We don't have that actual career, just skip it for now
@@ -120,16 +141,16 @@ class StudentController extends Controller
 							/* Para salir del paso */
 							$user->token = hash("sha256", $element[$interesting_index["email"]]);
 
-							$user->created_at = $request->created;
-							$user->updated_at = $request->updated;
-
 							$status = $user->save();
 							if ($status) {
+							
+								$response = $response[0];
+							
 								$enrollment = new Enrolment;
 								$enrollment->user_id = $user->id;
-								$enrollment->term_id = $response["term_id"];
-								$enrollment->career_id = $response["code"];
-								$enrollment->dni = $element[$interesting_index["dni"]];
+								$enrollment->term_id = $response->term_id;
+								$enrollment->career_id = $response->id;
+								$enrollment->dni = $element[$interesting_index["identificacion"]["actual"]];
 								$enrollment->state = "unregistered";
 								$enrollment->created_at = $request->created;
 								$enrollment->updated_at = $request->updated;
