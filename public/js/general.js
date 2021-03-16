@@ -133,8 +133,9 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
+                	console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.id, item.firstname, item.lastname1 + " " + item.lastname2, item.email,
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name,
                         "students"
                     ));
                 }
@@ -152,7 +153,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="5"><p>Sense Alumnes.</p></td>
+                        <td colspan="4"><p>Sense Alumnes.</p></td>
                     </tr>`
                 );
             }
@@ -431,7 +432,9 @@ function importCSV(page) {
                 success: (res) => {
                     console.log(res);
                     $("#form-file").trigger("reset");
-                    generateMessages(res.status, res.text, ".container-messages", 3)
+                    generateMessages(res.status, res.text, ".container-messages", 3);
+                    $("tbody").html('');
+                    loadStudentsPage();
                 },
                 error: (res) => {
                     $("#form-file").trigger("reset");
@@ -778,7 +781,6 @@ $(function () {
         })
     } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
-        $(".return-term.link").text('ID: '+getUrlParameter("term"))
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')

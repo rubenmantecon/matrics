@@ -5,6 +5,11 @@ use App\Models\Term;
 use App\Models\Career;
 use BabDev\Breadcrumbs\Contracts\BreadcrumbsGenerator;
 use BabDev\Breadcrumbs\Contracts\BreadcrumbsManager;
+use Illuminate\Http\Request;
+
+Route::get('/', function () {
+    return redirect('dashboard');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -14,8 +19,21 @@ Route::get('/dashboard/terms', function () {
     return view('terms');
 });
 
-Route::get('/dashboard/careers', function () {
-    return view('careers');
+Route::get('/dashboard/careers', function (Request $request) {
+	if(!isset($request->term)){
+		// redirect
+		return redirect('/admin/dashboard/terms');
+	}
+	$result = Term::select("name")->where('id', $request->term)->get()[0];
+	
+	if($result){
+		return view('careers', ['term' => $result["name"]]);	
+	}
+	else{
+		// redirect
+		return redirect('/admin/dashboard/terms');
+	}
+    
 });
 
 Route::get('/dashboard/careers/import', function () {
