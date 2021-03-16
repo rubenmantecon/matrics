@@ -31,7 +31,7 @@ class DbTables extends Migration
             $table->string('description', 300);
             $table->integer('hours');
             $table->date('start');
-            $table->date('end');
+            $table->date('end')->nullable();
             $table->timestamps();
         });
 

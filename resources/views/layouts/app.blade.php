@@ -22,6 +22,13 @@
 </head>
 
 <body class="">
+    <script>
+        if(localStorage.getItem('darkMode') == 'enabled'){
+            $('body').toggleClass('night');
+            $('.dark-mode').toggleClass('active');
+        }
+    </script>
+    
     <div class="min-h-screen min-w-screen">
         @include('layouts.navigation')
         <div class="col-md-8">
