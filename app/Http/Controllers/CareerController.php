@@ -60,64 +60,27 @@ class CareerController extends Controller
      */
     public function store(Request $request)
     {
-        /*
-        $token = $request->header('token');
-        $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
+        $token = $request->header('token');
+        if ($token) {
+            $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
+            if ($user['token']) {
+                $career = new Career;
+                $career->code = $request->code;
+                $career->term_id = $request->term_id;
+                $career->name = $request->name;
+                $career->description = $request->desc;
+                $career->hours = $request->hours;
+                $career->start = $request->start;
+                $career->end = $request->end;
 
-        if ($user['token']) {
-        */
-
-        //dd($request);
-        if (isset($request->import_file)) {
-            $tmp = base64_decode(explode(",", $request->file)[1]);
-            $array = array_map("str_getcsv", explode("\n", $tmp));
-            $stash_control = array();
-            $stash = array();
-            $array = array_slice(array_slice($array, 1), 0, -1);
-            foreach ($array as $element) {
-                //Existe CODI_CICLE_FORMATIU?
-                if (array_key_exists($element[0], $stash_control)) {
-                    // Existe CODI_MODUL?
-                    if (array_key_exists($element[6], $stash_control[$element[0]]["modulos"])) {
-                        $stash_control[$element[0]]["modulos"][$element[6]]["ufs"][$element[12]] = $element[13];
-                    } else {
-                        $stash_control[$element[0]]["modulos"][$element[6]] = array("NOM_MODUL" => $element[7], "DURADA_MIN_MODUL" => $element[8], "DURADA_MAX_MODUL" => $element[9], "DATA_INICI_MODUL" => $element[10], "DATA_FI_MODUL" => $element[11], "ufs" => array($element[12] => $element[13]));
-                    }
-                } else {
-                    // nuevo ciclo
-                    if (sizeof($element) == 19) {
-                        $stash_control[$element[0]] = array("NOM_CICLE_FORMATIU" => $element[1], "CODI_ADAPTACIO_CURRICULAR" => $element[2], "HORES_CICLE_FORMATIU" => $element[3], "DATA_INICI_CICLE_FORMATIU" => $element[4], "DATA_FI_CICLE_FORMATIU" => $element[5], "modulos" => array());
-                    }
+                $status = $career->save();
+                if ($status) {
+                    $data = ["status" => "Cicle creart correctament."];
+                    Log::channel('dblogging')->info("Ha creado un Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
                 }
-            }
-
-            $json = json_encode($stash_control);
-            return $json;
-        } else {
-            // Check if term_id exist
-            $careers = json_decode($request->data, true);
-            foreach ($careers as $career) {
-                $c = new Career;
-                $c->term_id = $request->term_id;
-                $c->code = $career["CODI"];
-                $c->name = $career["NOM_CICLE_FORMATIU"];
-                $c->description = "";
-                $c->hours = $career["HORES_CICLE_FORMATIU"];
-                $c->start = $career["DATA_INICI_CICLE_FORMATIU"];
-                if (empty($career["DATA_FI_CICLE_FORMATIU"])) {
-                    $c->end = null;
-                } else {
-                    $c->end = $career["DATA_FI_CICLE_FORMATIU"];
-                }
-
-                $status = $c->save();
             }
         }
-
-        if ($status)
-            $data = ["status" => "Nou cicle creat correctament."];
-        Log::channel('dblogging')->info("Ha creado un nuevo Ciclo", ["user_id" => Auth::id(), "career_id" => $c->id]);
         return response()->json($data);
     }
 

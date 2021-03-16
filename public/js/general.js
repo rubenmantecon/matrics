@@ -130,18 +130,15 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
-            console.log(res);
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
-                    console.log(item);
                     $("tbody").append(insertNewRow(
                         item.id, item.firstname, item.lastname1 + " " + item.lastname2, item.email,
                         "students"
                     ));
                 }
                 for (const item of res.links) {
-                    console.log(item.label);
                     if (item.label === "&laquo; Previous") item.label = '<i class="fas fa-angle-left"></i>';
                     else if (item.label === "Next &raquo;") item.label = '<i class="fas fa-angle-right"></i>';
 
@@ -359,7 +356,7 @@ function loadImportPage(careers) {
             var data = JSON.stringify(selectedRows);
 
             $.ajax({
-                url: $("meta[name='url']").attr("content"),
+                url: "/api/import",
                 method: 'POST',
                 headers: {
                     token: $("meta[name='_token']").attr("content"),
@@ -395,7 +392,7 @@ function importCSV(page) {
             console.log("Loaded");
             var file = fr.result;
             $.ajax({
-                url: $("meta[name='url']").attr("content"),
+                url: "/api/import",
                 method: 'POST',
                 headers: {
                     token: $("meta[name='_token']").attr("content"),
@@ -432,7 +429,13 @@ function importCSV(page) {
                     file
                 },
                 success: (res) => {
+                    console.log(res);
+                    $("#form-file").trigger("reset");
                     generateMessages(res.status, res.text, ".container-messages", 3)
+                },
+                error: (res) => {
+                    $("#form-file").trigger("reset");
+                    console.log(res);
                 }
             });
         }
@@ -549,7 +552,7 @@ function insertNewRow(...params) {
  * @param {String} created 
  * @param {String} updated 
  */
-function insertTermInDB(data) {
+function insertRowInDB(data, page) {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -564,7 +567,11 @@ function insertTermInDB(data) {
         data,
         success: (res) => {
             generateMessages("success", res.status, ".container-messages", 3);
-            loadTermPage();
+            if (page === "terms") {
+                loadTermPage();
+            } else if (page === "careers") {
+                loadCareerPage();
+            }
         },
         error: (res) => {
             console.log(res.responseJSON.message);
@@ -583,7 +590,7 @@ function insertTermInDB(data) {
  * @param {String} updated 
  * @param {String} type "detect if is soft delete or not (default='softDelete')"
  */
-function updateTableInDB(data, page) {
+function updateRowInDB(data, page) {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -635,7 +642,7 @@ function updateTableRowTerm(cols) {
             start: momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
         }
-        insertTermInDB(data);
+        insertRowInDB(data, "terms");
     } else {
         const data = {
             id: $(cols[0]).text(),
@@ -645,7 +652,7 @@ function updateTableRowTerm(cols) {
             end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             type: null,
         }
-        updateTableInDB(data, "terms");
+        updateRowInDB(data, "terms");
     }
 }
 
@@ -656,14 +663,16 @@ function updateTableRowTerm(cols) {
 function updateTableRowCareers(cols) {
     $("tbody").html('');
     if (cols.length === 1) {
-        insertTermInDB(
-            $(".label-group input#name").val(),
-            $(".label-group input#description").val(),
-            momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            momentFormat(now(), "DD/MM/YYYY HH:mm:ss", "YYYY-MM-DD HH:mm:ss"),
-            momentFormat(now(), "DD/MM/YYYY HH:mm:ss", "YYYY-MM-DD HH:mm:ss")
-        );
+        const data = {
+            term_id: getUrlParameter("term"),
+            code: $(".label-group input#code").val(),
+            name: $(".label-group input#name").val(),
+            desc: $(".label-group input#description").val(),
+            hours: $(".label-group input#hours").val(),
+            start: momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+        }
+        insertRowInDB(data, "careers");
     } else {
         const data = {
             id: $(cols[0]).text(),
@@ -674,7 +683,7 @@ function updateTableRowCareers(cols) {
             start: momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
             end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
         }
-        updateTableInDB(data, "careers");
+        updateRowInDB(data, "careers");
     }
 }
 
@@ -742,7 +751,7 @@ $(function () {
                         id: $(".delete-term").attr("data-id"),
                         type: "softDelete",
                     }
-                    updateTableInDB(data, "terms");
+                    updateRowInDB(data, "terms");
                 } else $("#remove").addClass("disabled");
             }
         })
@@ -756,18 +765,20 @@ $(function () {
         })
         $("tbody").fadeIn(300);
         const page = getUrlParameter("page");
-        if (page)
+        if (page) {
             loadStudentsPage($("meta[name='url']").attr("content") + `?page=${page}`);
-        else
+        } else {
             loadStudentsPage();
+        }
         $("#file-csv").on("change", (e) => {
             if (e.target.files[0].type === "text/csv")
                 $("#form-file").submit();
             else
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
         })
-    } else if (location.pathname.endsWith("/admin/dashboard/careers") || location.pathname.endsWith("/admin/dashboard/careers")) {
+    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
+        $(".return-term.link").text('ID: '+getUrlParameter("term"))
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
@@ -809,7 +820,7 @@ $(function () {
                         id: $(".delete-term").attr("data-id"),
                         type: "softDelete",
                     }
-                    updateTableInDB(data, "careers");
+                    updateRowInDB(data, "careers");
                 } else $("#remove").addClass("disabled");
             }
         })

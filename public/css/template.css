@@ -80,6 +80,10 @@ body.night a {
     color: rgba(255, 255, 255, 0.8);
 }
 
+body.night a.link {
+    color: #00fff5;
+}
+
 body.night tr {
     background-color: rgba(17, 16, 34, 0.911);
     color: white;
@@ -179,6 +183,10 @@ a.link {
     font-size: 17px;
     text-decoration: 2px underline;
     transition: .1s;
+}
+
+a.return-term.link {
+    font-size: 20px !important;
 }
 
 .options {
