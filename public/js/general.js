@@ -530,9 +530,12 @@ function insertNewRow(...params) {
     }
 
     let lastParam = params[params.length - 1];
-    if (lastParam == "terms" || lastParam == "careers") {
+    if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Eliminar"><i class="fas fa-trash"></i></a></td>`;
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+    } else if (lastParam == "careers") {
+        row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter('term')}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
     }
     return row + "</tr>";
 }
@@ -598,7 +601,11 @@ function updateTableInDB(data, page) {
             if (data.type === "softDelete") {
                 setTimeout(() => {
                     $("#remove").html('Eliminar').removeClass("loading");
-                    location.href = `/admin/dashboard/${page}`
+                    if (page === "terms") {
+                        location.href = `/admin/dashboard/${page}`
+                    } else if (page === "careers") {
+                        location.href = `/admin/dashboard/${page}?term=${getUrlParameter('term')}`
+                    }
                 }, 2000);
             } else {
                 if (page === "terms") {
@@ -731,14 +738,11 @@ $(function () {
             } else {
                 if ($("#name").val() === name) {
                     $("#remove").html('').addClass("loading");
-                    updateTermInDB(
-                        $(".delete-term").attr("data-id"),
-                        $(".delete-term").attr("data-name"),
-                        $(".delete-term").attr("data-desc"),
-                        $(".delete-term").attr("data-start"),
-                        $(".delete-term").attr("data-end"),
-                        $(".delete-term").attr("data-updated"),
-                    );
+                    const data = {
+                        id: $(".delete-term").attr("data-id"),
+                        type: "softDelete",
+                    }
+                    updateTableInDB(data, "terms");
                 } else $("#remove").addClass("disabled");
             }
         })
@@ -761,34 +765,6 @@ $(function () {
                 $("#form-file").submit();
             else
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
-        })
-        $("#form-file").submit((e) => {
-            // e.preventDefault();
-            // importCareer();
-            // var formData = new FormData(document.getElementById("form-file"));
-            //     $.ajaxSetup({
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //         }
-            //     });
-            //     $.ajax({
-            //         url: "/api/import",
-            //         method: 'POST',
-            //         headers: {
-            //             token: $("meta[name='_token']").attr("content"),
-            //         },
-            //         data: formData,
-            //         contentType: false,
-            //         processData: false,
-            //         success: (data) => {
-            //             // $("#form-file").reset();
-            //             // alert('File has been uploaded successfully');
-            //             console.log(data);
-            //         },
-            //         error: function (data) {
-            //             console.log(data);
-            //         }
-            //     });
         })
     } else if (location.pathname.endsWith("/admin/dashboard/careers") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
@@ -814,6 +790,29 @@ $(function () {
         } else {
             loadImportPage(careers);
         }
+    } else if (location.pathname.includes("admin/dashboard/careers/delete/")) {
+        $(".buttons-group>a.btn.save").prop("href", "/admin/dashboard/careers?term=" + getUrlParameter("term"))
+        $("#name").focus();
+        const name = $("span.code").text();
+        $("#name").on("input", (e) => {
+            if (e.target.value === name) $("#remove").removeClass("disabled");
+            else $("#remove").addClass("disabled");
+        });
+        $("#remove").on("click", (e) => {
+            if ($("#remove").hasClass("disabled")) {
+                generateMessages("info", "Introdueix el nom del cicle.", ".container-messages", 2.5)
+                $("#name").focus();
+            } else {
+                if ($("#name").val() === name) {
+                    $("#remove").html('').addClass("loading");
+                    const data = {
+                        id: $(".delete-term").attr("data-id"),
+                        type: "softDelete",
+                    }
+                    updateTableInDB(data, "careers");
+                } else $("#remove").addClass("disabled");
+            }
+        })
     }
 
     //"DARK-MODE"

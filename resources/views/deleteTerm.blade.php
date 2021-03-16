@@ -1,7 +1,5 @@
 <x-app-layout page="terms">
-    <div class="delete-term" data-id="{{ $term->id }}" data-name="{{ $term->name }}"
-        data-desc="{{ $term->description }}" data-start="{{ $term->start }}" data-end="{{ $term->end }}"
-        data-updated="{{ $term->updated_at }}">
+    <div class="delete-term" data-id="{{ $term->id }}">
         <div class="modal-dialog">
         @section('breadcrumbs')
             {{ Breadcrumbs::render('term', $term) }}

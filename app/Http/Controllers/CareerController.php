@@ -30,7 +30,7 @@ class CareerController extends Controller
                     if (sizeof($term) == 0)
                         return response()->json(['status' => "warning", "text" => 'Curs desactivat, redireccionant ...']);
                     if ($term[0]['active']) {
-                        $data = Career::select("*")->where("term_id", $term_id)->get();
+                        $data = Career::select("*")->where("term_id", $term_id)->where("active", 1)->get();
                     } else {
                         $data = ['status' => "warning", "text" => 'Curs desactivat, redireccionant ...'];
                     }
@@ -152,31 +152,34 @@ class CareerController extends Controller
      */
     public function update(Request $request, Career $career)
     {
-        $token = $request->header('token');
-        $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
         $data = ['status' => 'Unauthorized, error 503'];
+        $token = $request->header('token');
+        if ($token) {
+            $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
+            if ($user['token']) {
+                if ($request->type === "softDelete") {
+                    $career->active = 0;
+                } else {
+                    $career->code = $request->code;
+                    $career->name = $request->name;
+                    $career->description = $request->desc;
+                    $career->hours = $request->hours;
+                    $career->start = $request->start;
+                    $career->end = $request->end;
+                }
+                $career->touch();
 
-        if ($user['token']) {
-            $career->code = $request->code;
-            $career->name = $request->name;
-            $career->description = $request->desc;
-            $career->hours = $request->hours;
-            $career->start = $request->start;
-            $career->end = $request->end;
-            if ($request->type === "softDelete")
-                $career->active = 0;
-            $career->touch();
+                $status = $career->save();
+                if ($status)
+                    $data = ["status" => "Cicle actualitzat correctament."];
 
-            $status = $career->save();
-            if ($status)
-                $data = ["status" => "Cicle actualitzat correctament."];
-
-            if ($request->type === "softDelete") {
-                $data = ["status" => "Curs eliminat correctament."];
-                Log::channel('dblogging')->info("Ha eliminado un Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
-            } else {
-                $data = ["status" => "Curs actualitzat correctament."];
-                Log::channel('dblogging')->info("Ha actualizado un Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
+                if ($request->type === "softDelete") {
+                    $data = ["status" => "Curs eliminat correctament."];
+                    Log::channel('dblogging')->info("Ha eliminado un Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
+                } else {
+                    $data = ["status" => "Curs actualitzat correctament."];
+                    Log::channel('dblogging')->info("Ha actualizado un Ciclo", ["user_id" => Auth::id(), "career_id" => $career->id]);
+                }
             }
         }
         return response()->json($data);
