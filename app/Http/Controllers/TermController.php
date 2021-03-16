@@ -105,12 +105,14 @@ class TermController extends Controller
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
             if ($user['token']) {
-                $term->name = $request->name;
-                $term->description = $request->desc;
-                $term->start = $request->start;
-                $term->end = $request->end;
-                if ($request->type === "softDelete")
+                if ($request->type === "softDelete") {
                     $term->active = 0;
+                } else {
+                    $term->name = $request->name;
+                    $term->description = $request->desc;
+                    $term->start = $request->start;
+                    $term->end = $request->end;
+                }
                 $term->touch();
 
                 $status = $term->save();

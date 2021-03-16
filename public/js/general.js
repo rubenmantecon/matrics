@@ -130,18 +130,15 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
-            console.log(res);
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
-                	console.log(item);
                     $("tbody").append(insertNewRow(
                         item.id, item.firstname, item.lastname1 + " " + item.lastname2, item.email,
                         "students"
                     ));
                 }
                 for (const item of res.links) {
-                    console.log(item.label);
                     if (item.label === "&laquo; Previous") item.label = '<i class="fas fa-angle-left"></i>';
                     else if (item.label === "Next &raquo;") item.label = '<i class="fas fa-angle-right"></i>';
 
@@ -203,7 +200,8 @@ function loadTermPage() {
             if (res.length > 0) {
                 for (const item of res) {
                     $("tbody").append(insertNewRow(
-                        item.id, item.name, item.description,
+                        item.id, `<a class="link" href="/admin/dashboard/careers?term=${item.id}">${item.name}</a>`,
+                        item.description,
                         momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.created_at, "", "DD/MM/YYYY HH:mm:ss"),
@@ -225,7 +223,7 @@ function loadTermPage() {
             ).fadeIn(300);
 
             $("body").addClass("body-term");
-            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target));
+            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "terms"));
         }
     });
 }
@@ -234,38 +232,52 @@ function loadTermPage() {
  * @description "load all the data of the career end point in the tbody HTML"
  */
 function loadCareerPage() {
+    const term_id = getUrlParameter("term");
     $.ajax({
         url: $("meta[name='url']").attr("content"),
         method: 'GET',
         headers: {
             token: $("meta[name='_token']").attr("content"),
+            term_id: (!term_id) ? 'empty' : term_id,
         },
         success: (res) => {
-            $("tbody").css("display", "none").html('');
-            if (res.length > 0) {
-                for (const item of res) {
-                    $("tbody").append(insertNewRow(
-                        item.id, item.code, item.name, item.description, item.hours,
-                        momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
-                        momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
-                        "careers"
-                    ));
-                }
+            if (res.status) {
+                generateMessages(res.status, res.text, ".container-messages", 3)
+                setTimeout(() => location.href = "/admin/dashboard/terms", 3000);
             } else {
+                $("tbody").css("display", "none").html('');
+                if (res.length > 0) {
+                    for (const item of res) {
+                        let end = momentFormat(item.end, null, "DD-MM-YYYY");
+                        if (end == "Invalid date") {
+                            end = null;
+                        }
+                        $("tbody").append(insertNewRow(
+                            item.id, item.code, item.name, item.description, item.hours,
+                            momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
+                            end,
+                            "careers"
+                        ));
+                    }
+                } else {
+                    $("tbody").append(
+                        `<tr>
+                        <td colspan="9"><p>No s'ha trobat cap cicle.</p></td>
+                    </tr>`
+                    );
+                }
                 $("tbody").append(
                     `<tr>
-                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
-                    </tr>`
-                );
-            }
-            $("tbody").append(
-                `<tr>
                     <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
                 </tr>`
-            ).fadeIn(300);
+                ).fadeIn(300);
 
-            $("body").addClass("body-term");
-            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target));
+                $("body").addClass("body-term");
+                $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "careers"));
+            }
+        },
+        error: (res) => {
+            console.log(res.responseJSON);
         }
     });
 }
@@ -288,7 +300,6 @@ function loadLogsPage() {
                 }
                 $("tbody").append(insertNewRow(
                     item.id, item.name, output_badge, tmp.message,
-
                     momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
                     "logs"
                 ));
@@ -299,73 +310,137 @@ function loadLogsPage() {
     });
 }
 
+function loadImportPage(careers) {
+    let arrayCareers = [];
+    let cont = 0;
+    let rows = "";
+    // Create all rows
+    for (const key in careers) {
+        if (Object.hasOwnProperty.call(careers, key)) {
+            careers[key]['CODI'] = key;
+            arrayCareers.push(careers[key]);
+            let dataRow = `
+            <div class="container-cb">
+                <input name="check-${cont}" id="check-${cont}" type="checkbox">
+                <label for="check-${cont}">
+                    <i class="fa fa-check"></i>
+                </label>
+            </div>
+            <label class="text" for="check-${cont}">${key} - ${careers[key]['NOM_CICLE_FORMATIU']}</label>
+            <div class="row-bg"></div>`;
+            rows += insertNewRow(dataRow, "import");
+            cont++;
+        }
+    }
+    $("tbody").css("display", "none").html(rows).fadeIn(300);
+    animationSelectedRow();
+
+    $(".btn-start-import button").on("click", () => {
+        const checkboxes = $(".container-cb>input[type='checkbox']:checked");
+        let selectedRows = [];
+        if (checkboxes.length > 0) {
+            generateMessages("info", "La importació ha començat.", ".container-messages", 2.5);
+            $(".btn-start-import button").html('').addClass("loading no-click");
+            for (const item of checkboxes) {
+                const index = $(item).prop("name").split("-")[1];
+                selectedRows.push(arrayCareers[index]);
+            }
+            console.table(selectedRows);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                }
+            });
+
+            var term_id = getUrlParameter("term");
+            var data = JSON.stringify(selectedRows);
+
+            $.ajax({
+                url: "/api/import",
+                method: 'POST',
+                headers: {
+                    token: $("meta[name='_token']").attr("content"),
+                },
+                data: {
+                    data,
+                    term_id
+                },
+                success: (res) => {
+                    localStorage.removeItem("careers_json");
+                    location.href = `/admin/dashboard/careers?term=${getUrlParameter("term")}`;
+                },
+                error: (res) => {
+                    generateMessages("error", "Error en el servidor", ".container-messages", 2.5);
+                    console.log(res);
+                }
+            });
+        } else generateMessages("error", "No s'ha seleccionat cap cicle.", ".container-messages", 2.5);
+    });
+    generateMessages("success", "Arxiu carregat correctament.", ".container-messages", 2.5);
+}
+
 function importCSV(page) {
-	
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-		}
-	});
-	
-	if(page == "careers"){
-		$("#remove").html('').addClass("loading");
-		var fr = new FileReader();
-
-		fr.onload = function(){
-			console.log("Loaded");
-			var file = fr.result;
-			
-			var import_file = "csv";
-			
-			$.ajax({
-				url: $("meta[name='url']").attr("content"),
-				method: 'POST',
-				headers: {
-				    token: $("meta[name='_token']").attr("content"),
-				},
-				data: {
-					import_file,
-					file
-				},
-				success: (res) => {
-					$("#form-file").trigger("reset");
-		            localStorage.setItem('careers_json', res);
-		            location.href = "/admin/dashboard/careers/import";
-				},
-				error: (res) => {
-		            $("#form-file").trigger("reset");
-		            console.log(res);
-		        }
-			});
-		}
-
-		fr.readAsDataURL($('#file-csv')[0].files[0]);
-	}
-	else if(page == "students"){
-		var fr = new FileReader();
-
-		fr.onload = function(){
-			console.log("Loaded");
-			var file = fr.result;
-
-			var import_file = "csv";
-			
-			$.ajax({
-				url: $("meta[name='url']").attr("content"),
-				method: 'POST',
-				headers: {
-				    token: $("meta[name='_token']").attr("content"),
-				},
-				data: {
-					import_file,
-					file
-				},
-				success: (res) => {generateMessages(res.status, res.text, ".container-messages", 3)}
-			});
-		}
-
-		fr.readAsDataURL($('#file')[0].files[0]);
-	}
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+    if (page == "careers") {
+        $("#remove").html('').addClass("loading");
+        var fr = new FileReader();
+        fr.onload = function () {
+            console.log("Loaded");
+            var file = fr.result;
+            $.ajax({
+                url: "/api/import",
+                method: 'POST',
+                headers: {
+                    token: $("meta[name='_token']").attr("content"),
+                },
+                data: {
+                    import_file: "csv",
+                    file
+                },
+                success: (res) => {
+                    $("#form-file").trigger("reset");
+                    localStorage.setItem('careers_json', res);
+                    location.href = `/admin/dashboard/careers/import?term=${getUrlParameter("term")}`;
+                },
+                error: (res) => {
+                    $("#form-file").trigger("reset");
+                    console.log(res);
+                }
+            });
+        }
+        fr.readAsDataURL($('#file-csv')[0].files[0]);
+    } else if (page == "students") {
+        var fr = new FileReader();
+        fr.onload = function () {
+            console.log("Loaded");
+            var file = fr.result;
+            $.ajax({
+                url: $("meta[name='url']").attr("content"),
+                method: 'POST',
+                headers: {
+                    token: $("meta[name='_token']").attr("content"),
+                },
+                data: {
+                    import_file: "csv",
+                    file
+                },
+                success: (res) => {
+                    console.log(res);
+                    $("#form-file").trigger("reset");
+                    generateMessages(res.status, res.text, ".container-messages", 3)
+                },
+                error: (res) => {
+                    $("#form-file").trigger("reset");
+                    console.log(res);
+                }
+            });
+        }
+        fr.readAsDataURL($('#file')[0].files[0]);
+    }
 }
 
 /**
@@ -373,7 +448,7 @@ function importCSV(page) {
  * @param {Element} tag "Event onClick: DOM Element tag pressed"
  */
 
-function rowEventEditAndNew(tag) {
+function rowEventEditAndNew(tag, page) {
     $("body").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
     const rowSelected = $(tag).closest("tr");
@@ -381,9 +456,13 @@ function rowEventEditAndNew(tag) {
         modal: true,
         buttons: {
             "Desa": () => {
-                if (validationTermForm()) {
+                if (validationTermForm(page)) {
                     dialog.dialog("close");
-                    updateTableRowTerm(rowSelected.children());
+                    if (page === "terms") {
+                        updateTableRowTerm(rowSelected.children());
+                    } else if (page === "careers") {
+                        updateTableRowCareers(rowSelected.children());
+                    }
                     $("body").css("overflow", "auto");
                     setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
                 }
@@ -410,24 +489,36 @@ function rowEventEditAndNew(tag) {
     let childrens = $(".ui-dialog-buttonset").addClass("buttons-group").children();
     $(childrens[1]).attr("class", "btn cancel");
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
-    $(".ui-dialog-title").text((tag.id === "new") ? 'Nou Curs' : 'Modicació de curs');
+    $(".ui-dialog-title").text((tag.id === "new") ? 'Nou' : 'Modicació');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
 
-    if (location.pathname.includes("admin/dashboard/terms")) {
-        getInfoForModal(rowSelected.children(), "terms");
-    } else if (location.pathname.includes("admin/dashboard/careers")) {
-        getInfoForModal(rowSelected.children(), "careers");
+    const cols = rowSelected.children();
+    if (page === "terms") {
+        const colsValues = [cols[1], cols[2], cols[3], cols[4]];
+        const inputsIds = ["name", "description", "start", "end"];
+        getInfoForModal(colsValues, inputsIds);
+    } else if (page === "careers") {
+        const colsValues = [cols[1], cols[2], cols[3], cols[4], cols[5], cols[6]];
+        const inputsIds = ["code", "name", "description", "hours", "start", "end"];
+        getInfoForModal(colsValues, inputsIds);
     }
 
 }
 
-function getInfoForModal(cols, page) {
-    if (page === "terms") {
-        $(".label-group input#name").val($(cols[1]).text()); // NAME
-        $(".label-group input#description").val($(cols[2]).text()); // DESCRIPTION
-        $(".label-group input#start").val($(cols[3]).text()); // START
-        $(".label-group input#end").val($(cols[4]).text()); // END
+function getInfoForModal(colsValues, inputsIds) {
+    for (let i = 0; i < colsValues.length; i++) {
+        $(`.label-group input#${inputsIds[i]}`).val($(colsValues[i]).text());
     }
+}
+
+function animationSelectedRow() {
+    $("label").click(function () {
+        let rowBackground = $(this).closest('td').children(".row-bg");
+        let input = $(this).closest('td').children(".container-cb").children("input");
+        rowBackground.animate({
+            width: (input.is(':checked')) ? "0vw" : "100vw"
+        })
+    });
 }
 
 /**
@@ -437,12 +528,17 @@ function getInfoForModal(cols, page) {
  */
 function insertNewRow(...params) {
     let row = "<tr>";
-    for (let i = 0; i < params.length - 1; i++)
+    for (let i = 0; i < params.length - 1; i++) {
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
-        
-    if (params[params.length - 1] == "terms") {
-        row += `<td><button id="edit" class="btn save" title="Modificar el curs"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/terms/delete/${params[0]}" class="btn cancel" title="Eliminar el curs"><i class="fas fa-trash"></i></a></td>`;
+    }
+
+    let lastParam = params[params.length - 1];
+    if (lastParam == "terms") {
+        row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+    } else if (lastParam == "careers") {
+        row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter('term')}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
     }
     return row + "</tr>";
 }
@@ -456,7 +552,7 @@ function insertNewRow(...params) {
  * @param {String} created 
  * @param {String} updated 
  */
-function insertTermInDB(name, desc, start, end, created, updated) {
+function insertRowInDB(data, page) {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -468,17 +564,14 @@ function insertTermInDB(name, desc, start, end, created, updated) {
         headers: {
             token: $("meta[name='_token']").attr("content"),
         },
-        data: {
-            name,
-            desc,
-            start,
-            end,
-            created,
-            updated
-        },
+        data,
         success: (res) => {
             generateMessages("success", res.status, ".container-messages", 3);
-            loadTermPage();
+            if (page === "terms") {
+                loadTermPage();
+            } else if (page === "careers") {
+                loadCareerPage();
+            }
         },
         error: (res) => {
             console.log(res.responseJSON.message);
@@ -497,34 +590,37 @@ function insertTermInDB(name, desc, start, end, created, updated) {
  * @param {String} updated 
  * @param {String} type "detect if is soft delete or not (default='softDelete')"
  */
-function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete") {
+function updateRowInDB(data, page) {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
     $.ajax({
-        url: $("meta[name='url']").attr("content") + "/" + id,
+        url: $("meta[name='url']").attr("content") + "/" + data.id,
         method: 'PUT',
         headers: {
             token: $("meta[name='_token']").attr("content"),
         },
-        data: {
-            type,
-            name,
-            desc,
-            start,
-            end,
-            updated
-        },
+        data,
         success: (res) => {
             generateMessages("success", res.status, ".container-messages", 3)
-            if (type === "softDelete") {
+            if (data.type === "softDelete") {
                 setTimeout(() => {
                     $("#remove").html('Eliminar').removeClass("loading");
-                    location.href = "/admin/dashboard/terms"
+                    if (page === "terms") {
+                        location.href = `/admin/dashboard/${page}`
+                    } else if (page === "careers") {
+                        location.href = `/admin/dashboard/${page}?term=${getUrlParameter('term')}`
+                    }
                 }, 2000);
-            } else loadTermPage();
+            } else {
+                if (page === "terms") {
+                    loadTermPage();
+                } else if (page === "careers") {
+                    loadCareerPage();
+                }
+            }
         },
         error: (res) => {
             console.log(res.responseJSON.message);
@@ -540,23 +636,54 @@ function updateTermInDB(id, name, desc, start, end, updated, type = "softDelete"
 function updateTableRowTerm(cols) {
     $("tbody").html('');
     if (cols.length === 1) {
-        insertTermInDB(
-            $(".label-group input#name").val(),
-            $(".label-group input#description").val(),
-            momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            momentFormat(now(), "DD/MM/YYYY HH:mm:ss","YYYY-MM-DD HH:mm:ss"),
-            momentFormat(now(), "DD/MM/YYYY HH:mm:ss","YYYY-MM-DD HH:mm:ss")
-        );
+        const data = {
+            name: $(".label-group input#name").val(),
+            desc: $(".label-group input#description").val(),
+            start: momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+        }
+        insertRowInDB(data, "terms");
     } else {
-        updateTermInDB(
-            $(cols[0]).text(),
-            $(".label-group input#name").val(),
-            $(".label-group input#description").val(),
-            momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
-            now(), null
-        );
+        const data = {
+            id: $(cols[0]).text(),
+            name: $(".label-group input#name").val(),
+            desc: $(".label-group input#description").val(),
+            start: momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            type: null,
+        }
+        updateRowInDB(data, "terms");
+    }
+}
+
+/**
+ * @description "update tbody of HTML tables"
+ * @param {Element[]} cols 
+ */
+function updateTableRowCareers(cols) {
+    $("tbody").html('');
+    if (cols.length === 1) {
+        const data = {
+            term_id: getUrlParameter("term"),
+            code: $(".label-group input#code").val(),
+            name: $(".label-group input#name").val(),
+            desc: $(".label-group input#description").val(),
+            hours: $(".label-group input#hours").val(),
+            start: momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+        }
+        insertRowInDB(data, "careers");
+    } else {
+        const data = {
+            id: $(cols[0]).text(),
+            code: $(".label-group input#code").val(),
+            name: $(".label-group input#name").val(),
+            desc: $(".label-group input#description").val(),
+            hours: $(".label-group input#hours").val(),
+            start: momentFormat($(".label-group input#start").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+            end: momentFormat($(".label-group input#end").val(), "DD/MM/YYYY", "YYYY-MM-DD"),
+        }
+        updateRowInDB(data, "careers");
     }
 }
 
@@ -564,12 +691,16 @@ function updateTableRowTerm(cols) {
  * @description "validate if edit or new term form have an errors"
  * @return {Boolean}
  */
-function validationTermForm() {
+function validationTermForm(page) {
     let msg = "";
     if (isNull($(".label-group input#name").val())) msg += "El camp 'Nom' no pot estar buit.\n";
     if (isNull($(".label-group input#description").val())) msg += "El camp 'Descripció' no pot estar buit.\n";
+    if (page === "careers") {
+        if (isNull($(".label-group input#code").val())) msg += "El camp 'Codi' no pot estar buit.\n";
+        if (isNull($(".label-group input#hours").val())) msg += "El camp 'Hores' no pot estar buit.\n";
+    }
     if (isNull($(".label-group input#start").val())) msg += "El camp 'Data d'inici' no pot estar buit.\n";
-    if (isNull($(".label-group input#end").val())) msg += "El camp 'Data de finalització' no pot estar buit.\n";
+    if (isNull($(".label-group input#end").val())) msg += "El camp 'Data de fi' no pot estar buit.\n";
 
     if (!msg) {
         let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
@@ -577,9 +708,9 @@ function validationTermForm() {
         if (start === "Invalid date")
             msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
         else if (end === "Invalid date")
-            msg += "Data de finalització invàlida 'DD-MM-AAAA'.\n";
+            msg += "Data de fi invàlida 'DD-MM-AAAA'.\n";
         else if (end < start)
-            msg += "La data de finalització no pot ser mes petita que la d'inici.\n";
+            msg += "La data de fi no pot ser mes petita que la d'inici.\n";
     }
 
     if (msg) {
@@ -600,11 +731,9 @@ $(function () {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         })
-    }
-    else if (location.pathname.includes("admin/dashboard/logs")) {
+    } else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
-    }
-    else if (location.pathname.includes("dashboard/terms/delete/")) {
+    } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
         $("#name").on("input", (e) => {
@@ -618,14 +747,11 @@ $(function () {
             } else {
                 if ($("#name").val() === name) {
                     $("#remove").html('').addClass("loading");
-                    updateTermInDB(
-                        $(".delete-term").attr("data-id"),
-                        $(".delete-term").attr("data-name"),
-                        $(".delete-term").attr("data-desc"),
-                        $(".delete-term").attr("data-start"),
-                        $(".delete-term").attr("data-end"),
-                        $(".delete-term").attr("data-updated"),
-                    );
+                    const data = {
+                        id: $(".delete-term").attr("data-id"),
+                        type: "softDelete",
+                    }
+                    updateRowInDB(data, "terms");
                 } else $("#remove").addClass("disabled");
             }
         })
@@ -633,59 +759,32 @@ $(function () {
         $("tbody").fadeIn(300);
         loadLogsPage();
     } else if (location.pathname.endsWith("/admin/dashboard/students/") || location.pathname.endsWith("/admin/dashboard/students")) {
-        $('#file').change(function(){
-        	console.log("Hey!")
-        	importCSV("students");
+        $('#file').change(function () {
+            console.log("Hey!")
+            importCSV("students");
         })
         $("tbody").fadeIn(300);
         const page = getUrlParameter("page");
-        if (page)
+        if (page) {
             loadStudentsPage($("meta[name='url']").attr("content") + `?page=${page}`);
-        else
+        } else {
             loadStudentsPage();
+        }
         $("#file-csv").on("change", (e) => {
             if (e.target.files[0].type === "text/csv")
                 $("#form-file").submit();
             else
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
         })
-        $("#form-file").submit((e) => {
-            // e.preventDefault();
-            // importCareer();
-            // var formData = new FormData(document.getElementById("form-file"));
-            //     $.ajaxSetup({
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //         }
-            //     });
-            //     $.ajax({
-            //         url: "/api/import",
-            //         method: 'POST',
-            //         headers: {
-            //             token: $("meta[name='_token']").attr("content"),
-            //         },
-            //         data: formData,
-            //         contentType: false,
-            //         processData: false,
-            //         success: (data) => {
-            //             // $("#form-file").reset();
-            //             // alert('File has been uploaded successfully');
-            //             console.log(data);
-            //         },
-            //         error: function (data) {
-            //             console.log(data);
-            //         }
-            //     });
-        })
-    } else if (location.pathname.endsWith("/admin/dashboard/careers") || location.pathname.endsWith("/admin/dashboard/careers")) {
+    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
+        $(".return-term.link").text('ID: '+getUrlParameter("term"))
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
             $(".ui-icon-circle-triangle-e").parent().html('<i class="fas fa-arrow-circle-right"></i>')
         });
         $("#file-csv").on("change", (e) => {
-            console.log(e.target.files[0].name.split('.').pop());
             if (e.target.files[0].name.split('.').pop() === "csv") {
                 console.log("hey");
                 importCSV("careers");
@@ -693,115 +792,60 @@ $(function () {
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
                 $(e.target).trigger("reset");
             }
-        })
+        });
     } else if (location.pathname.endsWith("/admin/dashboard/careers/import") || location.pathname.endsWith("/admin/dashboard/careers/import/")) {
         const careers = JSON.parse(localStorage.getItem("careers_json"));
         if (!careers) {
             generateMessages("warning", "No s'ha trobat cap importació.", ".container-messages", 2.5);
             setTimeout(() => location.href = "/admin/dashboard/careers", 2500);
         } else {
-            let arrayCareers = [];
-            let cont = 0;
-            let rows = "";
-            for (const key in careers) {
-                if (Object.hasOwnProperty.call(careers, key)) {
-                    arrayCareers.push(careers[key]);
-                    let dataRow = `
-                    <div class="container-cb">
-                        <input name="check-${cont}" id="check-${cont}" type="checkbox">
-                        <label for="check-${cont}">
-                            <i class="fa fa-check"></i>
-                        </label>
-                    </div>
-                    <label class="text" for="check-${cont}">${key} - ${careers[key]['NOM_CICLE_FORMATIU']}</label>
-                    <div class="row-bg"></div>`;
-                    rows += insertNewRow(dataRow, "import");
-                    cont++;
-                }
-            }
-            $("tbody").css("display", "none").html(rows).fadeIn(300);
-            $("label").click(function () {
-                let rowBackground = $(this).closest('td').children(".row-bg");
-                let input = $(this).closest('td').children(".container-cb").children("input");
-                if (input.is(':checked')) {
-                    rowBackground.animate({
-                        width: "0vw"
-                    });
-                } else {
-                    rowBackground.animate({
-                        width: "100vw"
-                    });
-                }
-            });
-            $(".btn-start-import button").on("click", () => {
-                const checkboxes = $("input[type='checkbox']:checked");
-                let selectedRows = [];
-                if (checkboxes.length > 0) {
-                    generateMessages("info", "La importació ha començat.", ".container-messages", 2.5);
-                    $(".btn-start-import button").html('').addClass("loading no-click");
-                    for (const item of checkboxes) {
-                        const index = $(item).prop("name").split("-")[1];
-                        selectedRows.push(arrayCareers[index]);
-                    }
-                    console.table(selectedRows);
-                    // AJAX
-                    $.ajaxSetup({
-						headers: {
-							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-						}
-					});
-					
-					var term_id = 1;
-					var data = JSON.stringify(selectedRows);
-					
-                    $.ajax({
-						url: $("meta[name='url']").attr("content"),
-						method: 'POST',
-						headers: {
-							token: $("meta[name='_token']").attr("content"),
-						},
-						data: {
-							data,
-							term_id
-						},
-						success: (res) => {
-							localStorage.removeItem("careers_json");
-                    		location.href = "/admin/dashboard/careers";
-						},
-						error: (res) => {
-							console.log(res);
-						}
-					});
-                    //.success {}
-                    localStorage.removeItem("careers_json");
-                    // location.href = "/admin/dashboard/careers";
-
-                } else generateMessages("error", "No s'ha seleccionat cap cicle.", ".container-messages", 2.5);
-            });
-            generateMessages("success", "Arxiu carregat correctament.", ".container-messages", 2.5);
+            loadImportPage(careers);
         }
+    } else if (location.pathname.includes("admin/dashboard/careers/delete/")) {
+        $(".buttons-group>a.btn.save").prop("href", "/admin/dashboard/careers?term=" + getUrlParameter("term"))
+        $("#name").focus();
+        const name = $("span.code").text();
+        $("#name").on("input", (e) => {
+            if (e.target.value === name) $("#remove").removeClass("disabled");
+            else $("#remove").addClass("disabled");
+        });
+        $("#remove").on("click", (e) => {
+            if ($("#remove").hasClass("disabled")) {
+                generateMessages("info", "Introdueix el nom del cicle.", ".container-messages", 2.5)
+                $("#name").focus();
+            } else {
+                if ($("#name").val() === name) {
+                    $("#remove").html('').addClass("loading");
+                    const data = {
+                        id: $(".delete-term").attr("data-id"),
+                        type: "softDelete",
+                    }
+                    updateRowInDB(data, "careers");
+                } else $("#remove").addClass("disabled");
+            }
+        })
     }
-    
+
     //"DARK-MODE"
-    $('.dark-mode').on('change',()=>{
+    $('.dark-mode').on('change', () => {
         $('body').toggleClass('night');
         $('.dark-mode').toggleClass('active');
 
-        if($('body').hasClass('night')){ //cuando el cuerpo tiene la clase 'dark' actualmente
+        if ($('body').hasClass('night')) { //cuando el cuerpo tiene la clase 'dark' actualmente
             localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
-        }else{
+        } else {
             localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
         }
     });
 
-    if(localStorage.getItem('darkMode') == 'enabled'){
-        $('.dark-mode').toggleClass('active').prop('checked',true);
+    if (localStorage.getItem('darkMode') == 'enabled') {
+        $('.dark-mode').toggleClass('active').prop('checked', true);
     }
 
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
     if (prefersDarkScheme.matches) {
-        if(!$('body').hasClass('night')){
+        if (!$('body').hasClass('night')) {
             $('body').addClass('night');
         }
-    } 
+    }
 });

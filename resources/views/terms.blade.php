@@ -8,6 +8,11 @@
         {{ Breadcrumbs::render('terms') }}
     @endsection
     <div class="terms">
+        <p class="text">
+            <span class="red">*</span>
+            Per veure els cicles del curs selecciona el nom del curs
+            <span class="red">*</span>
+        </p>
         <table>
             <caption>Llistat de cursos</caption>
             <thead>
@@ -16,7 +21,7 @@
                     <th>Nom</th>
                     <th>Descripció</th>
                     <th>Data d'inici</th>
-                    <th>Data de finalització</th>
+                    <th>Data de fi</th>
                     <th>Creació</th>
                     <th>Darrera modificació</th>
                     <th>Edita</th>
@@ -34,7 +39,7 @@
                     <th>Nom</th>
                     <th>Descripció</th>
                     <th>Data d'inici</th>
-                    <th>Data de finalització</th>
+                    <th>Data de fi</th>
                     <th>Creació</th>
                     <th>Darrera modificació</th>
                     <th>Edita</th>
@@ -58,7 +63,7 @@
                     <input type="text" id="start" class="input">
                 </div>
                 <div class="label-group">
-                    <label for="end">Data de finalització: <span class="red">*</span></label>
+                    <label for="end">Data de fi: <span class="red">*</span></label>
                     <input type="text" id="end" class="input">
                 </div>
             </div>

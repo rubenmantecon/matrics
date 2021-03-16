@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('career') }}
+        {{ Breadcrumbs::render('career_import') }}
     @endsection
     <div class="import">
         <div class="btn-start-import">

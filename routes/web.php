@@ -6,7 +6,7 @@ use App\Http\Controllers\TermController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\MyImportController;
+use App\Http\Controllers\ImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +37,7 @@ Route::resource('api/terms', TermController::class);
 Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
-
-Route::resource('api/careers/import', MyImportController::class);
+Route::resource('api/import', ImportController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
