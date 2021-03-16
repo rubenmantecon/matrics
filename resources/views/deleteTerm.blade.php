@@ -2,7 +2,7 @@
     <div class="delete-term" data-id="{{ $term->id }}">
         <div class="modal-dialog">
         @section('breadcrumbs')
-            {{ Breadcrumbs::render('term', $term) }}
+            {{ Breadcrumbs::render('term_delete', $term) }}
         @endsection
             <div class="modal-header">
                 <h4 class="modal-title">Eliminació de curs</h4>

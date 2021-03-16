@@ -92,28 +92,21 @@ Route::get('/dashboard/students', function () {
     });
 
     // Dashboard > Terms > Delete[Term]
-    Breadcrumbs::for('term', function ($trail, $term) {
+    Breadcrumbs::for('term_delete', function ($trail, $term) {
         $trail->parent('terms');
         $trail->push($term->name, '/dashboard/terms/delete/{term_id}');
     });
 
     // Dashboard > Terms > [Term]
-    Breadcrumbs::for('term_career', function ($trail, $term) {
+    Breadcrumbs::for('term', function ($trail, $term) {
         $trail->parent('terms');
-        $trail->push($term->name, '/dashboard/terms/{term_id}');
-    });
-
-    // Dashboard > Careers
-    Breadcrumbs::for('careers', function ($trail) {
-        //$trail->parent('term_career');
-        $trail->parent('dashboard');
-        $trail->push("Cicles", '/dashboard/careers');
-    });
+        $trail->push($term, '/admin/dashboard/careers?term={term_id}');
+    }); 
 
     // Dashboard > Careers > Import
     Breadcrumbs::for('career_import', function ($trail) {
-        $trail->parent('careers');
-        $trail->push("Importació cicles", '/dashboard/careers/import');
+        $trail->parent('terms');
+        $trail->push("Cicles", '/admin/dashboard/careers/import?term={term_id}');
     });
 
     // Dashboard > Careers > Delete[Term]
