@@ -19,7 +19,7 @@ class DbTables extends Migration
             $table->string('description', 300);
             $table->date('start');
             $table->date('end');
-            $table->boolean('active');
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
 
@@ -31,7 +31,8 @@ class DbTables extends Migration
             $table->string('description', 300);
             $table->integer('hours');
             $table->date('start');
-            $table->date('end');
+            $table->date('end')->nullable();
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
 

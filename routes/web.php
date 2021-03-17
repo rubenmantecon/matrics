@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,19 +22,22 @@ use App\Http\Controllers\LogController;
 Route::get('/', function () {
     $year = Carbon::now()->year;
     $nextYear = $year + 1;
-    return view('landing', ["year" => "$year/$nextYear"]);
+    return view('pages.landing', ["year" => "$year/$nextYear"]);
 });
 
 Route::get('/sample', function () {
-    return view('sample');
+    return view('pages.sample');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('api/terms', TermController::class);
+Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
+Route::resource('api/students', StudentController::class);
+Route::resource('api/import', ImportController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/

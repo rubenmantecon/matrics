@@ -17,9 +17,17 @@
 
             <!-- Navigation Links -->
             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+            @if(Auth::user()->role == 'admin')
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Panell de control') }}
                 </x-nav-link>
+                <x-nav-link href="/admin/dashboard/terms" :active="request()->routeIs('terms')">
+                    {{ __('Cursos') }}
+                </x-nav-link>
+                <x-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
+                    {{ __('Alumnes') }}
+                </x-nav-link>
+            @endif
             </div>
             @if(Auth::user()->role == 'admin')
             <p class="user"><i class="fas fa-user"></i> Admin</p>
@@ -43,7 +51,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <!-- Authentication -->
+                        {{-- <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
@@ -52,9 +60,19 @@
                                                 this.closest('form').submit();">
                                 {{ __('Tanca sessió') }}
                             </x-dropdown-link>
-                        </form>
+                        </form> --}}
                     </x-slot>
                 </x-dropdown>
+            </div>
+            <div class="toggle night-mode-available">
+                <div class="night-mode-button">
+                    <input type="checkbox" class="dark-mode" id="night-mode">
+                    <label for="night-mode" class="label-dark-mode">
+                        <i class="fas fa-moon"></i>
+                        <i class="fas fa-sun"></i>
+                        <div class="blob"></div>
+                    </label>
+                </div>
             </div>
         </header>
     </div>
@@ -77,6 +95,12 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Panell de control') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link href="/admin/dashboard/terms" :active="request()->routeIs('terms')">
+                {{ __('Cursos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
+                {{ __('Alumnes') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -94,8 +118,8 @@
                 </div>
             </div>
 
-            <div class="mt-3 space-y-1">
-                <!-- Authentication -->
+            <div class="auth mt-3 space-y-1">
+                {{-- <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
@@ -104,7 +128,7 @@
                                         this.closest('form').submit();">
                         {{ __('Tanca sessió') }}
                     </x-responsive-nav-link>
-                </form>
+                </form> --}}
             </div>
         </div>
     </div>
