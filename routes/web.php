@@ -22,15 +22,15 @@ use App\Http\Controllers\ImportController;
 Route::get('/', function () {
     $year = Carbon::now()->year;
     $nextYear = $year + 1;
-    return view('landing', ["year" => "$year/$nextYear"]);
+    return view('pages.landing', ["year" => "$year/$nextYear"]);
 });
 
 Route::get('/sample', function () {
-    return view('sample');
+    return view('pages.sample');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('api/terms', TermController::class);

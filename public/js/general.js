@@ -4,7 +4,7 @@
  * @param {String} element 
  * @return {Boolean} 
  */
-function isNull(element) {
+ function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
 }
 
@@ -234,17 +234,18 @@ function loadTermPage() {
  */
 function loadCareerPage() {
     const term_id = getUrlParameter("term");
+    console.log(term_id);
     $.ajax({
         url: $("meta[name='url']").attr("content"),
         method: 'GET',
         headers: {
             token: $("meta[name='_token']").attr("content"),
-            term_id: (!term_id) ? 'empty' : term_id,
+            "term-id": (!term_id) ? 'empty' : term_id,
         },
         success: (res) => {
             if (res.status) {
                 generateMessages(res.status, res.text, ".container-messages", 3)
-                setTimeout(() => location.href = "/admin/dashboard/terms", 3000);
+                // setTimeout(() => location.href = "/admin/dashboard/terms", 3000);
             } else {
                 $("tbody").css("display", "none").html('');
                 if (res.length > 0) {
@@ -283,6 +284,9 @@ function loadCareerPage() {
     });
 }
 
+/**
+ * @description "load all the data of the logs end point in the tbody HTML"
+ */
 function loadLogsPage() {
     $.ajax({
         url: $("meta[name='url']").attr("content"),
@@ -310,6 +314,10 @@ function loadLogsPage() {
     });
 }
 
+/**
+ * @description "load all the data of the import end point in the tbody HTML"
+ * @param {JSON} careers "json with the careers"
+ */
 function loadImportPage(careers) {
     let arrayCareers = [];
     let cont = 0;
@@ -379,6 +387,11 @@ function loadImportPage(careers) {
     generateMessages("success", "Arxiu carregat correctament.", ".container-messages", 2.5);
 }
 
+
+/**
+ * @description "load all the data of the career end point in the tbody HTML"
+ * @param {String} "actual page (careers|students)"
+ */
 function importCSV(page) {
     $.ajaxSetup({
         headers: {
@@ -446,8 +459,8 @@ function importCSV(page) {
 /**
  * @description "callback function event for create or edit term"
  * @param {Element} tag "Event onClick: DOM Element tag pressed"
+ * @param {String} page "actual page"
  */
-
 function rowEventEditAndNew(tag, page) {
     $("html").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
@@ -506,12 +519,20 @@ function rowEventEditAndNew(tag, page) {
 
 }
 
+/**
+ * @description "get row information for dialog modal"
+ * @param {*} colsValues "selected row"
+ * @param {*} inputsIds "inputs of modal"
+ */
 function getInfoForModal(colsValues, inputsIds) {
     for (let i = 0; i < colsValues.length; i++) {
         $(`.label-group input#${inputsIds[i]}`).val($(colsValues[i]).text());
     }
 }
 
+/**
+ * @description "animation for selected careers in careers import page"
+ */
 function animationSelectedRow() {
     $("label").click(function () {
         let rowBackground = $(this).closest('td').children(".row-bg");
@@ -546,12 +567,8 @@ function insertNewRow(...params) {
 
 /**
  * @description "insert new row in the terms table of the DB with AJAX"
- * @param {String} name 
- * @param {String} desc 
- * @param {String} start 
- * @param {String} end 
- * @param {String} created 
- * @param {String} updated 
+ * @param {JSON} data "data body information"
+ * @param {String} page "actual page"
  */
 function insertRowInDB(data, page) {
     $.ajaxSetup({
@@ -583,13 +600,8 @@ function insertRowInDB(data, page) {
 
 /**
  * @description "update row in the terms table of the DB with AJAX"
- * @param {Number} id 
- * @param {String} name 
- * @param {String} desc 
- * @param {String} start 
- * @param {String} end 
- * @param {String} updated 
- * @param {String} type "detect if is soft delete or not (default='softDelete')"
+ * @param {JSON} data "data body information"
+ * @param {String} page "actual page"
  */
 function updateRowInDB(data, page) {
     $.ajaxSetup({
@@ -631,7 +643,7 @@ function updateRowInDB(data, page) {
 }
 
 /**
- * @description "update tbody of HTML tables"
+ * @description "update tbody of term HTML table"
  * @param {Element[]} cols 
  */
 function updateTableRowTerm(cols) {
@@ -658,7 +670,7 @@ function updateTableRowTerm(cols) {
 }
 
 /**
- * @description "update tbody of HTML tables"
+ * @description "update tbody of career HTML table"
  * @param {Element[]} cols 
  */
 function updateTableRowCareers(cols) {
@@ -690,6 +702,7 @@ function updateTableRowCareers(cols) {
 
 /**
  * @description "validate if edit or new term form have an errors"
+ * @param {String} page "actual page"
  * @return {Boolean}
  */
 function validationTermForm(page) {
@@ -828,13 +841,16 @@ $(function () {
 
     //"DARK-MODE"
     $('.dark-mode').on('change', () => {
-        $('body').toggleClass('night');
-        $('.dark-mode').toggleClass('active');
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        if (!prefersDarkScheme.matches) {
+            $('body').toggleClass('night');
+            $('.dark-mode').toggleClass('active');
 
-        if ($('body').hasClass('night')) { //cuando el cuerpo tiene la clase 'dark' actualmente
-            localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
-        } else {
-            localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
+            if ($('body').hasClass('night')) { //cuando el cuerpo tiene la clase 'dark' actualmente
+                localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
+            } else {
+                localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
+            }
         }
     });
 

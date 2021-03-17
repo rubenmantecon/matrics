@@ -165,6 +165,10 @@ body.night .modal-footer {
     border-bottom-left-radius: 16px;
 }
 
+body.night ul.pagination li.pageNumber a {
+    color: #fff !important;
+}
+
 .dark-mode:checked+.label-dark-mode .blob {
     left: 0;
 }
@@ -1722,6 +1726,10 @@ ul.pagination li.pageNumber:last-child {
 }
 
 @media (prefers-color-scheme: dark) {
+    ul.pagination li.pageNumber a {
+        color: #fff !important;
+    }
+
     header {
         background-color: var(--BGdarkF);
         color: var(--darkText);

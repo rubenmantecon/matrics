@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use \Datetime;
+use Carbon\Carbon;
+
 use App\Models\Career;
 use App\Models\Term;
 use App\Models\User;
@@ -86,6 +89,14 @@ class ImportController extends Controller
                 $c->description = "";
                 $c->hours = $career["HORES_CICLE_FORMATIU"];
                 $c->start = $career["DATA_INICI_CICLE_FORMATIU"];
+
+                if (config('app.env') != "local") {
+                    $source = $career["DATA_INICI_CICLE_FORMATIU"];
+                    $date = date_create(str_replace("/", "-", $source));
+                    $newFormat = Carbon::parse(date_format($date, 'd-m-y'));
+                    $c->start = $newFormat->format('m-d-y');
+                }
+
                 if (empty($career["DATA_FI_CICLE_FORMATIU"])) {
                     $c->end = null;
                 } else {
@@ -93,12 +104,13 @@ class ImportController extends Controller
                 }
 
                 $status = $c->save();
+                if ($status) {
+                    $data = ["status" => "Nou cicle creat correctament."];
+                    Log::channel('dblogging')->info("Ha creado un nuevo Ciclo", ["user_id" => Auth::id(), "career_id" => $c->id]);
+                }
             }
         }
 
-        if ($status)
-            $data = ["status" => "Nou cicle creat correctament."];
-        Log::channel('dblogging')->info("Ha creado un nuevo Ciclo", ["user_id" => Auth::id(), "career_id" => $c->id]);
         return response()->json($data);
     }
 

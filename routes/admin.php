@@ -12,11 +12,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('pages.dashboard');
 });
 
 Route::get('/dashboard/terms', function () {
-    return view('terms');
+    return view('pages.terms.index');
 });
 
 Route::get('/dashboard/careers', function (Request $request) {
@@ -25,7 +25,7 @@ Route::get('/dashboard/careers', function (Request $request) {
     }
     $result = Term::select("name")->where('id', $request->term)->get()[0];
     if ($result) {
-        return view('careers', ['term' => $result["name"]]);
+        return view('pages.careers.index', ['term' => $result["name"]]);
     } else {
         return redirect('/admin/dashboard/terms');
     }
@@ -45,20 +45,20 @@ Route::get('/dashboard/careers/delete/{career_id}', function ($career_id) {
 });
 
 Route::get('/dashboard/logs', function () {
-    return view('logs');
+    return view('pages.logs');
 });
 
 Route::get('/dashboard/terms/delete/{term_id}', function ($term_id) {
     $term = Term::select("*")->where('id', $term_id)->get();
     if (sizeof($term) > 0) {
-        return view('deleteTerm', ["term" => $term[0]]);
+        return view('pages.terms.delete', ["term" => $term[0]]);
     } else {
         return redirect("/admin/dashboard/terms");
     }
 });
 
 Route::get('/dashboard/students', function () {
-    return view('students.index');
+    return view('pages.students');
 });
 
 
