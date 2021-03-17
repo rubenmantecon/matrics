@@ -23,7 +23,6 @@ Route::get('/dashboard/careers', function (Request $request) {
     if (!isset($request->term)) {
         return redirect('/admin/dashboard/terms');
     }
-
     $result = Term::select("name")->where('id', $request->term)->get()[0];
     if ($result) {
         return view('careers', ['term' => $result["name"]]);
