@@ -51,6 +51,12 @@ class StudentController extends Controller
 		$data = ['status' => 'Unauthorized, error 503'];
 		$token = $request->header('token');
 
+		// Check if the file contains csv extensión.
+		if (!str_contains($request->file, "text/csv")) {
+			$res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
+			return response()->json($res);
+		}
+
 		if ($token) {
 			$user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
 
@@ -106,17 +112,13 @@ class StudentController extends Controller
 									if (empty($interesting_index["identificacion"]["pass"])) {
 										$status_controller["failed"]++;
 										continue;
-									}
-									else{
+									} else {
 										$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["pass"];
 									}
-								}
-								else{
+								} else {
 									$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["nie"];
 								}
-								
-							}
-							else{
+							} else {
 								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["dni"];
 							}
 
@@ -143,9 +145,9 @@ class StudentController extends Controller
 
 							$status = $user->save();
 							if ($status) {
-							
+
 								$response = $response[0];
-							
+
 								$enrollment = new Enrolment;
 								$enrollment->user_id = $user->id;
 								$enrollment->term_id = $response->term_id;
