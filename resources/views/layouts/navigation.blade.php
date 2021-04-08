@@ -27,6 +27,9 @@
                 <x-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
                     {{ __('Alumnes') }}
                 </x-nav-link>
+                <x-nav-link href="/admin/dashboard/createadmin" :active="request()->routeIs('createadmin')">
+                    {{ __('Crear admin') }}
+                </x-nav-link>
             @endif
             </div>
             @if(Auth::user()->role == 'admin')
@@ -100,6 +103,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
                 {{ __('Alumnes') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="/admin/dashboard/createadmin" :active="request()->routeIs('createadmin')">
+                {{ __('Crear admin') }}
             </x-responsive-nav-link>
         </div>
 
