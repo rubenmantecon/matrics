@@ -31,7 +31,7 @@
                 <img src="{{ asset('images/icono-alumno.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <a href="/admin/dashboard/createadmin" class="btn primary-btn">Crear admin</a>
+                <a href="/admin/dashboard/createAdmin" class="btn primary-btn">Crear admin</a>
             </div>
         </div>
     </div>
