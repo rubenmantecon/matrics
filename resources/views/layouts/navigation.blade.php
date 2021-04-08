@@ -35,7 +35,7 @@
             <p class="user"><i class="fas fa-user"></i> Student</p>
             @endif
 
-            <!-- Settings Dropdown -->
+            <!-- Settings Dropdown
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -63,7 +63,7 @@
                         </form> --}}
                     </x-slot>
                 </x-dropdown>
-            </div>
+            </div> -->
             <div class="toggle night-mode-available">
                 <div class="night-mode-button">
                     <input type="checkbox" class="dark-mode" id="night-mode">

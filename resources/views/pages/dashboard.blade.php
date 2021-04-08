@@ -27,6 +27,23 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="flex flex-col">
+        <div class="flex items-center justify-center w-full h-24">
+            <h2>Estat de la matricula</h2>
+        </div>
+        <div class="flex items-center justify-center w-full">
+            <div class="px-6 py-4">
+                <a href="/profile" class="btn primary-btn">Dades de l'usuari</a>
+            </div>
+            <div class="px-6 py-4">
+                <a href="/admin/dashboard/terms" class="btn primary-btn">Recalcular matricula</a>
+            </div>
+            <div class="px-6 py-4">
+                <a href="/admin/dashboard/terms" class="btn primary-btn">Documents</a>
+            </div>
+        </div>
+    </div>
     @endif
 
 </x-app-layout>
