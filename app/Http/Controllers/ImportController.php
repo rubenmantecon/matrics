@@ -44,23 +44,14 @@ class ImportController extends Controller
      */
     public function store(Request $request)
     {
-        /*
-        $token = $request->header('token');
-        $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
-        $data = ['status' => 'Unauthorized, error 503'];
-
-        if ($user['token']) {
-        */
-
-        //dd($request);
-
-        // Check if the file contains csv extensión.
-        if (!str_contains($request->file, "text/csv")) {
-            $res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
-            return response()->json($res);
-        }
-
         if (isset($request->import_file)) {
+
+            // Check if the file contains csv extensión.
+            if (!str_contains($request->file, "text/csv")) {
+                $res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
+                return response()->json($res);
+            }
+
             $tmp = base64_decode(explode(",", $request->file)[1]);
             $array = array_map("str_getcsv", explode("\n", $tmp));
             $stash_control = array();
