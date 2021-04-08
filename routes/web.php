@@ -29,6 +29,9 @@ Route::get('/sample', function () {
     return view('pages.sample');
 });
 
+Route::get('/dashboard/profile', function () {
+    return view('pages.perfile');
+});
 Route::get('/dashboard', function () {
     return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
