@@ -52,7 +52,7 @@ class StudentController extends Controller
 		$token = $request->header('token');
 
 		// Check if the file contains csv extensión.
-		if (!str_contains($request->file, "text/csv")) {
+		if (!str_contains($request->file, 'data:text/csv;')) {
 			$res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
 			return response()->json($res);
 		}
@@ -64,16 +64,14 @@ class StudentController extends Controller
 
 				if (isset($request->import_file)) {
 					$tmp = base64_decode(explode(",", $request->file)[1]);
-
 					$array = array_map("str_getcsv", explode("\n", $tmp));
-
 					$array = array_slice($array, 0, -1);
-
 					$q = 0;
 					$status_controller = ["okey" => 0, "failed" => 0];
-
 					$interesting_index = ["firstname" => null, "lastname1" => null, "lastname2" => null, "email" => null];
-
+					/**
+					 * @var array
+					 */
 					foreach ($array as $element) {
 						if ($q == 0) {
 							// search for certain column names
@@ -147,7 +145,6 @@ class StudentController extends Controller
 							if ($status) {
 
 								$response = $response[0];
-
 								$enrollment = new Enrolment;
 								$enrollment->user_id = $user->id;
 								$enrollment->term_id = $response->term_id;
@@ -156,9 +153,7 @@ class StudentController extends Controller
 								$enrollment->state = "unregistered";
 								$enrollment->created_at = $request->created;
 								$enrollment->updated_at = $request->updated;
-
 								$enrollment->save();
-
 								$status_controller["okey"]++;
 							} else {
 								$status_controller["failed"]++;
