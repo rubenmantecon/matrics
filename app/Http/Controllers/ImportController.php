@@ -53,6 +53,13 @@ class ImportController extends Controller
         */
 
         //dd($request);
+
+        // Check if the file contains csv extensión.
+        if (!str_contains($request->file, "text/csv")) {
+            $res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
+            return response()->json($res);
+        }
+
         if (isset($request->import_file)) {
             $tmp = base64_decode(explode(",", $request->file)[1]);
             $array = array_map("str_getcsv", explode("\n", $tmp));
