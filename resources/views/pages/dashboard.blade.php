@@ -40,7 +40,7 @@
                 <a href="/admin/dashboard/terms" class="btn primary-btn">Recalcular matricula</a>
             </div>
             <div class="px-6 py-4">
-                <a href="/admin/dashboard/terms" class="btn primary-btn">Documents</a>
+                <a href="/documents" class="btn primary-btn">Documents</a>
             </div>
         </div>
     </div>
