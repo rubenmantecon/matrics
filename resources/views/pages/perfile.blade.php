@@ -32,12 +32,11 @@
                     <label for="state.email">Localidad</label>
                     <p><-localidad-></p>
                 </div>
-
-                <div class="form-group">
-                    <label for="state.email">Permisos de Imagen</label>
-                    <textarea>permisos</textarea>.
-                </div>
             </form>
+            <div class="form-group">
+                <label for="state.email">Solicitar cambios</label>
+                <textarea>cambios</textarea>.
+            </div>
             <a href="/admin/dashboard/terms" class="btn primary-btn">Solucitar</a>
         </div>
     </div>
