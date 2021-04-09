@@ -38,6 +38,7 @@
                 <textarea>cambios</textarea>.
             </div>
             <a href="/admin/dashboard/terms" class="btn primary-btn">Solucitar</a>
+            <a href="/dashboard" class="btn primary-btn">Solucitar</a>
         </div>
     </div>
 </x-app-layout>
