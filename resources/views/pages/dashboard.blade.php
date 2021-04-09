@@ -4,6 +4,7 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
+    
     @if(Auth::user()->role == 'admin')
     @section('breadcrumbs')
         {{ Breadcrumbs::render('dashboard') }}
