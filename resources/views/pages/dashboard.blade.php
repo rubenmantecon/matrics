@@ -33,7 +33,7 @@
         </div>
         <div class="flex items-center justify-center w-full">
             <div class="px-6 py-4">
-                <a href="/profile" class="btn primary-btn">Dades de l'usuari</a>
+                <a href="/dashboard/profile" class="btn primary-btn">Dades de l'usuari</a>
             </div>
             <div class="px-6 py-4">
                 <a href="/admin/dashboard/terms" class="btn primary-btn">Recalcular matricula</a>
