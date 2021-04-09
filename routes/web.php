@@ -7,7 +7,7 @@ use App\Http\Controllers\CareerController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ImportController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\RegisterAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
 Route::resource('api/import', ImportController::class);
-Route::resource('api/createAdmin', RegisterController::class);
+Route::resource('api/createAdmin', RegisterAdminController::class);
 
 require __DIR__ . '/auth.php';
 

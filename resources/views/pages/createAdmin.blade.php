@@ -21,9 +21,9 @@
 
             <!-- Name -->
             <div class="label-group-admin">
-                <x-label for="name" :value="__('Name')" />
+                <x-label for="firstname" :value="__('Firstame')" />
 
-                <x-input id="name" class="input block mt-1 h-8" type="text" name="name" :value="old('name')" required
+                <x-input id="firstname" class="input block mt-1 h-8" type="text" name="firstname" :value="old('firstname')" required
                     autofocus />
             </div>
 

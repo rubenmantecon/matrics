@@ -122,7 +122,23 @@ function loadLogsPage() {
  * @description "load all the functionalities of the create admin in HTML"
  */
  function loadCreateAdminPage() {
-     console.log("hola");
+     $('form').submit(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let msg = "";
+        if (isNull($("input#username").val())) msg += "El camp 'Nom d'usuari' no pot estar buit.\n";
+        if (isNull($("input#firstname").val())) msg += "El camp 'Nom' no pot estar buit.\n";
+        if (isNull($("input#lastname1").val())) msg += "El camp 'Cognom' no pot estar buit.\n";
+        if (isNull($("input#lastname2").val())) msg += "El camp 'Segon cognom' no pot estar buit.\n";
+        if (isNull($("input#password").val())) msg += "El camp 'Contrasenya' no pot estar buit.\n";
+        if (isNull($("input#password_confirmation").val())) msg += "El camp 'Confirma contrasenya' no pot estar buit.\n";
+        if ($("input#password_confirmation").val() != $("input#password").val()) msg += "Les contrasenyes no coincideixen.\n";
+
+        if (msg) {
+            generateMessages("error", msg, ".container-messages", 5);
+            return false;
+        } else e.target.submit();
+     })
 }
 
 
