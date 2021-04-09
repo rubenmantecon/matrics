@@ -119,34 +119,10 @@ function loadLogsPage() {
 
 /* CREATE ADMIN */
 /**
- * @description "load all the data of the create admin in HTML"
+ * @description "load all the functionalities of the create admin in HTML"
  */
  function loadCreateAdminPage() {
-    let msg = "";
-    if (isNull($(".label-group input#name").val())) msg += "El camp 'Nom' no pot estar buit.\n";
-    if (isNull($(".label-group input#description").val())) msg += "El camp 'Descripció' no pot estar buit.\n";
-    if (page === "careers") {
-        if (isNull($(".label-group input#code").val())) msg += "El camp 'Codi' no pot estar buit.\n";
-        if (isNull($(".label-group input#hours").val())) msg += "El camp 'Hores' no pot estar buit.\n";
-    }
-    if (isNull($(".label-group input#start").val())) msg += "El camp 'Data d'inici' no pot estar buit.\n";
-    if (isNull($(".label-group input#end").val())) msg += "El camp 'Data de fi' no pot estar buit.\n";
-
-    if (!msg) {
-        let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
-        let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
-        if (start === "Invalid date")
-            msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
-        else if (end === "Invalid date")
-            msg += "Data de fi invàlida 'DD-MM-AAAA'.\n";
-        else if (end < start)
-            msg += "La data de fi no pot ser mes petita que la d'inici.\n";
-    }
-
-    if (msg) {
-        generateMessages("error", msg, ".container-messages", 5);
-        return false;
-    } else return true;
+     console.log("hola");
 }
 
 
