@@ -5,16 +5,40 @@
         </h2>
     </x-slot>
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('students') }}
+        {{ Breadcrumbs::render('createAdmin') }}
     @endsection
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action={{ route('dashboard') }}>
         @csrf
+
+        <!-- Username -->
+        <div>
+            <x-label for="username" :value="__('Username')" />
+
+            <x-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required
+                autofocus />
+        </div>
 
         <!-- Name -->
         <div>
             <x-label for="name" :value="__('Name')" />
 
             <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
+                autofocus />
+        </div>
+
+        <!-- Surname -->
+        <div>
+            <x-label for="lastname1" :value="__('Lastname1')" />
+
+            <x-input id="lastname1" class="block mt-1 w-full" type="text" name="lastname1" :value="old('lastname1')" required
+                autofocus />
+        </div>
+
+        <!-- Second Surname -->
+        <div>
+            <x-label for="lastname2" :value="__('Lastname2')" />
+
+            <x-input id="lastname2" class="block mt-1 w-full" type="text" name="lastname2" :value="old('lastname2')" required
                 autofocus />
         </div>
 
@@ -42,7 +66,7 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+            <a class="underline text-sm text-yellow-600 hover:text-yellow-900" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
 

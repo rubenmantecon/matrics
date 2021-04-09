@@ -90,6 +90,12 @@ Breadcrumbs::for('terms', static function ($trail) {
     $trail->push('Cursos', '/admin/dashboard/terms');
 });
 
+// Dashboard > Create admin
+Breadcrumbs::for('createAdmin', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push("Crear admin", '/admin/dashboard/createAdmin');
+});
+
 // Dashboard > Terms > Delete[Term]
 Breadcrumbs::for('term_delete', function ($trail, $term) {
     $trail->parent('terms');
