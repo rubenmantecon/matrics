@@ -54,7 +54,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        {{-- <!-- Authentication -->
+                        <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
@@ -63,7 +63,7 @@
                                                 this.closest('form').submit();">
                                 {{ __('Tanca sessió') }}
                             </x-dropdown-link>
-                        </form> --}}
+                        </form>
                     </x-slot>
                 </x-dropdown>
             </div>
