@@ -4,7 +4,7 @@
  * @param {String} element 
  * @return {Boolean} 
  */
- function isNull(element) {
+function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
 }
 
@@ -199,6 +199,7 @@ function loadTermPage() {
         success: (res) => {
             $("tbody").css("display", "none").html('');
             if (res.length > 0) {
+                let contRows = 0;
                 for (const item of res) {
                     $("tbody").append(insertNewRow(
                         item.id, `<a class="link" href="/admin/dashboard/careers?term=${item.id}">${item.name}</a>`,
@@ -207,24 +208,27 @@ function loadTermPage() {
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.created_at, "", "DD/MM/YYYY HH:mm:ss"),
                         momentFormat(item.updated_at, "", "DD/MM/YYYY HH:mm:ss"),
+                        contRows,
                         "terms"
                     ));
+                    contRows++;
                 }
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
+                        <td colspan="10"><p>No s'ha trobat cap curs.</p></td>
                     </tr>`
                 );
             }
             $("tbody").append(
                 `<tr>
-                    <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
+                    <td colspan="10"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
                 </tr>`
             ).fadeIn(300);
 
             $("body").addClass("body-term");
             $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "terms"));
+            $("#clone").on("click", (e) => eventCloneCareer(e.target, res));
         }
     });
 }
@@ -457,6 +461,31 @@ function importCSV(page) {
 }
 
 /**
+ *  @description "event for clone the term"
+ */
+function eventCloneCareer(row, json) {
+    const rowSelected = $(row).closest("button").attr("data");
+    const termId = json[rowSelected].id;
+
+    // $.ajax({
+    //     url: "/api/...",
+    //     method: 'POST',
+    //     headers: {
+    //         token: $("meta[name='_token']").attr("content"),
+    //     },
+    //     data: {
+    //         id: termId
+    //     },
+    //     success: (res) => {
+    //         location.reload();
+    //     },
+    //     error: (res) => {
+    //         console.log(res);
+    //     }
+    // });
+}
+
+/**
  * @description "callback function event for create or edit term"
  * @param {Element} tag "Event onClick: DOM Element tag pressed"
  * @param {String} page "actual page"
@@ -550,14 +579,15 @@ function animationSelectedRow() {
  */
 function insertNewRow(...params) {
     let row = "<tr>";
-    for (let i = 0; i < params.length - 1; i++) {
+    for (let i = 0; i < params.length - 2; i++) {
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
     }
 
     let lastParam = params[params.length - 1];
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
+                <td><button id="clone" class="btn save" data="${params[params.length-2]}" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
     } else if (lastParam == "careers") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter('term')}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
