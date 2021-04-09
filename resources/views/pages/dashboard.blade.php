@@ -4,6 +4,7 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
+    
     @if(Auth::user()->role == 'admin')
     @section('breadcrumbs')
         {{ Breadcrumbs::render('dashboard') }}
@@ -42,7 +43,7 @@
                 <a href="/dashboard/profile" class="btn primary-btn">Dades de l'usuari</a>
             </div>
             <div class="px-6 py-4">
-                <a href="/admin/dashboard/terms" class="btn primary-btn">Recalcular matricula</a>
+                <a href="#" class="btn primary-btn">Recalcular matricula</a>
             </div>
             <div class="px-6 py-4">
                 <a href="/dashboard/documents" class="btn primary-btn">Documents</a>
