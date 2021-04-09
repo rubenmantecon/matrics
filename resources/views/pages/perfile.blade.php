@@ -37,7 +37,7 @@
                 <label for="state.email">Solicitar cambios</label>
                 <textarea>cambios</textarea>.
             </div>
-            <a href="/admin/dashboard/terms" class="btn primary-btn">Solucitar</a>
+            <a href="" class="btn primary-btn">Solicitar Cambios</a>
         </div>
     </div>
 </x-app-layout>
