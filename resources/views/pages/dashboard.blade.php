@@ -28,10 +28,10 @@
         </div>
         <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
             <div class="px-4 py-2">
-                <img src="{{ asset('images/icono-alumno.png') }}" alt="logo" class="logo w-24 m-4"/>
+                <img src="{{ asset('images/admin.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <a href="/admin/dashboard/createAdmin" class="btn primary-btn">Crear admin</a>
+                <a href="/admin/dashboard/createAdmin" class="btn primary-btn">Crea admin</a>
             </div>
         </div>
     </div>
