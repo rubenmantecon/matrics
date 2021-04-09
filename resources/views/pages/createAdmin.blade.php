@@ -8,7 +8,7 @@
         {{ Breadcrumbs::render('createAdmin') }}
     @endsection
     <div class="container-form-admin">
-        <form method="POST" action={{ route('dashboard') }}>
+        <form method="POST" action="/api/createAdmin">
             @csrf
 
             <!-- Username -->

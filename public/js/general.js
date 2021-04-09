@@ -123,6 +123,7 @@ function loadLogsPage() {
  */
  function loadCreateAdminPage() {
      $('form').submit(function (e) {
+        console.log('hey');
         e.preventDefault();
         e.stopPropagation();
         let msg = "";
