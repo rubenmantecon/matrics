@@ -21,6 +21,8 @@
     --darkText: rgb(250, 250, 250);
     --saveBtn: #21ba45;
     --saveBtnHover: #20973c;
+    --normalBtn:#e0e1e2; 
+    --normalBtnWriting:#a7a7a7;
     --selectedRow: #68ff6e;
     --cancelBtn: #ff695e;
     --cancelBtnHover: #c92b20;
@@ -175,6 +177,45 @@ body.night ul.pagination li.pageNumber a {
 
 .dark-mode:checked+.label-dark-mode {
     background-color: rgb(82, 81, 83);
+}
+/* SEMAFORO*/
+
+.statusok {
+      border-radius: 100%;
+      background: radial-gradient(#2CEC59, #0C3717);
+      /*border:20px solid #24A442;*/
+      /*background: #21ba45;*/
+      padding: 5vh;
+      width: 5vh;
+      height: 5vh;
+}
+
+.statuscancel {
+      border-radius: 100%;
+      background: radial-gradient(#F42626, #3A0909);
+      /*border:20px solid #24A442;*/
+      /*background: #21ba45;*/
+      padding: 5vh;
+      width: 5vh;
+      height: 5vh;
+}
+.statusprocesing {
+      border-radius: 100%;
+      background: radial-gradient(#F58027, #552C0D);
+      /*border:20px solid #24A442;*/
+      /*background: #21ba45;*/
+      padding: 5vh;
+      width: 5vh;
+      height: 5vh;
+}
+.statusnothing {
+      border-radius: 100%;
+      background: radial-gradient(#E9E9E9, #2F2F2F);
+      /*border:20px solid #24A442;*/
+      /*background: #21ba45;*/
+      padding: 5vh;
+      width: 5vh;
+      height: 5vh;
 }
 
 /* BODY */
@@ -448,6 +489,17 @@ table td.loading:after {
 
 .btn.save:hover {
     background-color: var(--saveBtnHover) !important;
+}
+
+.btn.file {
+    background-color: var(--normalBtn) !important;
+    color: var(--normalBtnWriting) !important;
+    text-shadow: none !important;
+}
+
+.btn.file:hover {
+    background-color: var(--normalBtnHover) !important;
+    color:#fff;
 }
 
 .btn.cancel {
