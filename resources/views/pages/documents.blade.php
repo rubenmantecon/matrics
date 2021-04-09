@@ -8,7 +8,7 @@
         <input type="file" id="Resguard del titol" multiple><br>
         <label for="Resguard del pagament">Selecciona el Resguard del pagament:</label>
         <input type="file" id="Resguard del pagament" multiple><br>
-      
+        <input class="btn primary-btn"type="submit" value="Pujar arxius">
     </div>
 </x-app-layout>
 
