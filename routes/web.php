@@ -33,6 +33,10 @@ Route::get('/dashboard', function () {
     return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::get('/ruben', function(){
+	return view('pages.ruben');
+});
+
 Route::resource('api/terms', TermController::class);
 Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
