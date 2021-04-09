@@ -28,8 +28,14 @@
     </div>
     @else
     <div class="flex flex-col">
-        <div class="flex items-center justify-center w-full h-24">
-            <h2>Estat de la matricula</h2>
+        <div class="flex flex-col items-center justify-center w-full">
+            <h2>Estat de la matricula *SEMAFORO*</h2>
+            <div class="flex flex-wrap items-center justify-center w-full text-center">
+                <div class="w-1/2">DNI: *SEMAFORO*</div>
+                <div class="w-1/2">T. SANITARIA: *SEMAFORO*</div>
+                <div class="w-1/2">TITULO ACADEMICO: *SEMAFORO*</div>
+                <div class="w-1/2">RESGUARDO PAGO: *SEMAFORO*</div>
+            </div>
         </div>
         <div class="flex items-center justify-center w-full">
             <div class="px-6 py-4">
@@ -39,7 +45,7 @@
                 <a href="/admin/dashboard/terms" class="btn primary-btn">Recalcular matricula</a>
             </div>
             <div class="px-6 py-4">
-                <a href="/documents" class="btn primary-btn">Documents</a>
+                <a href="/dashboard/documents" class="btn primary-btn">Documents</a>
             </div>
         </div>
     </div>
