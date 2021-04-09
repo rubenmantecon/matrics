@@ -24,8 +24,34 @@ class StudentController extends Controller
 		$token = $request->header('token');
 		if ($token) {
 			$user = User::select("token")->where('token', $token)->get()[0];
-			if ($user['token'])
-				$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
+			if ($user['token']){
+				if($request->filter){
+					// There is some filter present!
+					$filters = json_decode($request->filter, true);				
+					$filters = is_array($filters) ? $filters : array($filters);
+					
+					$allowed_filters = ["firstname", "lastname1", "lastname2"];
+					
+					if(sizeof(array_diff(array_keys($filters), $allowed_filters)) == 0){
+						$students = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id');
+						foreach($filters as $filter => $value){
+							if($filter == "firstname"){
+								$students->where("users.firstname", $value);
+							}
+							elseif($filter == "lastname1"){
+								$students->where("users.lastname1", $value);
+							}
+							elseif($filter == "lastname2"){
+								$students->where("users.lastname2", $value);
+							}						}
+						$data = $students->paginate(20)->onEachSide(2);
+					}
+				}
+				else{
+					$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
+				}
+
+			}
 		}
 		return response()->json($data);
 	}

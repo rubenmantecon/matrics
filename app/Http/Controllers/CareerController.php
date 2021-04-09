@@ -30,7 +30,34 @@ class CareerController extends Controller
                     if (sizeof($term) == 0)
                         return response()->json(['status' => "warning", "text" => 'Curs desactivat, redireccionant ...']);
                     if ($term[0]['active']) {
-                        $data = Career::select("*")->where("term_id", $term_id)->where("active", 1)->get();
+                    	if($request->filter){
+							// There is some filter present!
+							$filters = json_decode($request->filter, true);				
+							$filters = is_array($filters) ? $filters : array($filters);
+							
+							$allowed_filters = ["code", "name", "career_family"];
+							
+							if(sizeof(array_diff(array_keys($filters), $allowed_filters)) == 0){
+								$careers = Career::select("*")->where("term_id", $term_id)->where("active", 1);
+								foreach($filters as $filter => $value){
+									if($filter == "code"){
+										$careers->where("code", $value);
+									}
+									elseif($filter == "name"){
+										// Si queremos que sea mas laxo el filtrado $careers->where("name", "like", "%$value%");
+										$careers->where("name", $value);
+									}
+									elseif($filter == "career_family"){
+										// Modificar el numero offset 9 si el grupo de importacion mejora el contenido de la columna "careers.code"
+										$careers->where(\DB::raw('substr(code, 9, 2)'), "=", $value);
+									}
+								}
+								$data = $careers->get();
+							}
+						}
+						else{
+                        	$data = Career::select("*")->where("term_id", $term_id)->where("active", 1)->get();
+                        }
                     } else {
                         $data = ['status' => "warning", "text" => 'Curs desactivat, redireccionant ...'];
                     }
