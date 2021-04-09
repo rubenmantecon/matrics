@@ -1,6 +1,6 @@
 <x-app-layout page="documents"> 
     <div>
-    <form action="/guardar" method="post" enctype="multipart/form-data" >
+    <form action="" method="post" enctype="multipart/form-data" >
         <label for="DNI">Selecciona el DNI:</label>
         <input type="file" name="DNI" id="DNI" multiple><br>
         <label for="Tarjeta sanitaria">Selecciona el Tarjeta sanitaria:</label>
