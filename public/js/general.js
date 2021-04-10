@@ -99,7 +99,7 @@ function loadLogsPage() {
 
                     $("tbody").append(insertNewRow(
                         item.id, item.name, output_badge, msg,
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"), null,
                         "logs"
                     ));
                 }
@@ -135,7 +135,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
                 for (const item of res.data) {
                     console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name,
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, null,
                         "students"
                     ));
                 }
@@ -228,7 +228,8 @@ function loadTermPage() {
 
             $("body").addClass("body-term");
             $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "terms"));
-            $("#clone").on("click", (e) => eventCloneCareer(e.target, res));
+            console.log($(".clone"));
+            $(".clone").on("click", (e) => eventCloneCareer(e.target, res));
         }
     });
 }
@@ -261,7 +262,7 @@ function loadCareerPage() {
                         $("tbody").append(insertNewRow(
                             item.id, item.code, item.name, item.description, item.hours,
                             momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
-                            end,
+                            end, null,
                             "careers"
                         ));
                     }
@@ -308,7 +309,7 @@ function loadLogsPage() {
                 }
                 $("tbody").append(insertNewRow(
                     item.id, item.name, output_badge, tmp.message,
-                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"), null,
                     "logs"
                 ));
             }
@@ -340,7 +341,7 @@ function loadImportPage(careers) {
             </div>
             <label class="text" for="check-${cont}">${key} - ${careers[key]['NOM_CICLE_FORMATIU']}</label>
             <div class="row-bg"></div>`;
-            rows += insertNewRow(dataRow, "import");
+            rows += insertNewRow(dataRow, null, "import");
             cont++;
         }
     }
@@ -466,23 +467,25 @@ function importCSV(page) {
 function eventCloneCareer(row, json) {
     const rowSelected = $(row).closest("button").attr("data");
     const termId = json[rowSelected].id;
-
-    // $.ajax({
-    //     url: "/api/...",
-    //     method: 'POST',
-    //     headers: {
-    //         token: $("meta[name='_token']").attr("content"),
-    //     },
-    //     data: {
-    //         id: termId
-    //     },
-    //     success: (res) => {
-    //         location.reload();
-    //     },
-    //     error: (res) => {
-    //         console.log(res);
-    //     }
-    // });
+    let btn = $(row).closest("button");
+    btn.html('<i class="fas fa-load" aria-hidden="true"></i>');
+    btn.addClass("loading");
+    $.ajax({
+        url: `/api/duplicate/${termId}`,
+        method: 'POST',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        data: {
+            id: termId
+        },
+        success: (res) => {
+            location.reload();
+        },
+        error: (res) => {
+            console.log(res);
+        }
+    });
 }
 
 /**
@@ -587,7 +590,7 @@ function insertNewRow(...params) {
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
-                <td><button id="clone" class="btn save" data="${params[params.length-2]}" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
+                <td><button class="btn save clone" data="${params[params.length-2]}" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
     } else if (lastParam == "careers") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter('term')}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
