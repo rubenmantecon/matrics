@@ -4,7 +4,7 @@
  * @param {String} element 
  * @return {Boolean} 
  */
- function isNull(element) {
+function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
 }
 
@@ -135,7 +135,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
                 for (const item of res.data) {
                     console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name,
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, item.id,
                         "students"
                     ));
                 }
@@ -153,7 +153,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="4"><p>Sense Alumnes.</p></td>
+                        <td colspan="6"><p>Sense Alumnes.</p></td>
                     </tr>`
                 );
             }
@@ -307,6 +307,35 @@ function loadLogsPage() {
                     momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
                     "logs"
                 ));
+            }
+            $('tbody').fadeIn(300);
+            $("body").addClass("body-logs");
+        }
+    });
+}
+
+/**
+ * @description "load all the data of the logs end point in the tbody HTML"
+ */
+function loadAdminMatriculationPage() {
+    const userId = getUrlParameter("student");
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+            user_id: userId,
+        },
+        success: (res) => {
+            console.log(res, $("#name"));
+            $("#name").val(res.user.firstname);
+            $("#surname1").val(res.user.lastname1);
+            $("#surname2").val(res.user.lastname2);
+            $("#mail").val(res.user.email);
+            $("#username").val(res.user.name);
+            $("#cycle").val(res.career.code + " - " + res.career.name);
+            for (const module of res.mps) {
+                $("#modules").append(`<li>${module.code}: ${module.name}</li>`);
             }
             $('tbody').fadeIn(300);
             $("body").addClass("body-logs");
@@ -561,6 +590,8 @@ function insertNewRow(...params) {
     } else if (lastParam == "careers") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter('term')}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+    } else if (lastParam == "students") {
+        row += `<td><a href="/admin/dashboard/students/matriculation?student=${params[params.length - 2]}" id="view" class="btn save" title="Dades"><i class="fas fa-eye"></i></button></td>`;
     }
     return row + "</tr>";
 }
@@ -837,6 +868,8 @@ $(function () {
                 } else $("#remove").addClass("disabled");
             }
         })
+    } else if (location.pathname.endsWith("/admin/dashboard/students/matriculation") || location.pathname.endsWith("/admin/dashboard/students/matriculation/")) {
+        loadAdminMatriculationPage();
     }
 
     //"DARK-MODE"
