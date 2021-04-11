@@ -28,6 +28,9 @@
         </div>
     </div>
     @else
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('home') }}
+    @endsection
     <div class="flex flex-col">
         <div class="flex flex-col items-center justify-center w-full">
             <h2>Estat de la matricula *SEMAFORO*</h2>
