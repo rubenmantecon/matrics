@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-body">
             <form wire:submit.prevent="updateProfileInformation" role="form">
-
+            
                 <div class="form-group">
                     <label for="state.email">Name</label>
                     <p><-nombre-></p>
