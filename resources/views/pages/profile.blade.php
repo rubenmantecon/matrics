@@ -6,7 +6,7 @@
     </x-slot>
     <div class="card">
         <div class="card-body">
-            <form wire:submit.prevent="updateProfileInformation" role="form">
+            <form role="form">
                 <div class="form-group">
                     <label for="state.nom">NOM</label>
                     <p>{{ $data->name }}</p>
