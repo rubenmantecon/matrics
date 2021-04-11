@@ -27,6 +27,9 @@
                 <x-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
                     {{ __('Alumnes') }}
                 </x-nav-link>
+                <x-nav-link href="/admin/dashboard/createAdmin" :active="request()->routeIs('createAdmin')">
+                    {{ __('Crea admin') }}
+                </x-nav-link>
             @endif
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Inici') }}
@@ -109,6 +112,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
                 {{ __('Alumnes') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="/admin/dashboard/createAdmin" :active="request()->routeIs('createAdmin')">
+                {{ __('Crear admin') }}
             </x-responsive-nav-link>
         </div>
 
