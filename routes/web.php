@@ -46,3 +46,5 @@ Route::name('admin') /*admin/dashboard*/
     ->group(function () {
         require __DIR__ . '/admin.php';
     });
+Route::get('auth/redirect', 'App\Http\Controllers\SocialController@redirect');
+Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
