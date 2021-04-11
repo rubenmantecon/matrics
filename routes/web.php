@@ -33,6 +33,9 @@ Route::get('/dashboard/profile', function () {
     return view('pages.profile');
 });
 Route::get('/dashboard', function () {
+    $user = Auth::user();
+    /*if ($user->enrolments()->first()->matricula) {
+    }*/
     return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
