@@ -9,7 +9,7 @@ Portal web de matriculaciones del lES Esteve Terradas i Illa
 ``` npm start ```
 
 ## Instalation
-- ```git clone https://github.com/silviadlc/IETI-matricula.git```
+- ```git clone https://github.com/AWS2/matrics.git```
 - ```npm run init-load```
 - ```cp .env.example .env```
 - ```php artisan key:generate```
