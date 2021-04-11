@@ -11,7 +11,7 @@
                     <label for="state.email">NOM</label>
                     <p><-nom-></p>
                 </div>
-
+                
                 <div class="form-group">
                     <label for="state.email">COGNOM</label>
                     <p><-cognom-></p>
