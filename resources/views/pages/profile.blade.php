@@ -8,17 +8,17 @@
         <div class="card-body">
             <form wire:submit.prevent="updateProfileInformation" role="form">
                 <div class="form-group">
-                    <label for="state.email">NOM</label>
+                    <label for="state.nom">NOM</label>
                     <p><-nom-></p>
                 </div>
                 
                 <div class="form-group">
-                    <label for="state.email">COGNOM</label>
+                    <label for="state.cognom">COGNOM</label>
                     <p><-cognom-></p>
                 </div>
 
                 <div class="form-group">
-                    <label for="state.email">Telefon</label>
+                    <label for="state.telef">Telefon</label>
                     <p><-telefon-></p>
                 </div>
 
@@ -28,45 +28,40 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="state.email">DNI</label>
+                    <label for="state.dni">DNI</label>
                     <p><-dni-></p>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="state.email">ADREÇA</label>
+                    <label for="state.adre">ADREÇA</label>
                     <p><-adreça-></p>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="state.email">Poblacio</label>
+                    <label for="state.pobla">Poblacio</label>
                     <p><-poblacion-></p>
                 </div>
 
                 <div class="form-group">
-                    <label for="state.email">Telefon</label>
-                    <p><-telefon-></p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.email">DATA NEIXAMENT</label>
+                    <label for="state.date">DATA NEIXAMENT</label>
                     <p><-data neixament-></p>
                 </div>
 
                 <div class="form-group">
-                    <label for="state.email">PARE</label>
+                    <label for="state.pare">PARE</label>
                     <p><-padre-></p>
                 </div>
 
                 <div class="form-group">
-                    <label for="state.email">MARE</label>
+                    <label for="state.mare">MARE</label>
                     <p><-madre-></p>
                 </div>
 
             </form>
             <div class="form-group">
-                <label for="state.email">Solicitar cambios</label>
+                <label for="state.cambio">Solicitar cambios</label>
                 <textarea>cambios</textarea>.
             </div>
             <a href="" class="btn primary-btn">Solicitar Cambios</a>
