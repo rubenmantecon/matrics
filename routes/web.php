@@ -30,7 +30,7 @@ Route::get('/sample', function () {
 });
 
 Route::get('/dashboard/profile', function () {
-    return view('pages.perfile');
+    return view('pages.profile');
 });
 Route::get('/dashboard', function () {
     $user = Auth::user();
