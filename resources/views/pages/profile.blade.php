@@ -14,7 +14,7 @@
                 
                 <div class="form-group">
                     <label for="state.cognom">COGNOM</label>
-                    <p>{{ $data->lastname }}</p>
+                    <p>{{ $data->firstname }}</p>
                 </div>
 
                 <div class="form-group">
