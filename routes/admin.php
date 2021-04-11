@@ -93,7 +93,7 @@ Breadcrumbs::for('terms', static function ($trail) {
 // Dashboard > Create admin
 Breadcrumbs::for('createAdmin', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push("Crear admin", '/admin/dashboard/createAdmin');
+    $trail->push("Crea admin", '/admin/dashboard/createAdmin');
 });
 
 // Dashboard > Terms > Delete[Term]

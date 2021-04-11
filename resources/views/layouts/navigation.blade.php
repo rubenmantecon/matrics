@@ -28,7 +28,7 @@
                     {{ __('Alumnes') }}
                 </x-nav-link>
                 <x-nav-link href="/admin/dashboard/createAdmin" :active="request()->routeIs('createAdmin')">
-                    {{ __('Crear admin') }}
+                    {{ __('Crea admin') }}
                 </x-nav-link>
             @endif
             </div>

@@ -215,7 +215,6 @@ span.red {
 .label-group-admin {
     display: flex;
     flex-direction: column;
-    width: 40vw;
     margin: 0 auto;
     padding-top: 5px;
 }
