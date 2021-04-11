@@ -179,7 +179,7 @@ class EnrolmentController extends Controller
 
     public function destroy(Request $request, Enrolment $enrolment)
     {
-        $id = $request->enrolment_id;
+        $id = $request->id;
         Enrolment::destroy($id);
     }
 }

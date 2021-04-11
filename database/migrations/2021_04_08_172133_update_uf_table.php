@@ -13,7 +13,7 @@ class UpdateUfTable extends Migration
      */
     public function up()
     {
-        Schema::table('uf', function (Blueprint $table){
+        Schema::table('ufs', function (Blueprint $table){
             $table->boolean('active')->default(1);
         });
         //
@@ -28,7 +28,7 @@ class UpdateUfTable extends Migration
     public function down()
     {
         //
-        Schema::table('uf', function (Blueprint $table){
+        Schema::table('ufs', function (Blueprint $table){
             $table->dropColumn('active');
         });
     }

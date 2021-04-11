@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class UpdateEnrolments extends Migration
 {
@@ -14,9 +15,7 @@ class UpdateEnrolments extends Migration
     public function up()
     {
         //
-        Schema::table('enrolments', function (Blueprint $table) {
-            $table->enum('state', ['pending', 'validated'])->change();
-        });
+        DB::statement("ALTER TABLE `enrolments` MODIFY COLUMN `state` ENUM('pending', 'validated')");
     }
 
     /**
