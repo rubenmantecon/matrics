@@ -9,54 +9,54 @@
             <form wire:submit.prevent="updateProfileInformation" role="form">
                 <div class="form-group">
                     <label for="state.nom">NOM</label>
-                    <p><-nom-></p>
+                    <p>{{ $userDetail->name }}</p>
                 </div>
                 
                 <div class="form-group">
                     <label for="state.cognom">COGNOM</label>
-                    <p><-cognom-></p>
+                    <p>{{ $userDetail->lastname }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.telef">Telefon</label>
-                    <p><-telefon-></p>
+                    <p>{{ $userDetail->telefon }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.email">Email</label>
-                    <p><-email-></p>
+                    <p>{{ $userDetail->mail }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.dni">DNI</label>
-                    <p><-dni-></p>
+                    <p>{{ $userDetail->dni }}</p>
                 </div>
 
 
                 <div class="form-group">
                     <label for="state.adre">ADREÇA</label>
-                    <p><-adreça-></p>
+                    <p>{{ $userDetail->adress }}</p>
                 </div>
 
 
                 <div class="form-group">
                     <label for="state.pobla">Poblacio</label>
-                    <p><-poblacion-></p>
+                    <p>{{ $userDetail->poblation }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.date">DATA NEIXAMENT</label>
-                    <p><-data neixament-></p>
+                    <p>{{ $userDetail->date }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.pare">PARE</label>
-                    <p><-padre-></p>
+                    <p>{{ $userDetail->father }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.mare">MARE</label>
-                    <p><-madre-></p>
+                    <p>{{ $userDetail->mather }}</p>
                 </div>
 
             </form>
