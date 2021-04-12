@@ -65,6 +65,10 @@ Route::get('/dashboard/createAdmin', function () {
     return view('pages.createAdmin');
 });
 
+Route::get('/dashboard/students/matriculation', function () {
+    return view('pages.studentsMatriculation');
+});
+
 
 /*
     * You may use either the Breadcrumbs facade or the $breadcrumbs variable in this file,
