@@ -19,9 +19,8 @@ public function redirect()
 public function callback()
 {
     try {
-            $user = Socialite::driver('google')->user();
-            $user = User::where('google_id', $user->id)->first();
-
+            $SocialUser = Socialite::driver('google')->user();
+            $user = User::where('email', $SocialUser->email)->first();
             if($user){
                 Auth::login($user);
                 return redirect('/dashboard');
