@@ -58,7 +58,7 @@
                 <img src="{{ asset('images/matricula.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <a href="#" class="btn primary-btn">Recalcula matricula</a>
+                <a href="/dashboard/requirements" class="btn primary-btn">Recalcula matricula</a>
             </div>
         </div>
         <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">

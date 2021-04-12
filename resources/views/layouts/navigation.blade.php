@@ -44,7 +44,7 @@
             <p class="user"><i class="fas fa-user"></i> Student</p>
             @endif
 
-            <!-- Settings Dropdown
+            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -60,7 +60,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        {{-- <!-- Authentication -->
+                        <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
@@ -69,10 +69,10 @@
                                                 this.closest('form').submit();">
                                 {{ __('Tanca sessió') }}
                             </x-dropdown-link>
-                        </form> --}}
+                        </form>
                     </x-slot>
                 </x-dropdown>
-            </div> -->
+            </div>
             <div class="toggle night-mode-available">
                 <div class="night-mode-button">
                     <input type="checkbox" class="dark-mode" id="night-mode">
@@ -128,7 +128,7 @@
             </div>
 
             <div class="auth mt-3 space-y-1">
-                {{-- <!-- Authentication -->
+                <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
@@ -137,7 +137,7 @@
                                         this.closest('form').submit();">
                         {{ __('Tanca sessió') }}
                     </x-responsive-nav-link>
-                </form> --}}
+                </form>
             </div>
         </div>
     </div>
