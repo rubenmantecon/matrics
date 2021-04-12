@@ -26,4 +26,6 @@ class Uf extends Model
         return $this->hasMany(Enrolment_uf::class);
     }
 
+    // Mass assignable attributes
+    protected $fillable = ['mp_id'];
 }
