@@ -74,17 +74,46 @@ class CareerTest extends DuskTestCase
                     ->visit('/admin/dashboard/careers?term='. $term->id)
                     ->pause(5000)
                     ->press('Afegeix un nou curs')
-                    ->pause(2000)
                     ->type('#code', $career->code)
                     ->type('#name', $career->name . 'test')
                     ->type('#description', $career->description)
                     ->type('#hours', $career->hours)
                     ->type('#start', date('d-m-Y', strtotime($career->start)))
                     ->type('#end', date('d-m-Y', strtotime($career->end)))
-                    ->screenshot('test')
                     ->press('Crea')
                     ->pause(5000)
                     ->assertSee($career->name . 'test');
+        });
+    }
+
+    /**
+     * Edit a Career.
+     *
+     * @return void
+     */
+    public function testEditCareer()
+    {
+        // Creating a new data for testing Career.
+        $term = Term::factory()->create();
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $career = Career::factory()->create();
+
+        $this->browse(function (Browser $browser) use ($user, $career, $term) {
+            $browser->loginAs($user)
+                    ->visit('/admin/dashboard/careers?term='. $term->id)
+                    ->pause(5000)
+                    ->clickAtXPath('(//button[@id="edit"])[1]')
+                    ->type('#code', '234234')
+                    ->type('#name', 'testEditCareer')
+                    ->type('#description', 'testEditCareerDescription')
+                    ->type('#hours', '2000')
+                    ->type('#start', date('d-m-Y', strtotime('now')))
+                    ->type('#end', date('d-m-Y', strtotime('+1 Years')))
+                    ->press('Desa')
+                    ->pause(5000)
+                    ->assertSee('testEditCareer');
         });
     }
 }
