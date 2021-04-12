@@ -11,7 +11,7 @@ use Tests\DuskTestCase;
 
 class TermTest extends DuskTestCase
 {
-	use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /**
      * Can we access inside the terms page being ADMIN?
@@ -20,10 +20,13 @@ class TermTest extends DuskTestCase
      */
     public function testAccessTermsPageAdmin()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(1))
-                    ->visit('/admin/dashboard/terms')
-                    ->assertSee('Llistat de cursos');
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->assertSee('Llistat de cursos');
         });
     }
 
@@ -34,10 +37,13 @@ class TermTest extends DuskTestCase
      */
     public function testAccessTermsPageStudent()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(2))
-                    ->visit('/admin/dashboard/terms')
-                    ->assertDontSee('Llistat de cursos');
+        $user = User::factory()->create([
+            'role' => 'user'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->assertDontSee('Llistat de cursos');
         });
     }
 
@@ -48,18 +54,21 @@ class TermTest extends DuskTestCase
      */
     public function testCreateNewTerm()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(1))
-                    ->visit('/admin/dashboard/terms')
-                    ->pause(5000)
-                    ->press('Afegeix un nou curs')
-                    ->type('#name', 'Curso de prueba #2309123912')
-                    ->type('#description', 'Esto es un curso de prueba.')
-                    ->type('#start', '05/01/2021')
-                    ->type('#end', '05/01/2022')
-                    ->press('Crea')
-                    ->pause(5000)
-                    ->assertSee('Curso de prueba #2309123912');
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->pause(5000)
+                ->press('Afegeix un nou curs')
+                ->type('#name', 'Curso de prueba #2309123912')
+                ->type('#description', 'Esto es un curso de prueba.')
+                ->type('#start', '05/01/2021')
+                ->type('#end', '05/01/2022')
+                ->press('Crea')
+                ->pause(5000)
+                ->assertSee('Curso de prueba #2309123912');
         });
     }
 
@@ -70,18 +79,21 @@ class TermTest extends DuskTestCase
      */
     public function testCreateNewTermNotDates()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(1))
-                    ->visit('/admin/dashboard/terms')
-                    ->pause(5000)
-                    ->press('Afegeix un nou curs')
-                    ->type('#name', 'Curso de prueba #9223403084')
-                    ->type('#description', 'Esto es un curso de prueba.')
-                    ->type('#start', '05/01/2022')
-                    ->type('#end', '05/01/2021')
-                    ->press('Crea')
-                    ->pause(5000)
-                    ->assertDontSee('Curso de prueba #9223403084');
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->pause(5000)
+                ->press('Afegeix un nou curs')
+                ->type('#name', 'Curso de prueba #9223403084')
+                ->type('#description', 'Esto es un curso de prueba.')
+                ->type('#start', '05/01/2022')
+                ->type('#end', '05/01/2021')
+                ->press('Crea')
+                ->pause(5000)
+                ->assertDontSee('Curso de prueba #9223403084');
         });
     }
 
@@ -92,82 +104,121 @@ class TermTest extends DuskTestCase
      */
     public function testEditTerm()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(1))
-                    ->visit('/admin/dashboard/terms')
-                    ->pause(5000)
-                    ->clickAtXPath('(//button[@id="edit"])[1]')
-					->type('#name', 'Curso de prueba #182349174192')
-					->type('#description', 'Esto es una prueba de curso.')
-					->type('#start', '01/09/2021')
-					->type('#end', '31/08/2022')
-					->press('Desa')
-                    ->pause(5000)
-					->assertSee('Curso de prueba #182349174192');
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->pause(5000)
+                ->press('Afegeix un nou curs')
+                ->type('#name', 'Curso de prueba #2309123912')
+                ->type('#description', 'Esto es un curso de prueba.')
+                ->type('#start', '05/01/2021')
+                ->type('#end', '05/01/2022')
+                ->press('Crea')
+                ->pause(5000)
+                ->clickAtXPath("(//button[@id='edit'])[1]")
+                ->type('#name', 'Curso de prueba #182349174192')
+                ->type('#description', 'Esto es una prueba de curso.')
+                ->type('#start', '01/09/2021')
+                ->type('#end', '31/08/2022')
+                ->press('Desa')
+                ->pause(5000)
+                ->assertSee('Curso de prueba #182349174192');
         });
     }
 
-	/**
+    /**
      * Edit a term but now, not following the condition about the first that needs to be smaller than the second one.
      *
      * @return void
      */
     public function testEditTermNotDates()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(1))
-                    ->visit('/admin/dashboard/terms')
-                    ->pause(5000)
-                    ->clickAtXPath('(//button[@id="edit"])[1]')
-					->type('#name', 'Curso de prueba #918233912742')
-					->type('#description', 'Esto es una prueba de curso.')
-					->type('#start', '01/09/2022')
-					->type('#end', '31/08/2021')
-					->press('Desa')
-                    ->pause(5000)
-					->assertDontSee('Curso de prueba #918233912742');
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->pause(5000)
+                ->press('Afegeix un nou curs')
+                ->type('#name', 'Curso de prueba #2309123912')
+                ->type('#description', 'Esto es un curso de prueba.')
+                ->type('#start', '05/01/2021')
+                ->type('#end', '05/01/2022')
+                ->press('Crea')
+                ->pause(5000)
+                ->clickAtXPath('(//button[@id="edit"])[1]')
+                ->type('#name', 'Curso de prueba #918233912742')
+                ->type('#description', 'Esto es una prueba de curso.')
+                ->type('#start', '01/09/2022')
+                ->type('#end', '31/08/2021')
+                ->press('Desa')
+                ->pause(5000)
+                ->assertDontSee('Curso de prueba #918233912742');
         });
     }
 
     /**
-	 * Delete a term but writing wrong the name.
-	 *
-	 * @return void
-	 */
-	public function testDeleteTermWrong()
-	{
-		$this->browse(function (Browser $browser) {
-			$browser->loginAs(User::find(1))
-                    ->visit('/admin/dashboard/terms')
-                    ->pause(5000)
-					->clickAtXPath('(//a[@title="Elimina"])[1]')
-                    ->pause(2500)
-                    ->assertSee('Curso de prueba #182349174192')
-                    ->type('#name', 'Curso de prueba #634932562375')
-                    ->assertVisible('#remove.disabled');
+     * Delete a term but writing wrong the name.
+     *
+     * @return void
+     */
+    public function testDeleteTermWrong()
+    {
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->pause(5000)
+                ->press('Afegeix un nou curs')
+                ->type('#name', 'Curso de prueba #2309123912')
+                ->type('#description', 'Esto es un curso de prueba.')
+                ->type('#start', '05/01/2021')
+                ->type('#end', '05/01/2022')
+                ->press('Crea')
+                ->pause(5000)
+                ->clickAtXPath('(//a[@title="Elimina"])[1]')
+                ->pause(2500)
+                ->assertSee('Curso de prueba #2309123912')
+                ->type('#name', 'Curso de prueba #634932562375')
+                ->assertVisible('#remove.disabled');
+        });
+    }
 
-		});
-	}
-
-	/**
-	 * Delete a term.
-	 *
-	 * @return void
-	 */
-	public function testDeleteTerm()
-	{
-		$this->browse(function (Browser $browser) {
-			$browser->loginAs(User::find(1))
-                    ->visit('/admin/dashboard/terms')
-                    ->pause(5000)
-					->clickAtXPath('(//a[@title="Elimina"])[1]')
-                    ->pause(2500)
-                    ->assertSee('Curso de prueba #182349174192')
-                    ->type('#name', 'Curso de prueba #182349174192')
-                    ->press('Eliminar')
-                    ->waitForReload()
-                    ->pause(3000)
-                    ->assertDontSee('Curso de prueba #182349174192');
-		});
-	}
+    /**
+     * Delete a term.
+     *
+     * @return void
+     */
+    public function testDeleteTerm()
+    {
+        $user = User::factory()->create([
+            'role' => 'admin'
+        ]);
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs(User::find($user->id))
+                ->visit('/admin/dashboard/terms')
+                ->pause(5000)
+                ->press('Afegeix un nou curs')
+                ->type('#name', 'Curso de prueba #2309123912')
+                ->type('#description', 'Esto es un curso de prueba.')
+                ->type('#start', '05/01/2021')
+                ->type('#end', '05/01/2022')
+                ->press('Crea')
+                ->pause(5000)
+                ->clickAtXPath('(//a[@title="Elimina"])[1]')
+                ->pause(2500)
+                ->assertSee('Curso de prueba #2309123912')
+                ->type('#name', 'Curso de prueba #2309123912')
+                ->press('Eliminar')
+                ->waitForReload()
+                ->pause(3000)
+                ->assertDontSee('Curso de prueba #2309123912');
+        });
+    }
 }
