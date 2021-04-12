@@ -135,7 +135,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
                 for (const item of res.data) {
                     console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, item.id,
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, item.id, item.id,
                         "students"
                     ));
                 }
@@ -332,6 +332,7 @@ function loadAdminMatriculationPage() {
             user_id: userId,
         },
         success: (res) => {
+            console.log(res);
             $("#name").val(res.user.firstname);
             $("#surname1").val(res.user.lastname1);
             $("#surname2").val(res.user.lastname2);
@@ -638,6 +639,7 @@ function insertNewRow(...params) {
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
     }
 
+    console.log("aaa", params)
     let lastParam = params[params.length - 1];
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
