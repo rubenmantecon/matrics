@@ -39,7 +39,7 @@ Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
 Route::resource('api/import', ImportController::class);
-Route::resource('api/upload', UploadController@store);
+Route::resource('api/upload', UploadController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
