@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class TermController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra todos los "terms" que esten activos
      *
      * @return \Illuminate\Http\Response
      */
