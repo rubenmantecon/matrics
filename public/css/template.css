@@ -204,7 +204,7 @@ body.night ul.pagination li.pageNumber a {
 /* SEMAFORO*/
 
 .statusok {
-    background: radial-gradient(#2CEC59, #0C3717);
+    background: radial-gradient(#2cec59, #0c3717);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -214,7 +214,7 @@ body.night ul.pagination li.pageNumber a {
 }
 
 .statuscancel {
-    background: radial-gradient(#F42626, #3A0909);
+    background: radial-gradient(#f42626, #3a0909);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -223,7 +223,7 @@ body.night ul.pagination li.pageNumber a {
     border-radius: 50%;
 }
 .statusprocesing {
-    background: radial-gradient(#F58027, #552C0D);
+    background: radial-gradient(#f58027, #552c0d);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -232,15 +232,13 @@ body.night ul.pagination li.pageNumber a {
     border-radius: 50%;
 }
 .statusnothing {
-    background: radial-gradient(#E9E9E9, #2F2F2F);
+    background: radial-gradient(#e9e9e9, #2f2f2f);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
     pointer-events: none;
     -webkit-border-radius: 50%;
     border-radius: 50%;
-
-}
 }
 
 /* BODY */
