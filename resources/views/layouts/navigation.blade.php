@@ -30,7 +30,7 @@
                 <x-nav-link href="/admin/dashboard/createAdmin" :active="request()->routeIs('createAdmin')">
                     {{ __('Crea admin') }}
                 </x-nav-link>
-            @endif
+            @else
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Inici') }}
                 </x-nav-link>
@@ -40,6 +40,7 @@
                 <x-nav-link href="/dashboard/documents" :active="request()->routeIs('/dashboard/documents')">
                     {{ __('Documents') }}
                 </x-nav-link>
+            @endif
             </div>
             @if(Auth::user()->role == 'admin')
             <p class="user"><i class="fas fa-user"></i> Admin</p>
