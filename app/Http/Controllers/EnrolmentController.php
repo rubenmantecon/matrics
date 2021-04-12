@@ -43,55 +43,6 @@ class EnrolmentController extends Controller
         }
         return response()->json($data);
     }
-    // $data = DB::table('enrolments')
-    //         ->join('users', 'enrolments.user_id', '=', 'users.id')
-    //         ->join('careers', 'enrolments.career_id', '=', 'careers.id')
-    //         ->join('mps', 'careers.id', '=', 'mps.career_id')
-    //         ->where("enrolments.user_id", $user_id)
-    //         ->select("*")
-    //         ->get();
-
-    // $filter = $request->header('filter');
-    // Filter enrolments by user (user_id)
-    // if (isset($filter) && $filter == "user") {
-    // Estado de los documentos, nombre de usuario, ciclo y módulo
-    // ->join('contacts', 'users.id', '=', 'contacts.user_id')
-    // $data = Enrolment::join('users', 'enrolments.user_id', '=', 'users.id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->join('mps', 'career.id', '=', 'mps.career_id')->where("user_id", $user_id)->get();
-    // if (sizeof($data) == 0){
-    //     return response()->json(['status' => "warning", "text" => 'No hi ha matriculacions']);
-    // } else {
-    // }
-    // }
-    // Filter enrolments by term (term_id)(Curso)
-    /*} else if (isset($filter) && $filter == "term"){
-                    $term_id = $request->header('term_id');
-                    if (isset($term_id) && $term_id != "empty") {
-                        $data = Enrolment::join('users', 'enrolments.user_id', '=', 'users.id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->join('mps', 'career.id', '=', 'mps.career_id')->select("*")->where("term_id", $term_id);
-                        if (sizeof($data) == 0){
-                            return response()->json(['status' => "warning", "text" => 'No hi ha matriculacions']);
-                        } else {
-                            return response()->json($data);
-                        }
-                    }else {
-                        return response()->json(['status' => "error", "text" => 'Curs no trobat']);
-                    }
-                // Filter enrolments by career (career_id) (Grado)
-                } else if (isset ($filter) && $filter == "carrer"){
-                    $career_id = $request->header('career_id');
-                    if (isset($career_id) && $career_id != "empty") {
-                        $data = Enrolment::join('users', 'enrolments.user_id', '=', 'users.id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->join('mps', 'career.id', '=', 'mps.career_id')->select("*")->where("career_id", $career_id);
-                        if (sizeof($data) == 0){
-                            return response()->json(['status' => "warning", "text" => 'No hi ha matriculacions']);
-                        } else {
-                            return response()->json($data);
-                        }
-                    } else {
-                        return response()->json(['status' => "error", "text" => 'Curs no trobat']);
-                    }
-                } else {
-                    $data = User::all();
-                    //$data = Enrolment::join('users', 'enrolments.user_id', '=', 'users.id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->join('mps', 'career.id', '=', 'mps.career_id')->select("*");
-                }*/
 
     /**
      * Show the form for creating a new resource.
@@ -128,6 +79,11 @@ class EnrolmentController extends Controller
                 //     $data = ["status" => "Nova matricula creada correctament."];
                 //     Log::channel('dblogging')->info("Ha creado una nueva matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
                 // }
+                $status = $enrolment->save();
+                if ($status) {
+                    $data = ["status" => "Nova matricula creada correctament."];
+                    Log::channel('dblogging')->info("Ha creado una nueva matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
+                }
             }
             return response()->json($data);
         }
@@ -162,30 +118,41 @@ class EnrolmentController extends Controller
      * @param  \App\Models\Enrolment  $enrolment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Enrolment $enrolment)
+
+    public function update(Request $request, Enrolment $enrolment, User $user)
     {
         $data = ['status' => 'Unauthorized, error 503'];
         $token = $request->header('token');
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
             if ($user['token']) {
+                // Update enrolment
                 $enrolment->user_id = $request->user_id;
                 $enrolment->term_id = $request->term_id;
-                $enrolment->career_id = $request->career_id;
                 $enrolment->dni = $request->dni;
                 $enrolment->state = $request->state; // pending or validated
-                // $enrolment->touch();
+                $enrolment->touch();
+                $status1 = $enrolment->save();
 
-                // $status = $enrolment->save();
-                // if ($status) {
-                //     $data = ["status" => "Matricula actualitzada correctament."];
-                //     Log::channel('dblogging')->info("Ha actualizado una matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
-                // } else {
-                //     $data = ["status" => "Error en actualitzar enrolment."];
-                // }
+                // Update user
+                $user->user_id = $request->user_id;
+                $user->firstname = $request->firstname;
+                $user->lastname1 = $request->lastname1;
+                $user->lastname2 = $request->lastname2;
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->touch();
+                $status2 = $user->save();
+                
+                if ($status1 && $status2){
+                    $data = ["status" => "Matricula actualitzada correctament."];
+                    Log::channel('dblogging')->info("Ha actualizado una matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
+                } else {
+                    $data = ["status" => "Error en actualitzar enrolment."];
+                }
             }
         }
-        return response()->json($request);
+        return response()->json($data);
     }
 
     /**
@@ -201,7 +168,7 @@ class EnrolmentController extends Controller
 
     public function destroy(Request $request, Enrolment $enrolment)
     {
-        $id = $request->enrolment_id;
+        $id = $request->id;
         Enrolment::destroy($id);
     }
 }

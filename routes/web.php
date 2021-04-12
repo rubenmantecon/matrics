@@ -4,10 +4,15 @@ use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\Enrolment_ufController;
+use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\UfController;
+use App\Models\Enrolment_uf;
+use App\Http\Controllers\MpsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +44,11 @@ Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
 Route::resource('api/import', ImportController::class);
+Route::resource('api/ufs', UfController::class);
 Route::resource('api/enrolments', EnrolmentController::class);
+Route::resource('api/enrolment_ufs', Enrolment_ufController::class);
+Route::resource('api/mps', MpsController::class);
+
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
