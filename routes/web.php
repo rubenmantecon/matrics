@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Users;
+use App\Models\Enrolment;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\CareerController;
@@ -30,11 +33,16 @@ Route::get('/sample', function () {
 });
 
 Route::get('/dashboard/profile', function () {
-    return view('pages.profile');
+    $user_id = auth::id();
+    $enrollments = Enrolment::where('user_id', $user_id)->get();
+    return view('pages.profile', ['enrollments' => $enrollments]);
 });
 Route::get('/dashboard', function () {
-    $user = Auth::user();
-    /*if ($user->enrolments()->first()->matricula) {
+    /*$user = Auth::user();
+    if ($user->enrolments()->first()->state) {
+        return view('pages.dashboard');
+    }else{
+        return view('pages.matriculacion');
     }*/
     return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');

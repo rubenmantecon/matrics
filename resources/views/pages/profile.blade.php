@@ -9,57 +9,25 @@
     @endsection
     <div class="container-form">
         <div class="card-body">
-            <form wire:submit.prevent="updateProfileInformation" role="form">
+            <form role="form">
                 <div class="form-group">
                     <label for="state.nom">NOM</label>
-                    <p><-nom-></p>
+                    <p>{{ Auth::user()->name }}</p>
                 </div>
                 
                 <div class="form-group">
                     <label for="state.cognom">COGNOM</label>
-                    <p><-cognom-></p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.telef">Telefon</label>
-                    <p><-telefon-></p>
+                    <p>{{ Auth::user()->firstname }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.email">Email</label>
-                    <p><-email-></p>
+                    <p>{{ Auth::user()->email }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.dni">DNI</label>
-                    <p><-dni-></p>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="state.adre">ADREÇA</label>
-                    <p><-adreça-></p>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="state.pobla">Poblacio</label>
-                    <p><-poblacion-></p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.date">DATA NEIXAMENT</label>
-                    <p><-data neixament-></p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.pare">PARE</label>
-                    <p><-padre-></p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.mare">MARE</label>
-                    <p><-madre-></p>
+                    <p>{{ $enrollments[0]->dni }}</p>
                 </div>
 
             </form>

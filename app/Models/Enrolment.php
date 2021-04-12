@@ -16,6 +16,8 @@ class Enrolment extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['dni'];
+
     public function careers() {
         return $this->belongsTo(Career::class);
     }
