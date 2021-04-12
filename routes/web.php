@@ -7,6 +7,7 @@ use App\Http\Controllers\CareerController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ImportController;
+use App\Models\Profile_req;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,10 @@ Route::get('/dashboard/profile', function () {
 Route::get('/dashboard', function () {
     return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
-
+Route::get('/dashboard/requirements', function () {
+    $profile_req = Profile_req::all();
+    return view('pages.requirements' , ['profile_req' => $profile_req]);
+});
 Route::get('/dashboard/documents', function () {
     return view('pages.documents');
 });
