@@ -18,44 +18,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="state.telef">Telefon</label>
-                    <p>{{ Auth::user()->phone }}</p>
-                </div>
-
-                <div class="form-group">
                     <label for="state.email">Email</label>
                     <p>{{ Auth::user()->email }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.dni">DNI</label>
-                    <p>{{ Auth::user()->dni }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.adre">ADREÇA</label>
-                    <p>{{ Auth::user()->address }}</p>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="state.pobla">Poblacio</label>
-                    <p>{{ Auth::user()->population }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.date">DATA NEIXAMENT</label>
-                    <p>{{ Auth::user()->date }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.pare">PARE</label>
-                    <p>{{ Auth::user()->father }}</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="state.mare">MARE</label>
-                    <p>{{ Auth::user()->mother }}</p>
+                    <p>{{ $enrollments[0]->dni }}</p>
                 </div>
 
             </form>
