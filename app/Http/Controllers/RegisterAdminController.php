@@ -50,7 +50,12 @@ class RegisterAdminController extends Controller
         $user->lastname1 = $request->lastname1;
         $user->lastname2 = $request->lastname2;
 
-        $status = $user->save();
+        if (!is_null(User::where('email','=',$request->email)->first())) {
+            return redirect('admin/dashboard/createAdmin')->header('initMessageErrors', 'Ja existeix un usuari amb el mateix mail.');
+        } else {
+            $status = $user->save();
+        }
+
         if ($status) {
             $data = ["status" => "Admin creat correctament."];
             Log::channel('dblogging')->info("Ha creado un Admin", ["user_id" => Auth::id(), "user_id" => $user->id]);
