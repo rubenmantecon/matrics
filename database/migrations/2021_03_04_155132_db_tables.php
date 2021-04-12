@@ -126,7 +126,7 @@ class DbTables extends Migration
     {
         Schema::dropIfExists('uploads');
         Schema::dropIfExists('enrolment_ufs');
-        Schema::dropIfExists('req_enrol');
+        Schema::dropIfExists('req_enrols');
         Schema::dropIfExists('requirements');
         Schema::dropIfExists('profile_req');
         Schema::dropIfExists('records');
@@ -135,6 +135,7 @@ class DbTables extends Migration
         Schema::dropIfExists('mps');
         Schema::dropIfExists('careers');
         Schema::dropIfExists('terms');
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('logs');
+        //Schema::dropIfExists('users');
     }
 }
