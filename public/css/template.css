@@ -13,11 +13,15 @@
     --BGadmin: #ffa500;
     --BGtable: #214093;
     --loading: rgba(0, 0, 0, 0.15);
-    --primaryText: ;
+    --darkLoading: #fff transparent transparent;
+    --BGdarkF: rgb(34, 34, 37);
+    --BGdarkFop: rgba(27, 27, 29, 0.911);
+    --BGdarkS: rgb(64, 64, 65);
+    --BGdarkSop: rgba(71, 71, 75, 0.85);
     --darkText: rgb(250, 250, 250);
     --saveBtn: #21ba45;
     --saveBtnHover: #20973c;
-    --selectedRow: #b1ffb494;
+    --selectedRow: #68ff6e;
     --cancelBtn: #ff695e;
     --cancelBtnHover: #c92b20;
     --pagination: #383838;
@@ -80,17 +84,17 @@ label .fa-sun {
 }
 
 body.night header {
-    background-color: rgba(17, 16, 34, 0.911);
+    background-color: var(--BGdarkF);
     color: var(--darkText);
 }
 
 body.night {
-    background-color: rgba(17, 16, 34, 0.85);
+    background-color: var(--BGdarkS);
     color: var(--darkText);
 }
 
 body.night .option {
-    background-color: rgba(42, 42, 66, 0.911);
+    background-color: var(--BGdarkFop);
 }
 
 body.night a {
@@ -102,12 +106,12 @@ body.night a.link {
 }
 
 body.night tr {
-    background-color: rgba(17, 16, 34, 0.911);
+    background-color: var(--BGdarkFop);
     color: var(--darkText);
 }
 
 body.night tr:nth-child(even) {
-    background-color: rgba(42, 42, 66, 0.85);
+    background-color: var(--BGdarkSop);
     color: var(--darkText);
 }
 
@@ -121,35 +125,48 @@ body.night ul.pagination li.pageNumber.active a {
 }
 
 body.night .ui-dialog {
-    background-color: rgba(42, 42, 66) !important;
+    background-color: var(--BGdarkS) !important;
     color: var(--darkText);
 }
 
 body.night .ui-dialog .ui-dialog-titlebar {
-    background-color: rgb(23, 22, 37) !important;
+    background-color: var(--BGdarkF) !important;
     color: var(--darkText);
 }
 
 body.night .ui-dialog .buttons-group {
-    background-color: rgb(42, 42, 66) !important;
+    background-color: var(--BGdarkS) !important;
     color: var(--darkText);
 }
 
 body.night .ui-dialog .buttons-group .or:before {
-    background-color: rgb(42, 42, 66) !important;
+    background-color: var(--BGdarkS) !important;
     color: var(--darkText);
 }
 
 body.night .modal-header {
-    background-color: rgba(23, 22, 37) !important;
+    background-color: var(--BGdarkF) !important;
     color: var(--darkText);
 }
 
 body.night .modal-body,
 body.night .modal-footer,
 body.night .buttons-group .or:before {
-    background-color: rgba(42, 42, 66) !important;
+    background-color: var(--BGdarkSop) !important;
     color: var(--darkText);
+}
+
+body.night .import td div.row-bg {
+    background-color: #68ff6e9e !important;
+}
+
+body.night .modal-footer {
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+body.night ul.pagination li.pageNumber a {
+    color: #fff !important;
 }
 
 .dark-mode:checked+.label-dark-mode .blob {
@@ -260,7 +277,7 @@ a.return-term.link {
     -webkit-animation-iteration-count: infinite;
     animation-iteration-count: infinite;
     border-radius: 500rem;
-    border-color: #fff transparent transparent;
+    border-color: var(--darkLoading);
     border-style: solid;
     border-width: 0.2em;
     -webkit-box-shadow: 0 0 0 1px transparent;
@@ -1083,6 +1100,10 @@ body.body-term {
     z-index: 3;
 }
 
+.ui-dialog.dialog-top {
+    top: 15% !important;
+}
+
 .ui-dialog .ui-dialog-titlebar {
     border-bottom: 2px solid #589ed0;
     text-align: center;
@@ -1119,6 +1140,14 @@ body.body-term {
 }
 
 /* DATAPICKER JQUERY */
+div#ui-datepicker-div.terms {
+    top: 5% !important;
+}
+
+div#ui-datepicker-div.careers {
+    top: 25% !important;
+}
+
 .ui-datepicker .ui-datepicker-header {
     position: relative;
     padding: 0.2em 0;
@@ -1524,6 +1553,7 @@ ul.pagination li.pageNumber:last-child {
     .toggle {
         margin-left: 0px;
     }
+
     .terms table {
         width: 90vw;
     }
@@ -1681,84 +1711,112 @@ ul.pagination li.pageNumber:last-child {
     .toggle {
         margin-right: -20px !important;
     }
+
     .label-dark-mode {
         width: 80px !important;
     }
 }
 
 @media (max-width: 375px) {
+
     .students td:nth-child(4),
     .students th:nth-child(4) {
         display: none;
     }
 }
-  
+
 @media (prefers-color-scheme: dark) {
+    ul.pagination li.pageNumber a {
+        color: #fff !important;
+    }
+
     header {
-        background-color: rgba(17, 16, 34, 0.911);
+        background-color: var(--BGdarkF);
         color: var(--darkText);
     }
+
     body {
-        background-color: rgba(17, 16, 34, 0.85) !important;
+        background-color: var(--BGdarkS) !important;
         color: var(--darkText);
     }
+
     .option {
-        background-color: rgba(42, 42, 66, 0.911);
+        background-color: rgbavar(--BGdarkFop);
     }
+
     .container-form {
-        background-color: rgba(42, 42, 66, 0.85) !important;
+        background-color: var(--BGdarkSop) !important;
     }
+
     .form span.title {
         color: rgba(255, 255, 255, 0.8) !important;
     }
-    div.icon.input-box > i {
+
+    div.icon.input-box>i {
         color: black;
     }
+
     a {
         color: rgba(255, 255, 255, 0.8);
     }
+
     .link-nav {
         color: black !important;
     }
+
     tr {
-        background-color: rgba(17, 16, 34, 0.911);
+        background-color: var(--BGdarkFop);
         color: var(--darkText);
     }
+
     tr:nth-child(even) {
-        background-color: rgba(42, 42, 66, 0.85);
+        background-color: var(--BGdarkSop);
         color: var(--darkText);
     }
+
     ul.pagination a i {
         color: rgba(255, 255, 255, 0.8);
     }
+
     ul.pagination li.pageNumber.active a {
         background: rgba(255, 255, 255, 0.8);
         color: var(--pagination);
     }
+
     .ui-dialog {
-        background-color: rgba(42, 42, 66) !important;
+        background-color: var(--BGdarkS) !important;
         color: var(--darkText);
     }
+
     .ui-dialog .ui-dialog-titlebar {
-        background-color: rgb(23, 22, 37) !important;
+        background-color: var(--BGdarkF) !important;
         color: var(--darkText);
     }
+
     .ui-dialog .buttons-group {
-        background-color: rgb(42, 42, 66) !important;
+        background-color: var(--BGdarkS) !important;
         color: var(--darkText);
     }
+
     .ui-dialog .buttons-group .or:before {
-        background-color: rgb(42, 42, 66) !important;
+        background-color: var(--BGdarkS) !important;
         color: var(--darkText);
     }
+
     .modal-header {
-        background-color: rgba(23, 22, 37) !important;
+        background-color: var(--BGdarkF) !important;
         color: var(--darkText);
     }
+
     .modal-body,
     .modal-footer,
     .buttons-group .or:before {
-        background-color: rgba(42, 42, 66) !important;
+        background-color: var(--BGdarkSop) !important;
         color: var(--darkText);
+    }
+
+    .modal-footer {
+        border-bottom-right-radius: 16px;
+        border-bottom-left-radius: 16px;
     }
 }

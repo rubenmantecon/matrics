@@ -18,7 +18,6 @@
             <caption>Llistat d'alumnes</caption>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nom</th>
                     <th>Cognoms</th>
                     <th>Email</th>
@@ -27,12 +26,11 @@
             </thead>
             <tbody style="display: none">
                 <tr>
-                    <td colspan="5" class="loading inverted"></td>
+                    <td colspan="4" class="loading inverted"></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <th>ID</th>
                     <th>Nom</th>
                     <th>Cognoms</th>
                     <th>Email</th>

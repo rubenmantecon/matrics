@@ -4,7 +4,7 @@
  * @param {String} element 
  * @return {Boolean} 
  */
-function isNull(element) {
+ function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
 }
 
@@ -133,8 +133,9 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
+                    console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.id, item.firstname, item.lastname1 + " " + item.lastname2, item.email,
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name,
                         "students"
                     ));
                 }
@@ -152,7 +153,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="5"><p>Sense Alumnes.</p></td>
+                        <td colspan="4"><p>Sense Alumnes.</p></td>
                     </tr>`
                 );
             }
@@ -233,17 +234,18 @@ function loadTermPage() {
  */
 function loadCareerPage() {
     const term_id = getUrlParameter("term");
+    console.log(term_id);
     $.ajax({
         url: $("meta[name='url']").attr("content"),
         method: 'GET',
         headers: {
             token: $("meta[name='_token']").attr("content"),
-            term_id: (!term_id) ? 'empty' : term_id,
+            "term-id": (!term_id) ? 'empty' : term_id,
         },
         success: (res) => {
             if (res.status) {
                 generateMessages(res.status, res.text, ".container-messages", 3)
-                setTimeout(() => location.href = "/admin/dashboard/terms", 3000);
+                // setTimeout(() => location.href = "/admin/dashboard/terms", 3000);
             } else {
                 $("tbody").css("display", "none").html('');
                 if (res.length > 0) {
@@ -282,6 +284,9 @@ function loadCareerPage() {
     });
 }
 
+/**
+ * @description "load all the data of the logs end point in the tbody HTML"
+ */
 function loadLogsPage() {
     $.ajax({
         url: $("meta[name='url']").attr("content"),
@@ -290,7 +295,6 @@ function loadLogsPage() {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
-            //console.log(res);
             for (const item of res) {
                 console.log(item);
                 var tmp = JSON.parse(item.message);
@@ -310,6 +314,10 @@ function loadLogsPage() {
     });
 }
 
+/**
+ * @description "load all the data of the import end point in the tbody HTML"
+ * @param {JSON} careers "json with the careers"
+ */
 function loadImportPage(careers) {
     let arrayCareers = [];
     let cont = 0;
@@ -379,6 +387,11 @@ function loadImportPage(careers) {
     generateMessages("success", "Arxiu carregat correctament.", ".container-messages", 2.5);
 }
 
+
+/**
+ * @description "load all the data of the career end point in the tbody HTML"
+ * @param {String} "actual page (careers|students)"
+ */
 function importCSV(page) {
     $.ajaxSetup({
         headers: {
@@ -389,7 +402,6 @@ function importCSV(page) {
         $("#remove").html('').addClass("loading");
         var fr = new FileReader();
         fr.onload = function () {
-            console.log("Loaded");
             var file = fr.result;
             $.ajax({
                 url: "/api/import",
@@ -416,7 +428,6 @@ function importCSV(page) {
     } else if (page == "students") {
         var fr = new FileReader();
         fr.onload = function () {
-            console.log("Loaded");
             var file = fr.result;
             $.ajax({
                 url: $("meta[name='url']").attr("content"),
@@ -429,13 +440,15 @@ function importCSV(page) {
                     file
                 },
                 success: (res) => {
-                    console.log(res);
                     $("#form-file").trigger("reset");
-                    generateMessages(res.status, res.text, ".container-messages", 3)
+                    generateMessages(res.status, res.text, ".container-messages", 3);
+                    $("tbody").html('');
+                    loadStudentsPage();
                 },
                 error: (res) => {
                     $("#form-file").trigger("reset");
-                    console.log(res);
+                    console.log(res.responseJSON.message);
+                    generateMessages("error", "Alguns usuaris ja existeixen", ".container-messages", 3)
                 }
             });
         }
@@ -446,14 +459,15 @@ function importCSV(page) {
 /**
  * @description "callback function event for create or edit term"
  * @param {Element} tag "Event onClick: DOM Element tag pressed"
+ * @param {String} page "actual page"
  */
-
 function rowEventEditAndNew(tag, page) {
-    $("body").css("overflow", "hidden");
+    $("html").css("overflow", "hidden");
     $(".bg-dialog").addClass("bg-opacity");
     const rowSelected = $(tag).closest("tr");
     let dialog = $(".modal-term").dialog({
         modal: true,
+        dialogClass: "dialog-top",
         buttons: {
             "Desa": () => {
                 if (validationTermForm(page)) {
@@ -463,18 +477,18 @@ function rowEventEditAndNew(tag, page) {
                     } else if (page === "careers") {
                         updateTableRowCareers(rowSelected.children());
                     }
-                    $("body").css("overflow", "auto");
+                    $("html").css("overflow", "auto");
                     setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
                 }
             },
             "Cancela": () => {
                 dialog.dialog("close");
-                $("body").css("overflow", "auto");
+                $("html").css("overflow", "auto");
                 setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
             }
         },
         close: () => {
-            $("body").css("overflow", "auto");
+            $("html").css("overflow", "auto");
             $(".bg-dialog").removeClass("bg-opacity");
         },
         show: {
@@ -491,7 +505,7 @@ function rowEventEditAndNew(tag, page) {
     $(childrens[0]).attr("class", "btn save").text((tag.id === "new") ? 'Crea' : 'Desa').after('<div class="or"></div>');
     $(".ui-dialog-title").text((tag.id === "new") ? 'Nou' : 'Modicació');
     $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
-
+    $(".ui-dialog").prev().addClass(page);
     const cols = rowSelected.children();
     if (page === "terms") {
         const colsValues = [cols[1], cols[2], cols[3], cols[4]];
@@ -505,12 +519,20 @@ function rowEventEditAndNew(tag, page) {
 
 }
 
+/**
+ * @description "get row information for dialog modal"
+ * @param {*} colsValues "selected row"
+ * @param {*} inputsIds "inputs of modal"
+ */
 function getInfoForModal(colsValues, inputsIds) {
     for (let i = 0; i < colsValues.length; i++) {
         $(`.label-group input#${inputsIds[i]}`).val($(colsValues[i]).text());
     }
 }
 
+/**
+ * @description "animation for selected careers in careers import page"
+ */
 function animationSelectedRow() {
     $("label").click(function () {
         let rowBackground = $(this).closest('td').children(".row-bg");
@@ -545,12 +567,8 @@ function insertNewRow(...params) {
 
 /**
  * @description "insert new row in the terms table of the DB with AJAX"
- * @param {String} name 
- * @param {String} desc 
- * @param {String} start 
- * @param {String} end 
- * @param {String} created 
- * @param {String} updated 
+ * @param {JSON} data "data body information"
+ * @param {String} page "actual page"
  */
 function insertRowInDB(data, page) {
     $.ajaxSetup({
@@ -582,13 +600,8 @@ function insertRowInDB(data, page) {
 
 /**
  * @description "update row in the terms table of the DB with AJAX"
- * @param {Number} id 
- * @param {String} name 
- * @param {String} desc 
- * @param {String} start 
- * @param {String} end 
- * @param {String} updated 
- * @param {String} type "detect if is soft delete or not (default='softDelete')"
+ * @param {JSON} data "data body information"
+ * @param {String} page "actual page"
  */
 function updateRowInDB(data, page) {
     $.ajaxSetup({
@@ -630,7 +643,7 @@ function updateRowInDB(data, page) {
 }
 
 /**
- * @description "update tbody of HTML tables"
+ * @description "update tbody of term HTML table"
  * @param {Element[]} cols 
  */
 function updateTableRowTerm(cols) {
@@ -657,7 +670,7 @@ function updateTableRowTerm(cols) {
 }
 
 /**
- * @description "update tbody of HTML tables"
+ * @description "update tbody of career HTML table"
  * @param {Element[]} cols 
  */
 function updateTableRowCareers(cols) {
@@ -689,6 +702,7 @@ function updateTableRowCareers(cols) {
 
 /**
  * @description "validate if edit or new term form have an errors"
+ * @param {String} page "actual page"
  * @return {Boolean}
  */
 function validationTermForm(page) {
@@ -778,7 +792,6 @@ $(function () {
         })
     } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
-        $(".return-term.link").text('ID: '+getUrlParameter("term"))
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
             $(".ui-icon-circle-triangle-w").parent().html('<i class="fas fa-arrow-circle-left"></i>')
@@ -828,13 +841,16 @@ $(function () {
 
     //"DARK-MODE"
     $('.dark-mode').on('change', () => {
-        $('body').toggleClass('night');
-        $('.dark-mode').toggleClass('active');
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+        if (!prefersDarkScheme.matches) {
+            $('body').toggleClass('night');
+            $('.dark-mode').toggleClass('active');
 
-        if ($('body').hasClass('night')) { //cuando el cuerpo tiene la clase 'dark' actualmente
-            localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
-        } else {
-            localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
+            if ($('body').hasClass('night')) { //cuando el cuerpo tiene la clase 'dark' actualmente
+                localStorage.setItem('darkMode', 'enabled'); //almacenar estos datos si el modo oscuro está activado
+            } else {
+                localStorage.setItem('darkMode', 'disabled'); //almacenar estos datos si el modo oscuro está desactivado
+            }
         }
     });
 

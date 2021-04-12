@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('careers') }}
+        {{ Breadcrumbs::render('term', $term) }}
     @endsection
     <div class="careers">
         <div class="btn-import">
@@ -15,7 +15,7 @@
             </form>
         </div>
         <table>
-            <caption>Llistat de cicles del curs <a class="return-term link" href="/admin/dashboard/terms">{{ 'CURSO' }}</a></caption>
+            <caption>Llistat de cicles del curs <a class="return-term link" href="/admin/dashboard/terms">{{ $term }}</a></caption>
             <thead>
                 <tr>
                     <th>ID</th>

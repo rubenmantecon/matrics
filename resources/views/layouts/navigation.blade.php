@@ -51,7 +51,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <!-- Authentication -->
+                        {{-- <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
@@ -60,7 +60,7 @@
                                                 this.closest('form').submit();">
                                 {{ __('Tanca sessió') }}
                             </x-dropdown-link>
-                        </form>
+                        </form> --}}
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -119,7 +119,7 @@
             </div>
 
             <div class="auth mt-3 space-y-1">
-                <!-- Authentication -->
+                {{-- <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
@@ -128,7 +128,7 @@
                                         this.closest('form').submit();">
                         {{ __('Tanca sessió') }}
                     </x-responsive-nav-link>
-                </form>
+                </form> --}}
             </div>
         </div>
     </div>

@@ -24,7 +24,7 @@ class CareerController extends Controller
         if ($token) {
             $user = User::select("token")->where('token', $token)->get()[0];
             if ($user['token']) {
-                $term_id = $request->header('term_id');
+                $term_id = $request->header('term-id');
                 if (isset($term_id) && $term_id != "empty") {
                     $term = Term::select("active")->where("id", $term_id)->get();
                     if (sizeof($term) == 0)
