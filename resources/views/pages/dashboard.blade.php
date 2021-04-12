@@ -29,13 +29,14 @@
     </div>
     @else
     <div class="flex flex-col">
-        <div class="flex flex-col items-center justify-center w-full">
-            <h2>Estat de la matricula *SEMAFORO*</h2>
-            <div class="flex flex-wrap items-center justify-center w-full text-center">
-                <div class="w-1/2">DNI: *SEMAFORO*</div>
-                <div class="w-1/2">TARJA SANITÀRIA: *SEMAFORO*</div>
-                <div class="w-1/2">TITOL ACADÈMIC: *SEMAFORO*</div>
-                <div class="w-1/2">COMPROVANT DE PAGAMENT: *SEMAFORO*</div>
+
+        <div class="flex flex-col items-center justify-center w-full mt-2">
+            <h2 class="">Estat de la matricula: <button class="statusnothing ml-2 flex-initial"></button></h2>
+            <div class="flex flex-wrap items-center justify-center w-1/2 text-center container-form mt-5 ">
+                <div class="w-1/2 mt-2">DNI: <button class="statusnothing ml-2 flex-initial"></button></div>
+                <div class="w-1/2 mt-2">T. SANITARIA: <button class="statusnothing ml-2 flex-initial"></button></div>
+                <div class="w-1/2 mt-2">TITULO ACADEMICO: <button class="statusnothing ml-2 flex-initial"></button></div>
+                <div class="w-1/2 mt-2">RESGUARDO PAGO: <button class="statusnothing ml-2 flex-initial"></button></div>
             </div>
         </div>
         <div class="options p-10">
@@ -43,6 +44,8 @@
             <div class="px-4 py-2">
                 <img src="{{ asset('images/usuari.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
+
+        
             <div class="px-6 py-4">
                 <a href="/dashboard/profile" class="btn primary-btn">Dades personals</a>
             </div>
