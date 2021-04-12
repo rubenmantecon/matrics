@@ -4,7 +4,7 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    <div class="card">
+    <div class="container-form">
         <div class="card-body">
             <form wire:submit.prevent="updateProfileInformation" role="form">
                 <div class="form-group">

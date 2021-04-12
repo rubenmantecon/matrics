@@ -33,17 +33,31 @@
             <h2>Estat de la matricula *SEMAFORO*</h2>
             <div class="flex flex-wrap items-center justify-center w-full text-center">
                 <div class="w-1/2">DNI: *SEMAFORO*</div>
-                <div class="w-1/2">T. SANITARIA: *SEMAFORO*</div>
-                <div class="w-1/2">TITULO ACADEMICO: *SEMAFORO*</div>
-                <div class="w-1/2">RESGUARDO PAGO: *SEMAFORO*</div>
+                <div class="w-1/2">TARJA SANITÀRIA: *SEMAFORO*</div>
+                <div class="w-1/2">TITOL ACADÈMIC: *SEMAFORO*</div>
+                <div class="w-1/2">COMPROVANT DE PAGAMENT: *SEMAFORO*</div>
             </div>
         </div>
-        <div class="flex items-center justify-center w-full">
-            <div class="px-6 py-4">
-                <a href="/dashboard/profile" class="btn primary-btn">Dades de l'usuari</a>
+        <div class="options p-10">
+        <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
+            <div class="px-4 py-2">
+                <img src="{{ asset('images/usuari.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <a href="#" class="btn primary-btn">Recalcular matricula</a>
+                <a href="/dashboard/profile" class="btn primary-btn">Dades personals</a>
+            </div>
+        </div>
+        <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
+            <div class="px-4 py-2">
+                <img src="{{ asset('images/matricula.png') }}" alt="logo" class="logo w-24 m-4"/>
+            </div>
+            <div class="px-6 py-4">
+                <a href="#" class="btn primary-btn">Recalcula matricula</a>
+            </div>
+        </div>
+        <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
+            <div class="px-4 py-2">
+                <img src="{{ asset('images/docs.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
                 <a href="/dashboard/documents" class="btn primary-btn">Documents</a>

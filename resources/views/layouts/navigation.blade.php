@@ -28,6 +28,15 @@
                     {{ __('Alumnes') }}
                 </x-nav-link>
             @endif
+                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Inici') }}
+                </x-nav-link>
+                <x-nav-link href="/dashboard/profile" :active="request()->routeIs('/dashboard/profile')">
+                    {{ __('Dades personals') }}
+                </x-nav-link>
+                <x-nav-link href="/dashboard/documents" :active="request()->routeIs('/dashboard/documents')">
+                    {{ __('Documentació') }}
+                </x-nav-link>
             </div>
             @if(Auth::user()->role == 'admin')
             <p class="user"><i class="fas fa-user"></i> Admin</p>
