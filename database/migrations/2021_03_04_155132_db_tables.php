@@ -63,7 +63,7 @@ class DbTables extends Migration
             $table->enum('state', ['registered', 'unregistered']);
             $table->timestamps();
         });
-        
+
         Schema::create('records', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
@@ -80,7 +80,7 @@ class DbTables extends Migration
         Schema::create('requirements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('profile_id');
-            $table->foreign('profile_id')->references('id')->on('profile_reqs');   
+            $table->foreign('profile_id')->references('id')->on('profile_reqs');
             $table->string('name');
             $table->timestamps();
         });
@@ -128,14 +128,14 @@ class DbTables extends Migration
         Schema::dropIfExists('enrolment_ufs');
         Schema::dropIfExists('req_enrols');
         Schema::dropIfExists('requirements');
-        Schema::dropIfExists('profile_req');
+        Schema::dropIfExists('profile_reqs');
         Schema::dropIfExists('records');
         Schema::dropIfExists('enrolments');
         Schema::dropIfExists('ufs');
         Schema::dropIfExists('mps');
         Schema::dropIfExists('careers');
         Schema::dropIfExists('terms');
-        Schema::dropIfExists('logs');
         //Schema::dropIfExists('users');
+        Schema::dropIfExists('logs');
     }
 }
