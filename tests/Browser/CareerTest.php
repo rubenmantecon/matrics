@@ -63,26 +63,28 @@ class CareerTest extends DuskTestCase
     public function testCreateNewCareer()
     {
         // Creating a new data for testing Career.
-        $career = Career::factory();
         $term = Term::factory()->create();
         $user = User::factory()->create([
             'role' => 'admin'
         ]);
+        $career = Career::factory()->create();
 
         $this->browse(function (Browser $browser) use ($user, $career, $term) {
             $browser->loginAs($user)
                     ->visit('/admin/dashboard/careers?term='. $term->id)
                     ->pause(5000)
                     ->press('Afegeix un nou curs')
+                    ->pause(2000)
                     ->type('#code', $career->code)
-                    ->type('#name', $career->name)
+                    ->type('#name', $career->name . 'test')
                     ->type('#description', $career->description)
                     ->type('#hours', $career->hours)
-                    ->type('#start', $career->start)
-                    ->type('#end', $career->end)
+                    ->type('#start', date('d-m-Y', strtotime($career->start)))
+                    ->type('#end', date('d-m-Y', strtotime($career->end)))
+                    ->screenshot('test')
                     ->press('Crea')
                     ->pause(5000)
-                    ->assertSee($career->name);
+                    ->assertSee($career->name . 'test');
         });
     }
 }

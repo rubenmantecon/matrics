@@ -37,6 +37,8 @@ abstract class DuskTestCase extends BaseTestCase
             return $items->merge([
                 '--disable-gpu',
                 '--headless',
+                '--ignore-certificate-errors',
+                '--ignore-ssl-errors'
             ]);
         })->all());
 

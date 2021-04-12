@@ -30,7 +30,7 @@ class CareerFactory extends Factory
             'description' => $this->faker->text,
             'hours' => $this->faker->numberBetween($min = 1000, $max = 3000),
             'start' => now(),
-            'end' =>  date('Y-m-d', $this->faker->date('now', '+1 years'))
+            'end' => now()->addYear()
         ];
     }
 }

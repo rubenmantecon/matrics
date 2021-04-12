@@ -128,7 +128,7 @@ class DbTables extends Migration
         Schema::dropIfExists('enrolment_ufs');
         Schema::dropIfExists('req_enrols');
         Schema::dropIfExists('requirements');
-        Schema::dropIfExists('profile_req');
+        Schema::dropIfExists('profile_reqs');
         Schema::dropIfExists('records');
         Schema::dropIfExists('enrolments');
         Schema::dropIfExists('ufs');
