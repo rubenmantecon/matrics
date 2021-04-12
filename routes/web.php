@@ -83,5 +83,5 @@ Breadcrumbs::for('profile', static function ($trail) {
 // Dashboard > Documents
 Breadcrumbs::for('documents', static function ($trail) {
     $trail->parent('home');
-    $trail->push('Documentació', '/dashboard/documents');
+    $trail->push('Documents', '/dashboard/documents');
 });
