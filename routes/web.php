@@ -7,6 +7,7 @@ use App\Http\Controllers\CareerController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\MpsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,8 @@ Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
 Route::resource('api/import', ImportController::class);
+Route::resource('api/mps', MpsController::class);
+
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
