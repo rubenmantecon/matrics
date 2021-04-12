@@ -22,11 +22,13 @@
                     <th>Cognoms</th>
                     <th>Email</th>
                     <th>Cicle</th>
+                    <th>Estat matricula</th>
+                    <th>Dades</th>
                 </tr>
             </thead>
             <tbody style="display: none">
                 <tr>
-                    <td colspan="4" class="loading inverted"></td>
+                    <td colspan="6" class="loading inverted"></td>
                 </tr>
             </tbody>
             <tfoot>
@@ -35,6 +37,8 @@
                     <th>Cognoms</th>
                     <th>Email</th>
                     <th>Cicle</th>
+                    <th>Estat matricula</th>
+                    <th>Dades</th>
                 </tr>
             </tfoot>
         </table>
