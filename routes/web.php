@@ -55,3 +55,22 @@ Route::name('admin') /*admin/dashboard*/
     ->group(function () {
         require __DIR__ . '/admin.php';
     });
+
+    /*BREADCRUMB*/
+
+// Dashboard
+Breadcrumbs::for('home', static function ($trail) {
+    $trail->push('Inici', route('dashboard'));
+});   
+
+// Dashboard > Profile
+Breadcrumbs::for('profile', static function ($trail) {
+    $trail->parent('home');
+    $trail->push('Dades personals', '/dashboard/profile');
+});
+
+// Dashboard > Documents
+Breadcrumbs::for('documents', static function ($trail) {
+    $trail->parent('home');
+    $trail->push('Documentació', '/dashboard/documents');
+});

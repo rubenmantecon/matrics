@@ -212,6 +212,7 @@ body.night ul.pagination li.pageNumber a {
       background: radial-gradient(#E9E9E9, #2F2F2F);
       /*border:20px solid #24A442;*/
       /*background: #21ba45;*/
+      pointer-events: none;
       padding: 10px;
       width: 10px;
       height: 10px;
@@ -908,6 +909,16 @@ ol.list a:before {
     box-shadow: 0 0 12px 2px black;
 }
 
+.container-formlights {
+    background: #fff;
+    border-radius: 10px;
+    position: relative;
+    padding: 20px;
+    margin-left: 8px;
+    margin-right: 8px;
+    box-shadow: 0 0 12px 2px black;
+}
+
 form.form {
     width: 100%;
     display: flex;
@@ -1401,10 +1412,10 @@ main.login .container-form a img.logo {
 }
 
 /*DASHBOARD STUDENTS*/
-/*
+
 .statesdiv {
-    background-color: var(--)
-}*/
+    color: var(--BGdarkS)
+}
 
 /* IMPORT */
 .import .text {

@@ -28,13 +28,16 @@
         </div>
     </div>
     @else
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('home') }}
+    @endsection
     <div class="flex flex-col">
 
-        <div class="flex flex-col items-center justify-center w-full mt-2">
+        <div class="flex flex-col items-center justify-center w-full  ">
             <h2 class="">Estat de la matricula: <button class="statusnothing ml-2 flex-initial"></button></h2>
-            <div class="flex flex-wrap items-center justify-center w-1/2 text-center container-form mt-5 ">
+            <div class="flex flex-wrap items-center justify-center w-1/2 text-center container-formlights mt-5 statesdiv ">
                 <div class="w-1/2 mt-2">DNI: <button class="statusnothing ml-2 flex-initial"></button></div>
-                <div class="w-1/2 mt-2">T. SANITARIA: <button class="statusnothing ml-2 flex-initial"></button></div>
+                <div class="w-1/2 mt-2">T. SANITARIA: <button class="statusnothing ml-2 flex-start"></button></div>
                 <div class="w-1/2 mt-2">TITULO ACADEMICO: <button class="statusnothing ml-2 flex-initial"></button></div>
                 <div class="w-1/2 mt-2">RESGUARDO PAGO: <button class="statusnothing ml-2 flex-initial"></button></div>
             </div>

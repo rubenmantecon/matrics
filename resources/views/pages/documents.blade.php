@@ -1,4 +1,13 @@
+
 <x-app-layout page="documents"> 
+<x-slot name="header">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Dashboard') }}
+    </h2>
+</x-slot>
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('documents') }}
+    @endsection
     <div>
     <form action="" method="post" enctype="multipart/form-data" >
         <label for="DNI">Selecciona el DNI:</label>

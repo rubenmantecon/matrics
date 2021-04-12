@@ -4,6 +4,9 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
+    @section('breadcrumbs')
+        {{ Breadcrumbs::render('profile') }}
+    @endsection
     <div class="container-form">
         <div class="card-body">
             <form wire:submit.prevent="updateProfileInformation" role="form">

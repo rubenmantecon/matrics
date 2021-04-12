@@ -35,7 +35,7 @@
                     {{ __('Dades personals') }}
                 </x-nav-link>
                 <x-nav-link href="/dashboard/documents" :active="request()->routeIs('/dashboard/documents')">
-                    {{ __('Documentació') }}
+                    {{ __('Documents') }}
                 </x-nav-link>
             </div>
             @if(Auth::user()->role == 'admin')
