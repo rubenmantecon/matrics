@@ -61,6 +61,10 @@ Route::get('/dashboard/students', function () {
     return view('pages.students');
 });
 
+Route::get('/dashboard/createAdmin', function () {
+    return view('pages.createAdmin');
+});
+
 
 /*
     * You may use either the Breadcrumbs facade or the $breadcrumbs variable in this file,
@@ -84,6 +88,12 @@ Breadcrumbs::for('students', static function ($trail) {
 Breadcrumbs::for('terms', static function ($trail) {
     $trail->parent('dashboard');
     $trail->push('Cursos', '/admin/dashboard/terms');
+});
+
+// Dashboard > Create admin
+Breadcrumbs::for('createAdmin', function ($trail) {
+    $trail->parent('dashboard');
+    $trail->push("Crea admin", '/admin/dashboard/createAdmin');
 });
 
 // Dashboard > Terms > Delete[Term]

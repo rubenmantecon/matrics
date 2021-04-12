@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Users;
+use App\Models\Enrolment;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\CareerController;
@@ -14,6 +17,9 @@ use App\Models\Enrolment_uf;
 use App\Http\Controllers\MpsController;
 use App\Http\Controllers\Profile_reqController;
 use App\Http\Controllers\RequirementController;
+use App\Models\Profile_req;
+use App\Http\Controllers\RegisterAdminController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,10 +41,27 @@ Route::get('/sample', function () {
     return view('pages.sample');
 });
 
+Route::get('/dashboard/profile', function () {
+    $user_id = auth::id();
+    $enrollments = Enrolment::where('user_id', $user_id)->get();
+    return view('pages.profile', ['enrollments' => $enrollments]);
+});
 Route::get('/dashboard', function () {
+    /*$user = Auth::user();
+    if ($user->enrolments()->first()->state) {
+        return view('pages.dashboard');
+    }else{
+        return view('pages.matriculacion');
+    }*/
     return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
-
+Route::get('/dashboard/requirements', function () {
+    $profile_req = Profile_req::all();
+    return view('pages.requirements' , ['profile_req' => $profile_req]);
+});
+Route::get('/dashboard/documents', function () {
+    return view('pages.documents');
+});
 Route::resource('api/terms', TermController::class);
 Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
@@ -50,6 +73,7 @@ Route::resource('api/enrolment_ufs', Enrolment_ufController::class);
 Route::resource('api/mps', MpsController::class);
 Route::resource('api/profile_reqs', Profile_reqController::class);
 Route::resource('api/requirements', RequirementController::class);
+Route::resource('api/createAdmin', RegisterAdminController::class);
 
 require __DIR__ . '/auth.php';
 
@@ -59,3 +83,22 @@ Route::name('admin') /*admin/dashboard*/
     ->group(function () {
         require __DIR__ . '/admin.php';
     });
+
+/*BREADCRUMB*/
+
+// Dashboard
+Breadcrumbs::for('home', static function ($trail) {
+    $trail->push('Inici', route('dashboard'));
+});   
+
+// Dashboard > Profile
+Breadcrumbs::for('profile', static function ($trail) {
+    $trail->parent('home');
+    $trail->push('Dades personals', '/dashboard/profile');
+});
+
+// Dashboard > Documents
+Breadcrumbs::for('documents', static function ($trail) {
+    $trail->parent('home');
+    $trail->push('Documents', '/dashboard/documents');
+});
