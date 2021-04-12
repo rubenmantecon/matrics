@@ -140,22 +140,32 @@ class EnrolmentController extends Controller
      * @param  \App\Models\Enrolment  $enrolment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Enrolment $enrolment)
+    public function update(Request $request, Enrolment $enrolment, User $user)
     {
         $data = ['status' => 'Unauthorized, error 503'];
         $token = $request->header('token');
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
             if ($user['token']) {
+                // Update enrolment
                 $enrolment->user_id = $request->user_id;
                 $enrolment->term_id = $request->term_id;
-                $enrolment->career_id = $request->career_id;
                 $enrolment->dni = $request->dni;
                 $enrolment->state = $request->state; // pending or validated
                 $enrolment->touch();
+                $status1 = $enrolment->save();
+
+                // Update user
+                $user->user_id = $request->user_id;
+                $user->firstname = $request->firstname;
+                $user->lastname1 = $request->lastname1;
+                $user->lastname2 = $request->lastname2;
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->touch();
+                $status2 = $user->save();
                 
-                $status = $enrolment->save();
-                if ($status){
+                if ($status1 && $status2){
                     $data = ["status" => "Matricula actualitzada correctament."];
                     Log::channel('dblogging')->info("Ha actualizado una matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
                 } else {
