@@ -184,9 +184,9 @@ body.night ul.pagination li.pageNumber a {
       background: radial-gradient(#2CEC59, #0C3717);
       /*border:20px solid #24A442;*/
       /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+      padding: 2vh;
+      width: 2vh;
+      height: 2vh;
 }
 
 .statuscancel {
@@ -194,27 +194,27 @@ body.night ul.pagination li.pageNumber a {
       background: radial-gradient(#F42626, #3A0909);
       /*border:20px solid #24A442;*/
       /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+      padding: 2vh;
+      width: 2vh;
+      height: 2vh;
 }
 .statusprocesing {
       border-radius: 100%;
       background: radial-gradient(#F58027, #552C0D);
       /*border:20px solid #24A442;*/
       /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+      padding: 2vh;
+      width: 2vh;
+      height: 2vh;
 }
 .statusnothing {
       border-radius: 100%;
       background: radial-gradient(#E9E9E9, #2F2F2F);
       /*border:20px solid #24A442;*/
       /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+      padding: 10px;
+      width: 10px;
+      height: 10px;
 }
 
 /* BODY */
@@ -1399,6 +1399,12 @@ main.login .container-form a img.logo {
     text-align: right;
     margin-right: 5vw;
 }
+
+/*DASHBOARD STUDENTS*/
+/*
+.statesdiv {
+    background-color: var(--)
+}*/
 
 /* IMPORT */
 .import .text {
