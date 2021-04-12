@@ -5,14 +5,23 @@ namespace Tests\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use App\Models\User;
 
 class LoginTests extends DuskTestCase
 {
+        use DatabaseMigrations;
+
     /**
     * @test
     */
     public function LoginStudent()
     {
+        User::factory()->create([
+            'name'=>'test',
+            'password'=>\Hash::make('test123'),
+            'role'=>'alumne'
+
+        ]);
         
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -21,7 +30,7 @@ class LoginTests extends DuskTestCase
                     ->press('Accedir')
                     ->assertPathIs('/dashboard')
                     ->assertSee('Student')
-                    ->screenshot('loginStudent')
+                    ->pause(2000)
                     ->logout();
         });
     }
@@ -31,6 +40,12 @@ class LoginTests extends DuskTestCase
     */
     public function LoginAdmin()
     {
+        User::factory()->create([
+            'name'=>'admin',
+            'password'=>\Hash::make('admin123'),
+            'role'=>'admin'
+
+        ]);
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
                     ->type('name', 'admin')
@@ -38,7 +53,7 @@ class LoginTests extends DuskTestCase
                     ->press('Accedir')
                     ->assertPathIs('/dashboard')
                     ->assertSee('Admin')
-                    ->screenshot('loginAdmin')
+                    ->pause(2000)
                     ->logout();
         });
 
@@ -56,7 +71,8 @@ class LoginTests extends DuskTestCase
                     ->type('password', 'admin')
                     ->press('Accedir')
                     ->assertsee('Whoops! Something went wrong.')
-                    ->screenshot('loginFailed');
+                    ->pause(2000);
+                    
         });
 
 
