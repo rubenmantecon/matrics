@@ -9,54 +9,53 @@
             <form role="form">
                 <div class="form-group">
                     <label for="state.nom">NOM</label>
-                    <p>{{ $data->name }}</p>
+                    <p>{{ Auth::user()->name }}</p>
                 </div>
                 
                 <div class="form-group">
                     <label for="state.cognom">COGNOM</label>
-                    <p>{{ $data->firstname }}</p>
+                    <p>{{ Auth::user()->firstname }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.telef">Telefon</label>
-                    <p>{{ $data->phone }}</p>
+                    <p>{{ Auth::user()->phone }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.email">Email</label>
-                    <p>{{ $data->email }}</p>
+                    <p>{{ Auth::user()->email }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.dni">DNI</label>
-                    <p>{{ $data->dni }}</p>
+                    <p>{{ Auth::user()->dni }}</p>
                 </div>
-
 
                 <div class="form-group">
                     <label for="state.adre">ADREÇA</label>
-                    <p>{{ $data->adress }}</p>
+                    <p>{{ Auth::user()->address }}</p>
                 </div>
 
 
                 <div class="form-group">
                     <label for="state.pobla">Poblacio</label>
-                    <p>{{ $data->poblation }}</p>
+                    <p>{{ Auth::user()->population }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.date">DATA NEIXAMENT</label>
-                    <p>{{ $data->date }}</p>
+                    <p>{{ Auth::user()->date }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.pare">PARE</label>
-                    <p>{{ $data->father }}</p>
+                    <p>{{ Auth::user()->father }}</p>
                 </div>
 
                 <div class="form-group">
                     <label for="state.mare">MARE</label>
-                    <p>{{ $data->mather }}</p>
+                    <p>{{ Auth::user()->mother }}</p>
                 </div>
 
             </form>
