@@ -16,23 +16,30 @@ class Enrolment extends Model
 {
     use HasFactory;
 
-    public function careers() {
+    protected $fillable = ['dni', 'user_id', 'term_id', 'career_id', 'state'];
+
+    public function careers()
+    {
         return $this->belongsTo(Career::class);
     }
 
-    public function terms() {
+    public function terms()
+    {
         return $this->belongsTo(Term::class);
     }
 
-    public function users() {
+    public function users()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function enrolment_ufs() {
+    public function enrolment_ufs()
+    {
         return $this->hasMany(Enrolment_uf::class);
     }
 
-    public function req_enrols() {
+    public function req_enrols()
+    {
         return $this->hasMany(Req_enrol::class);
     }
 }
