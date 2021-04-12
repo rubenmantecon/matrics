@@ -12,7 +12,9 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\UfController;
 use App\Models\Enrolment_uf;
 use App\Http\Controllers\MpsController;
-
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\Profile_reqController;
+use App\Http\Controllers\RequirementController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -47,6 +49,9 @@ Route::resource('api/ufs', UfController::class);
 Route::resource('api/enrolments', EnrolmentController::class);
 Route::resource('api/enrolment_ufs', Enrolment_ufController::class);
 Route::resource('api/mps', MpsController::class);
+Route::resource('api/profile_reqs', Profile_reqController::class);
+Route::resource('api/requirements', RequirementController::class);
+Route::resource('api/upload', UploadController::class);
 
 require __DIR__ . '/auth.php';
 
