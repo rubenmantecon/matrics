@@ -180,42 +180,44 @@ body.night ul.pagination li.pageNumber a {
 /* SEMAFORO*/
 
 .statusok {
-      border-radius: 100%;
-      background: radial-gradient(#2CEC59, #0C3717);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      padding: 2vh;
-      width: 2vh;
-      height: 2vh;
+    background: radial-gradient(#2CEC59, #0C3717);
+    width: 3vh;
+    height: 3vh;
+    -moz-border-radius: 50%;
+    pointer-events: none;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
 }
 
 .statuscancel {
-      border-radius: 100%;
-      background: radial-gradient(#F42626, #3A0909);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      padding: 2vh;
-      width: 2vh;
-      height: 2vh;
+    background: radial-gradient(#F42626, #3A0909);
+    width: 3vh;
+    height: 3vh;
+    -moz-border-radius: 50%;
+    pointer-events: none;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
 }
 .statusprocesing {
-      border-radius: 100%;
-      background: radial-gradient(#F58027, #552C0D);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      padding: 2vh;
-      width: 2vh;
-      height: 2vh;
+    background: radial-gradient(#F58027, #552C0D);
+    width: 3vh;
+    height: 3vh;
+    -moz-border-radius: 50%;
+    pointer-events: none;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
 }
 .statusnothing {
-      border-radius: 100%;
-      background: radial-gradient(#E9E9E9, #2F2F2F);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      pointer-events: none;
-      padding: 10px;
-      width: 10px;
-      height: 10px;
+    background: radial-gradient(#E9E9E9, #2F2F2F);
+    width: 3vh;
+    height: 3vh;
+    -moz-border-radius: 50%;
+    pointer-events: none;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+
+}
+
 }
 
 /* BODY */
