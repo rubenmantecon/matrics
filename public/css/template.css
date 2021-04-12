@@ -99,6 +99,16 @@ body.night .container-form-admin {
 
 body.night .container-form-admin .label-group-admin label {
     color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: bold;
+}
+
+body.night .container-form-user {
+    background-color: var(--BGdarkSop) !important;
+}
+
+body.night .container-form-user .label-group-admin label {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: bold;
 }
 
 body.night .option {
@@ -188,41 +198,41 @@ body.night ul.pagination li.pageNumber a {
 /* SEMAFORO*/
 
 .statusok {
-      border-radius: 100%;
-      background: radial-gradient(#2CEC59, #0C3717);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+    border-radius: 100%;
+    background: radial-gradient(#2cec59, #0c3717);
+    /*border:20px solid #24A442;*/
+    /*background: #21ba45;*/
+    padding: 5vh;
+    width: 5vh;
+    height: 5vh;
 }
 
 .statuscancel {
-      border-radius: 100%;
-      background: radial-gradient(#F42626, #3A0909);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+    border-radius: 100%;
+    background: radial-gradient(#f42626, #3a0909);
+    /*border:20px solid #24A442;*/
+    /*background: #21ba45;*/
+    padding: 5vh;
+    width: 5vh;
+    height: 5vh;
 }
 .statusprocesing {
-      border-radius: 100%;
-      background: radial-gradient(#F58027, #552C0D);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+    border-radius: 100%;
+    background: radial-gradient(#f58027, #552c0d);
+    /*border:20px solid #24A442;*/
+    /*background: #21ba45;*/
+    padding: 5vh;
+    width: 5vh;
+    height: 5vh;
 }
 .statusnothing {
-      border-radius: 100%;
-      background: radial-gradient(#E9E9E9, #2F2F2F);
-      /*border:20px solid #24A442;*/
-      /*background: #21ba45;*/
-      padding: 5vh;
-      width: 5vh;
-      height: 5vh;
+    border-radius: 100%;
+    background: radial-gradient(#e9e9e9, #2f2f2f);
+    /*border:20px solid #24A442;*/
+    /*background: #21ba45;*/
+    padding: 5vh;
+    width: 5vh;
+    height: 5vh;
 }
 
 /* BODY */
@@ -931,6 +941,16 @@ ol.list a:before {
     margin: 0 auto;
     padding-top: 20px;
     box-shadow: 0 0 12px 2px black;
+}
+
+.container-form-user {
+    background: #fff;
+    border-radius: 10px;
+    position: relative;
+    width: 60vw;
+    margin: 0 auto;
+    padding-top: 20px;
+    box-shadow: 0 0 4px 2px black;
 }
 
 form.form {

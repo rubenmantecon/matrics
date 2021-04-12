@@ -9,12 +9,12 @@
         {{ Breadcrumbs::render('profile') }}
     @endsection
     <div class="card">
-        <div class="card-body items-center">
+        <div class="card-body sm:items-center p-20">
             <form wire:submit.prevent="updateProfileInformation" role="form">
                 <div class="flex flex-wrap">
                     <div class="form-group w-full px-2 md:w-1/2">
                         <label class="block mb-1" for="state.email">NOM</label>
-                        <pclass="w-full h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"><-nom-></p>
+                        <p class="w-full h-10 px-3 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"><-nom-></p>
                     </div>
                 
                     <div class="form-group w-full px-2 md:w-1/2">
