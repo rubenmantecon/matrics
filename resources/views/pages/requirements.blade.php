@@ -2,7 +2,7 @@
     <div>
         <form action="" method="post" required>
             <select name="profile_requirements" id="prof_req">
-                @foreach ($profile_req as $prof)
+                @foreach ($profile_req ?? '' as $prof)
                     <option value="">{{$prof->name}}</option>
                 @endforeach
             </select>
