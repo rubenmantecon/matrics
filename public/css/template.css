@@ -93,6 +93,12 @@ body.night {
     color: var(--darkText);
 }
 
+body.night .statesdiv {
+    background-color: var(--BGdarkSop) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: bold;
+}
+
 body.night .container-form-admin {
     background-color: var(--BGdarkSop) !important;
 }
