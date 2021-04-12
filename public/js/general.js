@@ -1,8 +1,8 @@
 /* FUNCTIONS */
 /**
  * @description "check if value is null"
- * @param {String} element 
- * @return {Boolean} 
+ * @param {String} element
+ * @return {Boolean}
  */
  function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
@@ -10,7 +10,7 @@
 
 /**
  * @description "get parameter value from url"
- * @param {String} param 
+ * @param {String} param
  */
 function getUrlParameter(param) {
     let searchParams = new URLSearchParams(window.location.search);
@@ -42,9 +42,9 @@ let cont = 1;
 /**
  * @description "generate messages with different types"
  * @param {String} type ("success", "error", "warning", "info")
- * @param {String} text 
+ * @param {String} text
  * @param {String} parentName (XPath route for JQuery)
- * @param {Number} seconds 
+ * @param {Number} seconds
  */
 function generateMessages(type, text, parentName, seconds) {
     const icons = {
@@ -65,7 +65,7 @@ function generateMessages(type, text, parentName, seconds) {
  * @description "countdown for remove the message"
  * @param {String} parentName (XPath route for JQuery)
  * @param {Number} id "auto generate ID"
- * @param {Number} seconds 
+ * @param {Number} seconds
  */
 function countdown(parentName, id, seconds) {
     setTimeout(() => {
@@ -116,6 +116,32 @@ function loadLogsPage() {
         }
     });
 }
+
+/* CREATE ADMIN */
+/**
+ * @description "load all the functionalities of the create admin in HTML"
+ */
+ function loadCreateAdminPage() {
+     $('form').submit(function (e) {
+        console.log('hey');
+        e.preventDefault();
+        e.stopPropagation();
+        let msg = "";
+        if (isNull($("input#username").val())) msg += "El camp 'Nom d'usuari' no pot estar buit.\n";
+        if (isNull($("input#firstname").val())) msg += "El camp 'Nom' no pot estar buit.\n";
+        if (isNull($("input#lastname1").val())) msg += "El camp 'Cognom' no pot estar buit.\n";
+        if (isNull($("input#lastname2").val())) msg += "El camp 'Segon cognom' no pot estar buit.\n";
+        if (isNull($("input#password").val())) msg += "El camp 'Contrasenya' no pot estar buit.\n";
+        if (isNull($("input#password_confirmation").val())) msg += "El camp 'Confirma contrasenya' no pot estar buit.\n";
+        if ($("input#password_confirmation").val() != $("input#password").val()) msg += "Les contrasenyes no coincideixen.\n";
+
+        if (msg) {
+            generateMessages("error", msg, ".container-messages", 5);
+            return false;
+        } else e.target.submit();
+     })
+}
+
 
 /* STUDENTS */
 /**
@@ -280,36 +306,6 @@ function loadCareerPage() {
         },
         error: (res) => {
             console.log(res.responseJSON);
-        }
-    });
-}
-
-/**
- * @description "load all the data of the logs end point in the tbody HTML"
- */
-function loadLogsPage() {
-    $.ajax({
-        url: $("meta[name='url']").attr("content"),
-        method: 'GET',
-        headers: {
-            token: $("meta[name='_token']").attr("content"),
-        },
-        success: (res) => {
-            for (const item of res) {
-                console.log(item);
-                var tmp = JSON.parse(item.message);
-                var output_badge = "";
-                if (item.level == 200) {
-                    output_badge = "<span class=\"text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1\">Info</span>";
-                }
-                $("tbody").append(insertNewRow(
-                    item.id, item.name, output_badge, tmp.message,
-                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
-                    "logs"
-                ));
-            }
-            $('tbody').fadeIn(300);
-            $("body").addClass("body-logs");
         }
     });
 }
@@ -644,7 +640,7 @@ function updateRowInDB(data, page) {
 
 /**
  * @description "update tbody of term HTML table"
- * @param {Element[]} cols 
+ * @param {Element[]} cols
  */
 function updateTableRowTerm(cols) {
     $("tbody").html('');
@@ -671,7 +667,7 @@ function updateTableRowTerm(cols) {
 
 /**
  * @description "update tbody of career HTML table"
- * @param {Element[]} cols 
+ * @param {Element[]} cols
  */
 function updateTableRowCareers(cols) {
     $("tbody").html('');
@@ -747,6 +743,8 @@ $(function () {
         })
     } else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
+    } else if (location.pathname.includes("admin/dashboard/createAdmin")) {
+        loadCreateAdminPage();
     } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();

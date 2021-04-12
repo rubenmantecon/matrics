@@ -27,7 +27,10 @@
                 <x-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
                     {{ __('Alumnes') }}
                 </x-nav-link>
-            @endif
+                <x-nav-link href="/admin/dashboard/createAdmin" :active="request()->routeIs('createAdmin')">
+                    {{ __('Crea admin') }}
+                </x-nav-link>
+            @else
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Inici') }}
                 </x-nav-link>
@@ -37,6 +40,7 @@
                 <x-nav-link href="/dashboard/documents" :active="request()->routeIs('/dashboard/documents')">
                     {{ __('Documents') }}
                 </x-nav-link>
+            @endif
             </div>
             @if(Auth::user()->role == 'admin')
             <p class="user"><i class="fas fa-user"></i> Admin</p>
@@ -44,7 +48,7 @@
             <p class="user"><i class="fas fa-user"></i> Student</p>
             @endif
 
-            <!-- Settings Dropdown -->
+            <!-- Settings Dropdown-->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -109,6 +113,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="/admin/dashboard/students" :active="request()->routeIs('students')">
                 {{ __('Alumnes') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="/admin/dashboard/createAdmin" :active="request()->routeIs('createAdmin')">
+                {{ __('Crear admin') }}
             </x-responsive-nav-link>
         </div>
 

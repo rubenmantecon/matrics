@@ -11,6 +11,7 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ImportController;
 use App\Models\Profile_req;
+use App\Http\Controllers\RegisterAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,8 @@ Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
 Route::resource('api/import', ImportController::class);
+Route::resource('api/createAdmin', RegisterAdminController::class);
+
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
@@ -68,7 +71,7 @@ Route::name('admin') /*admin/dashboard*/
         require __DIR__ . '/admin.php';
     });
 
-    /*BREADCRUMB*/
+/*BREADCRUMB*/
 
 // Dashboard
 Breadcrumbs::for('home', static function ($trail) {
@@ -84,5 +87,5 @@ Breadcrumbs::for('profile', static function ($trail) {
 // Dashboard > Documents
 Breadcrumbs::for('documents', static function ($trail) {
     $trail->parent('home');
-    $trail->push('Documentació', '/dashboard/documents');
+    $trail->push('Documents', '/dashboard/documents');
 });
