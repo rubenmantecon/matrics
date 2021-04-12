@@ -9,8 +9,13 @@ use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ImportController;
+<<<<<<< HEAD
 use App\Http\Controllers\UfController;
 use App\Models\Enrolment_uf;
+use App\Http\Controllers\MpsController;
+=======
+use App\Http\Controllers\UploadController;
+>>>>>>> origin/dev-aaron
 
 /*
 |--------------------------------------------------------------------------
@@ -42,9 +47,15 @@ Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
 Route::resource('api/import', ImportController::class);
+<<<<<<< HEAD
 Route::resource('api/ufs', UfController::class);
 Route::resource('api/enrolments', EnrolmentController::class);
 Route::resource('api/enrolment_ufs', Enrolment_ufController::class);
+Route::resource('api/mps', MpsController::class);
+
+=======
+Route::resource('api/upload', UploadController::class);
+>>>>>>> origin/dev-aaron
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
