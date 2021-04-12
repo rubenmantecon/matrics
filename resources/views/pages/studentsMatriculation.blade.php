@@ -8,8 +8,9 @@
         {{ Breadcrumbs::render('students') }}
     @endsection
     <div class="enrolments">
-        <form class="form-alumn-data" action="#" method="post">
+        <form class="form-alumn-data" action="#" method="put">
             @csrf
+            <input type="hidden" id="changed" name="changed" value="false">
             <!-- RECOMENDACIOND DE BACKEND ADMIN CREAR UN COLLAPSIBLE PARA ESTAS OPCIONES CON EL NOMBRE "DETALLS D'ALUMNE" -->
             <div class="row">
                 <div class="label-group">
@@ -53,7 +54,7 @@
                 <p>FALTA QUE EL FRONT DE LOS ALUMNOS HAGA LO SUYO PARA PODER VER LOS REQUERIMINETOS</p>
             </div>
             
-            <button class="btn cancel">Cancelar</button>
+            <a href="/admin/dashboard/students" class="btn cancel">Cancelar</a>
             <button class="btn save">Desar</button>
         </form>
     </div>

@@ -327,7 +327,6 @@ function loadAdminMatriculationPage() {
             user_id: userId,
         },
         success: (res) => {
-            console.log(res, $("#name"));
             $("#name").val(res.user.firstname);
             $("#surname1").val(res.user.lastname1);
             $("#surname2").val(res.user.lastname2);
@@ -339,6 +338,30 @@ function loadAdminMatriculationPage() {
             }
             $('tbody').fadeIn(300);
             $("body").addClass("body-logs");
+
+
+            $(".form-alumn-data").submit((e) => {
+                e.preventDefault();
+                let changed = false;
+                if ($("#name").val() !== res.user.firstname) {
+                    changed = true;
+                }
+                if ($("#surname1").val() !== res.user.lastname1) {
+                    changed = true;
+                }
+                if ($("#surname2").val() !== res.user.lastname2) {
+                    changed = true;
+                }
+                if ($("#mail").val() !== res.user.email) {
+                    changed = true;
+                }
+                if ($("#username").val() !== res.user.name) {
+                    changed = true;
+                }
+                $("#changed").val(changed);
+
+                // location.href = "/admin/dashboard/students";
+            });
         }
     });
 }

@@ -174,18 +174,18 @@ class EnrolmentController extends Controller
                 $enrolment->career_id = $request->career_id;
                 $enrolment->dni = $request->dni;
                 $enrolment->state = $request->state; // pending or validated
-                $enrolment->touch();
+                // $enrolment->touch();
 
-                $status = $enrolment->save();
-                if ($status) {
-                    $data = ["status" => "Matricula actualitzada correctament."];
-                    Log::channel('dblogging')->info("Ha actualizado una matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
-                } else {
-                    $data = ["status" => "Error en actualitzar enrolment."];
-                }
+                // $status = $enrolment->save();
+                // if ($status) {
+                //     $data = ["status" => "Matricula actualitzada correctament."];
+                //     Log::channel('dblogging')->info("Ha actualizado una matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
+                // } else {
+                //     $data = ["status" => "Error en actualitzar enrolment."];
+                // }
             }
         }
-        return response()->json($data);
+        return response()->json($request);
     }
 
     /**
