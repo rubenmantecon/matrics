@@ -25,4 +25,7 @@ class Career extends Model
     public function mps() {
         return $this->hasMany(Mp::class);
     }
+    
+    // Mass assignable attributes
+    protected $fillable = ['term_id'];
 }
