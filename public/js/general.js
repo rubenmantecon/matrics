@@ -42,7 +42,7 @@ function filterStudentsPage() {
     }
 	$.ajax({
 		
-			url: '/api/students?filter=' + JSON.stringify(data),
+			url: '/api/students?filter=' + encodeURI(JSON.stringify(data)),
 			method: "GET",
 			headers: {
 					token: $("meta[name='_token']").attr("content"),
