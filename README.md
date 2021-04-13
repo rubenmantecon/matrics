@@ -15,7 +15,7 @@ Portal web de matriculaciones del lES Esteve Terradas i Illa
 - ```php artisan key:generate```
 - ```npm start```
 ## Generate Admin Account
--To fast-generate an Admin Account just run the next command in the instalation folder:
+To fast-generate an Admin Account just run the next command in the instalation folder:
 - ```php artisan createadmin```
 
 
