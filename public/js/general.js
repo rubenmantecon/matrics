@@ -367,6 +367,7 @@ function loadTermPage() {
         success: (res) => {
             $("tbody").css("display", "none").html("");
             if (res.length > 0) {
+                let contRows = 0;
                 for (const item of res) {
                     $("tbody").append(
                         insertNewRow(
@@ -396,7 +397,7 @@ function loadTermPage() {
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
+                        <td colspan="10"><p>No s'ha trobat cap curs.</p></td>
                     </tr>`
                 );
             }
@@ -409,10 +410,10 @@ function loadTermPage() {
                 .fadeIn(300);
 
             $("body").addClass("body-term");
-            $("#new, #edit").on("click", (e) =>
-                rowEventEditAndNew(e.target, "terms")
-            );
-        },
+            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "terms"));
+            console.log($(".clone"));
+            $(".clone").on("click", (e) => eventCloneCareer(e.target, res));
+        }
     });
 }
 
@@ -603,7 +604,7 @@ function loadImportPage(careers) {
             </div>
             <label class="text" for="check-${cont}">${key} - ${careers[key]["NOM_CICLE_FORMATIU"]}</label>
             <div class="row-bg"></div>`;
-            rows += insertNewRow(dataRow, "import");
+            rows += insertNewRow(dataRow, null, "import");
             cont++;
         }
     }
@@ -760,6 +761,33 @@ function importCSV(page) {
 }
 
 /**
+ *  @description "event for clone the term"
+ */
+function eventCloneCareer(row, json) {
+    const rowSelected = $(row).closest("button").attr("data");
+    const termId = json[rowSelected].id;
+    let btn = $(row).closest("button");
+    btn.html('<i class="fas fa-load" aria-hidden="true"></i>');
+    btn.addClass("loading");
+    $.ajax({
+        url: `/api/duplicate/${termId}`,
+        method: 'POST',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        data: {
+            id: termId
+        },
+        success: (res) => {
+            location.reload();
+        },
+        error: (res) => {
+            console.log(res);
+        }
+    });
+}
+
+/**
  * @description "callback function event for create or edit term"
  * @param {Element} tag "Event onClick: DOM Element tag pressed"
  * @param {String} page "actual page"
@@ -887,7 +915,8 @@ function insertNewRow(...params) {
     let lastParam = params[params.length - 1];
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
+                <td><button class="btn save clone" data="${params[params.length-2]}" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
     } else if (lastParam == "careers") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/${lastParam}/delete/${
