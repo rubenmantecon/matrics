@@ -8,7 +8,6 @@ use App\Http\Controllers\Enrolment_ufController;
 use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\UfController;
 use App\Models\Enrolment_uf;
