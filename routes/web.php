@@ -12,6 +12,7 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\UfController;
 use App\Models\Enrolment_uf;
 use App\Http\Controllers\MpsController;
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,7 @@ Route::resource('api/enrolments', EnrolmentController::class);
 Route::resource('api/enrolment_ufs', Enrolment_ufController::class);
 Route::resource('api/mps', MpsController::class);
 
+Route::resource('api/upload', UploadController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
