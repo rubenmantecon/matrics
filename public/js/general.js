@@ -9,6 +9,103 @@ function isNull(element) {
 }
 
 /**
+ * @description "wrapper for native fetch()"
+ */
+async function ajaxCall(url, verb, data) {
+    let response = await fetch(url, {
+        method: verb,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: $("meta[name='_token']").attr("content"),
+        },
+        body: JSON.stringify(data),
+    });
+    response = await response.json();
+    return response;
+}
+
+/**
+ * @description "Get filter keys and values"
+ */
+
+
+function filterStudentsPage() {
+	data = {};
+    formChildren = $("section.filter > *");
+    for (const elem of formChildren) {
+			if (elem.value != "") {
+        data[elem.name] = elem.value;
+				console.log(data[elem.name])
+			}
+    }
+	$.ajax({
+		
+			url: '/api/students?filter=' + encodeURI(JSON.stringify(data)),
+			method: "GET",
+			headers: {
+					token: $("meta[name='_token']").attr("content"),
+			},
+			success: (res) => {
+					$("tbody").css("display", "none").html("");
+					if (res.data.length > 0) {
+							for (const item of res.data) {
+									console.log(item);
+									$("tbody").append(
+											insertNewRow(
+													item.firstname,
+													item.lastname1 + " " + item.lastname2,
+													item.email,
+													item.name,
+													item.id,
+													"students"
+											)
+									);
+							}
+							for (const item of res.links) {
+									if (item.label === "&laquo; Previous")
+											item.label = '<i class="fas fa-angle-left"></i>';
+									else if (item.label === "Next &raquo;")
+											item.label = '<i class="fas fa-angle-right"></i>';
+
+									if (item.active)
+											$("ul.pagination").append(
+													`<li class="pageNumber active no-click"><a>${item.label}</a></li>`
+											);
+									else if (!item.url)
+											$("ul.pagination").append(
+													`<li class="pageNumber no-click"><a>${item.label}</a></li>`
+											);
+									else
+											$("ul.pagination").append(
+													`<li class="pageNumber"><a href="${
+															location.pathname
+													}?page=${item.url.split("?page=")[1]}">${
+															item.label
+													}</a></li>`
+											);
+							}
+					} else {
+							$("tbody").append(
+									`<tr>
+											<td colspan="6"><p>Sense Alumnes.</p></td>
+									</tr>`
+							);
+					}
+
+					$("tbody").fadeIn(300);
+					$("body").addClass("body-logs");
+			},
+			error: (res) => {
+					console.log(res);
+			},
+	});
+}
+
+
+
+/**
  * @description "get parameter value from url"
  * @param {String} param
  */
