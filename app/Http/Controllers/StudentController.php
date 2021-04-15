@@ -51,21 +51,21 @@ class StudentController extends Controller
 		$data = ['status' => 'Unauthorized, error 503'];
 		$token = $request->header('token');
 
+		// Check if the file contains csv extensión.
+		if (!str_contains($request->file, 'data:text/csv;')) {
+			$res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
+			return response()->json($res);
+		}
+
 		if ($token) {
 			$user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
-
 			if ($user['token']) {
-
 				if (isset($request->import_file)) {
 					$tmp = base64_decode(explode(",", $request->file)[1]);
-
 					$array = array_map("str_getcsv", explode("\n", $tmp));
-
 					$array = array_slice($array, 0, -1);
-
 					$q = 0;
 					$status_controller = ["okey" => 0, "failed" => 0];
-
 					$interesting_index = ["firstname" => null, "lastname1" => null, "lastname2" => null, "email" => null];
 
 					foreach ($array as $element) {
@@ -83,80 +83,74 @@ class StudentController extends Controller
 							// validate, if someone is not valid add to $status_controller["failed"] and skip it
 							if (empty($element[$interesting_index["firstname"]])) {
 								$status_controller["failed"]++;
-								continue;
+								//continue;
 							}
 							if (empty($element[$interesting_index["lastname1"]])) {
 								$status_controller["failed"]++;
-								continue;
+								//continue;
 							}
 							if (empty($element[$interesting_index["lastname2"]])) {
 								$status_controller["failed"]++;
-								continue;
+								//continue;
 							}
 							if (empty($element[$interesting_index["email"]])) {
 								$status_controller["failed"]++;
-								continue;
+								// continue;
 							}
 							if (empty($element[$interesting_index["career_id"]])) {
 								$status_controller["failed"]++;
-								continue;
+								// continue;
 							}
-							if (empty($interesting_index["identificacion"]["dni"])) {
-								if (empty($interesting_index["identificacion"]["nie"])) {
-									if (empty($interesting_index["identificacion"]["pass"])) {
-										$status_controller["failed"]++;
-										continue;
-									}
-									else{
-										$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["pass"];
-									}
-								}
-								else{
-									$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["nie"];
-								}
-								
-							}
-							else{
+
+							// Check what type of identification is the user using.
+							if (!empty($interesting_index["identificacion"]["dni"])) {
 								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["dni"];
+							} else if (!empty($interesting_index["identificacion"]["nie"])) {
+								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["nie"];
+							} else if (!empty($interesting_index["identificacion"]["pass"])) {
+								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["pass"];
+							} else {
+								$status_controller["failed"]++;
+								// continue;
 							}
 
 							// lets check if the career exists
 							$response = Career::select("id", "term_id")->where('code', $element[$interesting_index["career_id"]])->orderBy("term_id", "desc")->get();
-
 							if (sizeof($response) == 0) {
 								// We don't have that actual career, just skip it for now
 								$status_controller["failed"]++;
-								continue;
+								// continue;
 							}
 
-							// Insert user in the db
-							$user = new User;
-							$user->name = strtolower(str_replace(" ", "", substr($element[$interesting_index["firstname"]], 0, 1) . $element[$interesting_index["firstname"]] . $element[$interesting_index["lastname2"]]));
-							$user->firstname = $element[$interesting_index["firstname"]];
-							$user->lastname1 = $element[$interesting_index["lastname1"]];
-							$user->lastname2 = $element[$interesting_index["lastname2"]];
-							$user->email = $element[$interesting_index["email"]];
-							/* TODO Mejorar contraseña default a DNI */
-							$user->password = Hash::make("ieti" . date("Y"));
-							/* Para salir del paso */
-							$user->token = hash("sha256", $element[$interesting_index["email"]]);
+							// Search user by mail or create it.
+							$user = User::firstOrCreate(
+								['email' => $element[$interesting_index["email"]]],
+								[
+									'name' => utf8_encode(strtolower(str_replace(" ", "", substr($element[$interesting_index["firstname"]], 0, 1) . $element[$interesting_index["lastname1"]]))),
+									'firstname' => $element[$interesting_index["firstname"]],
+									'lastname1' => $element[$interesting_index["lastname1"]],
+									'lastname2' => $element[$interesting_index["lastname2"]],
+									'password' => Hash::make("ieti" . date("Y")),
+									'token' => hash("sha256", $element[$interesting_index["email"]])
+								]
+							);
 
-							$status = $user->save();
-							if ($status) {
-							
+							if ($user) {
 								$response = $response[0];
-							
-								$enrollment = new Enrolment;
-								$enrollment->user_id = $user->id;
-								$enrollment->term_id = $response->term_id;
-								$enrollment->career_id = $response->id;
-								$enrollment->dni = $element[$interesting_index["identificacion"]["actual"]];
-								$enrollment->state = "unregistered";
-								$enrollment->created_at = $request->created;
-								$enrollment->updated_at = $request->updated;
-
-								$enrollment->save();
-
+								// Create Enrolment or update it if exists.
+								$enrollment = Enrolment::updateOrCreate(
+									[
+										'dni' => $element[$interesting_index['identificacion']['actual']],
+										'term_id' => $response->term_id,
+										'career_id' => $response->id
+									],
+									[
+										'user_id' => $user->id,
+										'state' => 'unregistered',
+										'created_at' => $request->created,
+										'updated_at' => $request->updated
+									]
+								);
 								$status_controller["okey"]++;
 							} else {
 								$status_controller["failed"]++;

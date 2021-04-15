@@ -8,10 +8,18 @@ use App\Models\Log;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\Enrolment_ufController;
+use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\UfController;
+use App\Models\Enrolment_uf;
+use App\Http\Controllers\MpsController;
+use App\Http\Controllers\Profile_reqController;
+use App\Http\Controllers\RequirementController;
 use App\Models\Profile_req;
+use App\Http\Controllers\RegisterAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +71,14 @@ Route::resource('api/careers', CareerController::class);
 Route::resource('api/logs', LogController::class);
 Route::resource('api/students', StudentController::class);
 Route::resource('api/import', ImportController::class);
+Route::resource('api/ufs', UfController::class);
+Route::resource('api/enrolments', EnrolmentController::class);
+Route::resource('api/enrolment_ufs', Enrolment_ufController::class);
+Route::resource('api/mps', MpsController::class);
+Route::resource('api/profile_reqs', Profile_reqController::class);
+Route::resource('api/requirements', RequirementController::class);
+Route::resource('api/createAdmin', RegisterAdminController::class);
+
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
@@ -72,7 +88,10 @@ Route::name('admin') /*admin/dashboard*/
         require __DIR__ . '/admin.php';
     });
 
-    /*BREADCRUMB*/
+Route::get('auth/redirect', 'App\Http\Controllers\SocialController@redirect');
+Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
+
+/*BREADCRUMB*/
 
 // Dashboard
 Breadcrumbs::for('home', static function ($trail) {
@@ -88,5 +107,6 @@ Breadcrumbs::for('profile', static function ($trail) {
 // Dashboard > Documents
 Breadcrumbs::for('documents', static function ($trail) {
     $trail->parent('home');
-    $trail->push('Documentació', '/dashboard/documents');
+    $trail->push('Documents', '/dashboard/documents');
 });
+
