@@ -24,58 +24,8 @@ class StudentController extends Controller
 		$token = $request->header('token');
 		if ($token) {
 			$user = User::select("token")->where('token', $token)->get()[0];
-			if ($user['token']){
-				if($request->filter){
-					// There is some filter present!
-					$filters = json_decode($request->filter, true);				
-					$filters = is_array($filters) ? $filters : array($filters);
-					
-					$allowed_filters = ["firstname", "lastname1", "lastname2", "order_firstname", "order_firstname", "order_lastname1", "order_lastname2"];
-					
-					if(sizeof(array_diff(array_keys($filters), $allowed_filters)) == 0){
-						$students = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id');
-						foreach($filters as $filter => $value){
-							if($filter == "firstname"){
-								$students->where("users.firstname", $value);
-							}
-							elseif($filter == "lastname1"){
-								$students->where("users.lastname1", $value);
-							}
-							elseif($filter == "lastname2"){
-								$students->where("users.lastname2", $value);
-							}
-							elseif($filter == "order_firstname"){
-								if($value == "DESC"){
-									$students->orderBy('users.firstname', 'DESC');
-								}
-								else{
-									$students->orderBy('users.firstname', 'ASC');
-								}
-							}
-							elseif($filter == "order_lastname1"){
-								if($value == "DESC"){
-									$students->orderBy('users.lastname1', 'DESC');
-								}
-								else{
-									$students->orderBy('users.lastname1', 'ASC');
-								}
-							}
-							elseif($filter == "order_lastname2"){
-								if($value == "DESC"){
-									$students->orderBy('users.lastname2', 'DESC');
-								}
-								else{
-									$students->orderBy('users.lastname2', 'ASC');
-								}
-							}						}
-						$data = $students->paginate(20)->onEachSide(2);
-					}
-				}
-				else{
-					$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
-				}
-
-			}
+			if ($user['token'])
+				$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
 		}
 		return response()->json($data);
 	}
@@ -115,10 +65,10 @@ class StudentController extends Controller
 					$array = array_map("str_getcsv", explode("\n", $tmp));
 					$array = array_slice($array, 0, -1);
 					$q = 0;
-					$status_controller = ["okey" => 0, "failed" => 0];
+					$status_controller = ["success" => 0, "warnings" => [], "errors" => [], 'system_errors' => []];
 					$interesting_index = ["firstname" => null, "lastname1" => null, "lastname2" => null, "email" => null];
 
-					foreach ($array as $element) {
+					foreach ($array as $key => $element) {
 						if ($q == 0) {
 							// search for certain column names
 							$interesting_index["firstname"] = array_search("Nom", $element);
@@ -130,46 +80,51 @@ class StudentController extends Controller
 							$interesting_index["identificacion"]["nie"] = array_search("NIE", $element);
 							$interesting_index["identificacion"]["pass"] = array_search("PASS", $element);
 						} else {
-							// validate, if someone is not valid add to $status_controller["failed"] and skip it
+							$line_status = ['id' => "$key", 'error' => [], "warning" => []];
 							if (empty($element[$interesting_index["firstname"]])) {
-								$status_controller["failed"]++;
-								//continue;
+								$line_status['error'][] = "firstname";
 							}
 							if (empty($element[$interesting_index["lastname1"]])) {
-								$status_controller["failed"]++;
-								//continue;
+								$line_status['error'][] = "lastname1";
 							}
 							if (empty($element[$interesting_index["lastname2"]])) {
-								$status_controller["failed"]++;
-								//continue;
+								$line_status['error'][] = "lastname2";
 							}
 							if (empty($element[$interesting_index["email"]])) {
-								$status_controller["failed"]++;
-								// continue;
+								$line_status["warning"][] = "email";
 							}
 							if (empty($element[$interesting_index["career_id"]])) {
-								$status_controller["failed"]++;
-								// continue;
+								$line_status["warning"][] = "career_id";
 							}
 
 							// Check what type of identification is the user using.
 							if (!empty($interesting_index["identificacion"]["dni"])) {
 								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["dni"];
+								$line_status["warning"][] = "DNI";
 							} else if (!empty($interesting_index["identificacion"]["nie"])) {
 								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["nie"];
+								$line_status["warning"][] = "NIE";
 							} else if (!empty($interesting_index["identificacion"]["pass"])) {
 								$interesting_index["identificacion"]["actual"] =  $interesting_index["identificacion"]["pass"];
+								$line_status["warning"][] = "PASS";
 							} else {
-								$status_controller["failed"]++;
-								// continue;
+								$line_status['error'][] = "DNI";
+								$line_status['error'][] = "PASS";
+								$line_status['error'][] = "NIE";
+							}
+
+							// If a line has 1 error or more, add to error array.
+							if (count($line_status['error']) > 0) {
+								$status_controller['errors'][] = $line_status;
+								continue;
 							}
 
 							// lets check if the career exists
 							$response = Career::select("id", "term_id")->where('code', $element[$interesting_index["career_id"]])->orderBy("term_id", "desc")->get();
 							if (sizeof($response) == 0) {
 								// We don't have that actual career, just skip it for now
-								$status_controller["failed"]++;
-								// continue;
+								$status_controller['system_errors'][] = "No s'ha trobat ningún Clicle amb la id " . $element[$interesting_index['career_id']];
+								continue;
 							}
 
 							// Search user by mail or create it.
@@ -201,34 +156,43 @@ class StudentController extends Controller
 										'updated_at' => $request->updated
 									]
 								);
-								$status_controller["okey"]++;
+								$status_controller["success"]++;
 							} else {
-								$status_controller["failed"]++;
+								$status_controller['system_errors'][] = "Hi ha agut un error durant la busqueda/creació del usuari de la linea $key.";
+								// TODO: Error de importación de inscripción.
 							}
 						}
 						$q++;
 					}
-
-					if ($status_controller["okey"] + $status_controller["failed"] > 0) {
-						if ($status_controller["okey"] > 0) {
-							if ($status_controller["failed"] > 0) {
-								$data = ["status" => "warning", "text" => "Importació d'usuaris completada correctament.<br>{$status_controller["okey"]} afegits<br>{$status_controller["failed"]} no s'han afegit."];
-							} else {
-								$data = ["status" => "success", "text" => "Importació d'usuaris completada correctament.<br>{$status_controller["okey"]} afegits."];
-							}
-						} else {
-							$data = ["status" => "error", "text" => "Importació d'usuaris fallida.<br>{$status_controller["failed"]} no s'han afegit."];
-						}
+					/**
+					 * Casos
+					 * Todo bien- BASE
+					 * Todo bien con warnings 
+					 * Todo bien con errores
+					 * Todo bien con warnings/errores
+					 */
+					if (count($status_controller["errors"]) > 0 || count($status_controller["system_errors"]) > 0) {
+						$data = ["status" => "error", "text" => "Importació d'usuaris fallida.", "errors" => $status_controller["errors"], 'system_errors' => $status_controller["system_errors"]];
+						return response()->json($data);
+					} else if (count($status_controller["warnings"]) > 0) {
+						$data = ["status" => "warning", "text" => "Importació d'usuaris completada correctament.<br>{$status_controller["okey"]} afegits<br>{$status_controller["failed"]} no s'han afegit."];
+						return response()->json($data);
+					} else if ($status_controller["okei"] > 0) {
+						$data = ["status" => "success", "text" => "Importació d'usuaris completada correctament.<br>{$status_controller["okey"]} afegits."];
+						return response()->json($data);
 					} else {
 						$data = ["status" => "error", "text" => "Importació d'usuaris fallida, no s'han trobat alumnes al CSV."];
+						return response()->json($data);
 					}
-
-
-					//Log::channel('dblogging')->info("Ha importado alumnos (", ["user_id" => Auth::id(), "term_id" => $term->id]);
-
 				} else {
+					$data = ["status" => "error", "text" => "No s'ha trobat l'arxiu csv."];
+					return response()->json($data);
 				}
+			} else {
+				$data = ['status' => 'User token not found.'];
+				return response()->json($data);
 			}
+		} else {
 			return response()->json($data);
 		}
 	}

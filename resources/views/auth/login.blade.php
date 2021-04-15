@@ -28,8 +28,17 @@
             <div class="label-group">
                 <button class="btn secondary-btn">Accedir</button>
             </div>
+            <div class="grid grid-cols-1 divide-y  divide-white-500">
+                <div class="mt-4"><i></i></div>
+                <div class="form-group row mb-0">
+                    <div class="col-md-8 mt-6 offset-md-4">
+                        <a href="{{ url('/auth/redirect') }}" class="btn primary-btn"><i class="fab fa-google"></i> Google</a>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
+    <hr>
     {{-- <x-slot name="logo">
             <a href="/">
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />

@@ -27,6 +27,98 @@ async function ajaxCall(url, verb, data) {
 }
 
 /**
+ * @description "Use values of designated text inputs to refresh table according to filter"
+ */
+function filterStudentsPage() {
+    data = {};
+    formChildren = $("section.filter > *");
+    for (const elem of formChildren) {
+        if (elem.value != "") {
+            data[elem.name] = elem.value;
+            console.log(data[elem.name]);
+        }
+    }
+    $.ajax({
+        url: "/api/students?filter=" + encodeURI(JSON.stringify(data)),
+        method: "GET",
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html("");
+            if (res.data.length > 0) {
+                for (const item of res.data) {
+                    console.log(item);
+                    $("tbody").append(
+                        insertNewRow(
+                            item.firstname,
+                            item.lastname1 + " " + item.lastname2,
+                            item.email,
+                            item.name,
+                            item.id,
+                            "students"
+                        )
+                    );
+                }
+                for (const item of res.links) {
+                    if (item.label === "&laquo; Previous")
+                        item.label = '<i class="fas fa-angle-left"></i>';
+                    else if (item.label === "Next &raquo;")
+                        item.label = '<i class="fas fa-angle-right"></i>';
+
+                    if (item.active)
+                        $("ul.pagination").append(
+                            `<li class="pageNumber active no-click"><a>${item.label}</a></li>`
+                        );
+                    else if (!item.url)
+                        $("ul.pagination").append(
+                            `<li class="pageNumber no-click"><a>${item.label}</a></li>`
+                        );
+                    else
+                        $("ul.pagination").append(
+                            `<li class="pageNumber"><a href="${
+                                location.pathname
+                            }?page=${item.url.split("?page=")[1]}">${
+                                item.label
+                            }</a></li>`
+                        );
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+											<td colspan="6"><p>Sense Alumnes.</p></td>
+									</tr>`
+                );
+            }
+
+            $("tbody").fadeIn(300);
+            $("body").addClass("body-logs");
+        },
+        error: (res) => {
+            console.log(res);
+        },
+    });
+}
+
+/**
+ * @description "wrapper for native fetch()"
+ */
+async function ajaxCall(url, verb, data) {
+    let response = await fetch(url, {
+        method: verb,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: $("meta[name='_token']").attr("content"),
+        },
+        body: JSON.stringify(data),
+    });
+    response = await response.json();
+    return response;
+}
+
+/**
  * @description "Get filter keys and values"
  */
 
@@ -215,6 +307,7 @@ function loadLogsPage() {
                                 "YYYY-DD-MM hh:mm:ss",
                                 "DD/MM/YYYY HH:mm:ss"
                             ),
+                            null,
                             "logs"
                         )
                     );
@@ -230,6 +323,38 @@ function loadLogsPage() {
             $("tbody").fadeIn(300);
             $("body").addClass("body-logs");
         },
+    });
+}
+
+/* CREATE ADMIN */
+/**
+ * @description "load all the functionalities of the create admin in HTML"
+ */
+function loadCreateAdminPage() {
+    $("form").submit(function (e) {
+        console.log("hey");
+        e.preventDefault();
+        e.stopPropagation();
+        let msg = "";
+        if (isNull($("input#username").val()))
+            msg += "El camp 'Nom d'usuari' no pot estar buit.\n";
+        if (isNull($("input#firstname").val()))
+            msg += "El camp 'Nom' no pot estar buit.\n";
+        if (isNull($("input#lastname1").val()))
+            msg += "El camp 'Cognom' no pot estar buit.\n";
+        if (isNull($("input#lastname2").val()))
+            msg += "El camp 'Segon cognom' no pot estar buit.\n";
+        if (isNull($("input#password").val()))
+            msg += "El camp 'Contrasenya' no pot estar buit.\n";
+        if (isNull($("input#password_confirmation").val()))
+            msg += "El camp 'Confirma contrasenya' no pot estar buit.\n";
+        if ($("input#password_confirmation").val() != $("input#password").val())
+            msg += "Les contrasenyes no coincideixen.\n";
+
+        if (msg) {
+            generateMessages("error", msg, ".container-messages", 5);
+            return false;
+        } else e.target.submit();
     });
 }
 
@@ -256,6 +381,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
                             item.lastname1 + " " + item.lastname2,
                             item.email,
                             item.name,
+                            item.id,
                             item.id,
                             "students"
                         )
@@ -390,9 +516,11 @@ function loadTermPage() {
                                 "",
                                 "DD/MM/YYYY HH:mm:ss"
                             ),
+                            contRows,
                             "terms"
                         )
                     );
+                    contRows++;
                 }
             } else {
                 $("tbody").append(
@@ -404,16 +532,18 @@ function loadTermPage() {
             $("tbody")
                 .append(
                     `<tr>
-                    <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
+                    <td colspan="10"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
                 </tr>`
                 )
                 .fadeIn(300);
 
             $("body").addClass("body-term");
-            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "terms"));
+            $("#new, #edit").on("click", (e) =>
+                rowEventEditAndNew(e.target, "terms")
+            );
             console.log($(".clone"));
             $(".clone").on("click", (e) => eventCloneCareer(e.target, res));
-        }
+        },
     });
 }
 
@@ -460,6 +590,7 @@ function loadCareerPage() {
                                     "DD-MM-YYYY"
                                 ),
                                 end,
+                                null,
                                 "careers"
                             )
                         );
@@ -521,6 +652,7 @@ function loadLogsPage() {
                             "YYYY-DD-MM hh:mm:ss",
                             "DD/MM/YYYY HH:mm:ss"
                         ),
+                        null,
                         "logs"
                     )
                 );
@@ -544,6 +676,7 @@ function loadAdminMatriculationPage() {
             user_id: userId,
         },
         success: (res) => {
+            console.log(res);
             $("#name").val(res.user.firstname);
             $("#surname1").val(res.user.lastname1);
             $("#surname2").val(res.user.lastname2);
@@ -771,19 +904,19 @@ function eventCloneCareer(row, json) {
     btn.addClass("loading");
     $.ajax({
         url: `/api/duplicate/${termId}`,
-        method: 'POST',
+        method: "POST",
         headers: {
             token: $("meta[name='_token']").attr("content"),
         },
         data: {
-            id: termId
+            id: termId,
         },
         success: (res) => {
             location.reload();
         },
         error: (res) => {
             console.log(res);
-        }
+        },
     });
 }
 
@@ -908,15 +1041,20 @@ function animationSelectedRow() {
  */
 function insertNewRow(...params) {
     let row = "<tr>";
-    for (let i = 0; i < params.length - 1; i++) {
+    for (let i = 0; i < params.length - 2; i++) {
         row += `<td>${params[i] ? params[i] : ""}</td>`;
     }
 
+    console.log("aaa", params);
     let lastParam = params[params.length - 1];
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
-                <td><button class="btn save clone" data="${params[params.length-2]}" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
+                <td><a href="/admin/dashboard/${lastParam}/delete/${
+            params[0]
+        }" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
+                <td><button class="btn save clone" data="${
+                    params[params.length - 2]
+                }" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
     } else if (lastParam == "careers") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/${lastParam}/delete/${
@@ -1179,6 +1317,8 @@ $(function () {
         });
     } else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
+    } else if (location.pathname.includes("admin/dashboard/createAdmin")) {
+        loadCreateAdminPage();
     } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
@@ -1236,6 +1376,8 @@ $(function () {
                     2.5
                 );
         });
+
+        $("button.filter").on("click", filterStudentsPage);
     } else if (
         location.pathname.endsWith("/admin/dashboard/careers/") ||
         location.pathname.endsWith("/admin/dashboard/careers")
@@ -1349,5 +1491,5 @@ $(function () {
             $("body").addClass("night");
         }
     }
-    $("button.filter").on("click", filterStudentsPage);
+    $("");
 });
