@@ -30,4 +30,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google' => [
+        'client_id' => '596010679353-n836uu0k1amsgds6o9lpugs7a1770g1j.apps.googleusercontent.com',
+        'client_secret' => 'FxyY11jAa95l4QFQfz1JSQGo',
+        'redirect' => 'http://matriculacions-ieti.herokuapp.com/auth/callback',
+    ],
+
 ];

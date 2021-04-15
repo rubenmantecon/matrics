@@ -1,16 +1,16 @@
 /* FUNCTIONS */
 /**
  * @description "check if value is null"
- * @param {String} element 
- * @return {Boolean} 
+ * @param {String} element
+ * @return {Boolean}
  */
- function isNull(element) {
+function isNull(element) {
     return (element.replace(/ /g, "")) ? false : true;
 }
 
 /**
  * @description "get parameter value from url"
- * @param {String} param 
+ * @param {String} param
  */
 function getUrlParameter(param) {
     let searchParams = new URLSearchParams(window.location.search);
@@ -42,9 +42,9 @@ let cont = 1;
 /**
  * @description "generate messages with different types"
  * @param {String} type ("success", "error", "warning", "info")
- * @param {String} text 
+ * @param {String} text
  * @param {String} parentName (XPath route for JQuery)
- * @param {Number} seconds 
+ * @param {Number} seconds
  */
 function generateMessages(type, text, parentName, seconds) {
     const icons = {
@@ -65,7 +65,7 @@ function generateMessages(type, text, parentName, seconds) {
  * @description "countdown for remove the message"
  * @param {String} parentName (XPath route for JQuery)
  * @param {Number} id "auto generate ID"
- * @param {Number} seconds 
+ * @param {Number} seconds
  */
 function countdown(parentName, id, seconds) {
     setTimeout(() => {
@@ -99,7 +99,7 @@ function loadLogsPage() {
 
                     $("tbody").append(insertNewRow(
                         item.id, item.name, output_badge, msg,
-                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                        momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"), null,
                         "logs"
                     ));
                 }
@@ -116,6 +116,32 @@ function loadLogsPage() {
         }
     });
 }
+
+/* CREATE ADMIN */
+/**
+ * @description "load all the functionalities of the create admin in HTML"
+ */
+ function loadCreateAdminPage() {
+     $('form').submit(function (e) {
+        console.log('hey');
+        e.preventDefault();
+        e.stopPropagation();
+        let msg = "";
+        if (isNull($("input#username").val())) msg += "El camp 'Nom d'usuari' no pot estar buit.\n";
+        if (isNull($("input#firstname").val())) msg += "El camp 'Nom' no pot estar buit.\n";
+        if (isNull($("input#lastname1").val())) msg += "El camp 'Cognom' no pot estar buit.\n";
+        if (isNull($("input#lastname2").val())) msg += "El camp 'Segon cognom' no pot estar buit.\n";
+        if (isNull($("input#password").val())) msg += "El camp 'Contrasenya' no pot estar buit.\n";
+        if (isNull($("input#password_confirmation").val())) msg += "El camp 'Confirma contrasenya' no pot estar buit.\n";
+        if ($("input#password_confirmation").val() != $("input#password").val()) msg += "Les contrasenyes no coincideixen.\n";
+
+        if (msg) {
+            generateMessages("error", msg, ".container-messages", 5);
+            return false;
+        } else e.target.submit();
+     })
+}
+
 
 /* STUDENTS */
 /**
@@ -135,7 +161,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
                 for (const item of res.data) {
                     console.log(item);
                     $("tbody").append(insertNewRow(
-                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name,
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, item.id, item.id,
                         "students"
                     ));
                 }
@@ -153,7 +179,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="4"><p>Sense Alumnes.</p></td>
+                        <td colspan="6"><p>Sense Alumnes.</p></td>
                     </tr>`
                 );
             }
@@ -199,6 +225,7 @@ function loadTermPage() {
         success: (res) => {
             $("tbody").css("display", "none").html('');
             if (res.length > 0) {
+                let contRows = 0;
                 for (const item of res) {
                     $("tbody").append(insertNewRow(
                         item.id, `<a class="link" href="/admin/dashboard/careers?term=${item.id}">${item.name}</a>`,
@@ -207,24 +234,28 @@ function loadTermPage() {
                         momentFormat(item.end, "YYYY-MM-DD", "DD-MM-YYYY"),
                         momentFormat(item.created_at, "", "DD/MM/YYYY HH:mm:ss"),
                         momentFormat(item.updated_at, "", "DD/MM/YYYY HH:mm:ss"),
+                        contRows,
                         "terms"
                     ));
+                    contRows++;
                 }
             } else {
                 $("tbody").append(
                     `<tr>
-                        <td colspan="9"><p>No s'ha trobat cap curs.</p></td>
+                        <td colspan="10"><p>No s'ha trobat cap curs.</p></td>
                     </tr>`
                 );
             }
             $("tbody").append(
                 `<tr>
-                    <td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
+                    <td colspan="10"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
                 </tr>`
             ).fadeIn(300);
 
             $("body").addClass("body-term");
             $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "terms"));
+            console.log($(".clone"));
+            $(".clone").on("click", (e) => eventCloneCareer(e.target, res));
         }
     });
 }
@@ -257,7 +288,7 @@ function loadCareerPage() {
                         $("tbody").append(insertNewRow(
                             item.id, item.code, item.name, item.description, item.hours,
                             momentFormat(item.start, "YYYY-MM-DD", "DD-MM-YYYY"),
-                            end,
+                            end, null,
                             "careers"
                         ));
                     }
@@ -304,12 +335,65 @@ function loadLogsPage() {
                 }
                 $("tbody").append(insertNewRow(
                     item.id, item.name, output_badge, tmp.message,
-                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"),
+                    momentFormat(item.updated_at, "YYYY-DD-MM hh:mm:ss", "DD/MM/YYYY HH:mm:ss"), null,
                     "logs"
                 ));
             }
             $('tbody').fadeIn(300);
             $("body").addClass("body-logs");
+        }
+    });
+}
+
+/**
+ * @description "load all the data of the logs end point in the tbody HTML"
+ */
+function loadAdminMatriculationPage() {
+    const userId = getUrlParameter("student");
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+            user_id: userId,
+        },
+        success: (res) => {
+            console.log(res);
+            $("#name").val(res.user.firstname);
+            $("#surname1").val(res.user.lastname1);
+            $("#surname2").val(res.user.lastname2);
+            $("#mail").val(res.user.email);
+            $("#username").val(res.user.name);
+            $("#cycle").val(res.career.code + " - " + res.career.name);
+            for (const module of res.mps) {
+                $("#modules").append(`<li>${module.code}: ${module.name}</li>`);
+            }
+            $('tbody').fadeIn(300);
+            $("body").addClass("body-logs");
+
+
+            $(".form-alumn-data").submit((e) => {
+                e.preventDefault();
+                let changed = false;
+                if ($("#name").val() !== res.user.firstname) {
+                    changed = true;
+                }
+                if ($("#surname1").val() !== res.user.lastname1) {
+                    changed = true;
+                }
+                if ($("#surname2").val() !== res.user.lastname2) {
+                    changed = true;
+                }
+                if ($("#mail").val() !== res.user.email) {
+                    changed = true;
+                }
+                if ($("#username").val() !== res.user.name) {
+                    changed = true;
+                }
+                $("#changed").val(changed);
+
+                // location.href = "/admin/dashboard/students";
+            });
         }
     });
 }
@@ -336,7 +420,7 @@ function loadImportPage(careers) {
             </div>
             <label class="text" for="check-${cont}">${key} - ${careers[key]['NOM_CICLE_FORMATIU']}</label>
             <div class="row-bg"></div>`;
-            rows += insertNewRow(dataRow, "import");
+            rows += insertNewRow(dataRow, null, "import");
             cont++;
         }
     }
@@ -457,6 +541,33 @@ function importCSV(page) {
 }
 
 /**
+ *  @description "event for clone the term"
+ */
+function eventCloneCareer(row, json) {
+    const rowSelected = $(row).closest("button").attr("data");
+    const termId = json[rowSelected].id;
+    let btn = $(row).closest("button");
+    btn.html('<i class="fas fa-load" aria-hidden="true"></i>');
+    btn.addClass("loading");
+    $.ajax({
+        url: `/api/duplicate/${termId}`,
+        method: 'POST',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        data: {
+            id: termId
+        },
+        success: (res) => {
+            location.reload();
+        },
+        error: (res) => {
+            console.log(res);
+        }
+    });
+}
+
+/**
  * @description "callback function event for create or edit term"
  * @param {Element} tag "Event onClick: DOM Element tag pressed"
  * @param {String} page "actual page"
@@ -550,17 +661,21 @@ function animationSelectedRow() {
  */
 function insertNewRow(...params) {
     let row = "<tr>";
-    for (let i = 0; i < params.length - 1; i++) {
+    for (let i = 0; i < params.length - 2; i++) {
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
     }
 
+    console.log("aaa", params)
     let lastParam = params[params.length - 1];
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
+                <td><button class="btn save clone" data="${params[params.length-2]}" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
     } else if (lastParam == "careers") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
                 <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter('term')}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+    } else if (lastParam == "students") {
+        row += `<td><a href="/admin/dashboard/students/matriculation?student=${params[params.length - 2]}" id="view" class="btn save" title="Dades"><i class="fas fa-eye"></i></button></td>`;
     }
     return row + "</tr>";
 }
@@ -644,7 +759,7 @@ function updateRowInDB(data, page) {
 
 /**
  * @description "update tbody of term HTML table"
- * @param {Element[]} cols 
+ * @param {Element[]} cols
  */
 function updateTableRowTerm(cols) {
     $("tbody").html('');
@@ -671,7 +786,7 @@ function updateTableRowTerm(cols) {
 
 /**
  * @description "update tbody of career HTML table"
- * @param {Element[]} cols 
+ * @param {Element[]} cols
  */
 function updateTableRowCareers(cols) {
     $("tbody").html('');
@@ -747,6 +862,8 @@ $(function () {
         })
     } else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
+    } else if (location.pathname.includes("admin/dashboard/createAdmin")) {
+        loadCreateAdminPage();
     } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
@@ -837,6 +954,8 @@ $(function () {
                 } else $("#remove").addClass("disabled");
             }
         })
+    } else if (location.pathname.endsWith("/admin/dashboard/students/matriculation") || location.pathname.endsWith("/admin/dashboard/students/matriculation/")) {
+        loadAdminMatriculationPage();
     }
 
     //"DARK-MODE"
