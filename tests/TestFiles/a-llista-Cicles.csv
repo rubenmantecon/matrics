@@ -1,0 +1,6 @@
+CODI_CICLE_FORMATIU,NOM_CICLE_FORMATIU,CODI_ADAPTACIO_CURRICULAR,HORES_CICLE_FORMATIU,DATA_INICI_CICLE_FORMATIU,DATA_FI_CICLE_FORMATIU,CODI_MODUL,NOM_MODUL,DURADA_MIN_MODUL,DURADA_MAX_MODUL,DATA_INICI_MODUL,DATA_FI_MODUL,CODI_UNITAT_FORMATIVA,NOM_UNITAT_FORMATIVA,DURADA_UNITAT_FORMATIVA,INDICADOR_FCT,INDICADOR_SINTESIS,INDICADOR_IDIOMA,INDICADOR_PROJECTE
+CFPM    AF10,Preimpressió digital,0,2000,25/02/13,,AF10001,MP1. Tractament de textos,165,165,25/02/13,,AF1000101,UF1. Equips i programari de tractament de textos,15,N,N,N,N
+CFPM    CM10,Activitats comercials,0,2000,08/04/13,,CM10014,MP14. Formació en centres de treball,350,350,04/06/15,,CM1001401,Formació en centres de treball,350,S,N,N,N
+CFPS    AEA0,Ensenyament i animació socioesportiva,0,2000,22/06/18,,AEA0006,MP6. Activitats d'oci i temps lliure,165,198,22/06/18,,AEA000601,UF1. Recursos lúdics en projectes d'oci i temps lliure,55,N,N,N,N
+CFPS    ICC0,Desenvolupament d'aplicacions web,0,2000,28/05/10,,ICC0007,MP7. Desenvolupament web en entorn servidor,132,165,13/05/13,,ICC000704,UF4. Serveis web. Pàgines dinàmiques interactives. Webs híbrids,42,N,N,N,N
+CFPS    IPD0,Caracterització i maquillatge professional,0,2000,08/04/13,,IPD0007,MP7. Postisseria,135,165,15/07/13,,IPD000702,UF2. Extensions i ornaments,33,N,N,N,N

@@ -21,4 +21,6 @@ class Mp extends Model
         return $this->hasMany(Uf::class);
     }
 
+    // Mass assignable attributes
+    protected $fillable = ['career_id'];
 }
