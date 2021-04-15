@@ -84,6 +84,9 @@ Route::name('admin') /*admin/dashboard*/
         require __DIR__ . '/admin.php';
     });
 
+Route::get('auth/redirect', 'App\Http\Controllers\SocialController@redirect');
+Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
+
 /*BREADCRUMB*/
 
 // Dashboard
@@ -102,3 +105,4 @@ Breadcrumbs::for('documents', static function ($trail) {
     $trail->parent('home');
     $trail->push('Documents', '/dashboard/documents');
 });
+
