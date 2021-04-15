@@ -15,17 +15,20 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public function hasRole($role) {     
-        $role = (array)$role;    
-      
-        return in_array($this->role, $role); 
+    public function hasRole($role)
+    {
+        $role = (array)$role;
+
+        return in_array($this->role, $role);
     }
 
-    public function enrolments() {
+    public function enrolments()
+    {
         return $this->belongsTo(Enrolment::class);
     }
 
-    public function records() {
+    public function records()
+    {
         return $this->belongsTo(Record::class);
     }
 
@@ -43,6 +46,7 @@ class User extends Authenticatable
         'lastname1',
         'lastname2',
         'role',
+        'google_id'
     ];
 
     /**
