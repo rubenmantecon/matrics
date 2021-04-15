@@ -59,6 +59,12 @@ Route::get('/dashboard/requirements', function () {
     $profile_req = Profile_req::all();
     return view('pages.requirements' , ['profile_req' => $profile_req]);
 });
+
+Route::get('/dashboard/enrolments', function () {
+    $profile_req = Profile_req::all();
+    return view('pages.studentsEnrolments' , ['profile_req' => $profile_req]);
+});
+
 Route::get('/dashboard/documents', function () {
     return view('pages.documents');
 });
@@ -92,7 +98,7 @@ Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
 // Dashboard
 Breadcrumbs::for('home', static function ($trail) {
     $trail->push('Inici', route('dashboard'));
-});   
+});
 
 // Dashboard > Profile
 Breadcrumbs::for('profile', static function ($trail) {
@@ -104,5 +110,11 @@ Breadcrumbs::for('profile', static function ($trail) {
 Breadcrumbs::for('documents', static function ($trail) {
     $trail->parent('home');
     $trail->push('Documents', '/dashboard/documents');
+});
+
+// Dashboard > Enrolments
+Breadcrumbs::for('enrolments', static function ($trail) {
+    $trail->parent('home');
+    $trail->push('Preu', '/dashboard/enrolments');
 });
 
