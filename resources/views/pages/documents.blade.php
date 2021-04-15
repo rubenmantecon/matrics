@@ -17,15 +17,11 @@
             </div>                
             <div class="label-group-admin grid sm:grid-cols-2">
                 <label for="Tarjeta sanitaria">Tarjeta sanitària:</label>
-                <input class="btn" type="file" id="Tarjeta sanitaria" multiple><br>
+                <input class="btn" type="file" name="Tsanitaria" id="Tarjeta sanitaria" multiple><br>
             </div>
             <div class="label-group-admin grid sm:grid-cols-2">
                 <label for="Resguard del titol">Resguard del títol:</label>
-                <input class="btn" type="file" id="Resguard del titol" multiple><br>
-            </div>
-            <div class="label-group-admin grid sm:grid-cols-2">
-                <label for="Resguard del pagament">Resguard de pagament:</label>
-                <input class="btn" type="file" id="Resguard del pagament" multiple><br>
+                <input class="btn" type="file" name="RTitul" id="Resguard del titol" multiple><br>
             </div>
             <div class="label-group-admin grid justify-end">
                 <input class="btn primary-btn"type="submit" value="Puja arxius">
