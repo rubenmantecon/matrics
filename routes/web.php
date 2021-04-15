@@ -47,13 +47,23 @@ Route::get('/dashboard/profile', function () {
     return view('pages.profile', ['enrollments' => $enrollments]);
 });
 Route::get('/dashboard', function () {
-    /*$user = Auth::user();
-    if ($user->enrolments()->first()->state) {
-        return view('pages.dashboard');
-    }else{
-        return view('pages.matriculacion');
-    }*/
-    return view('pages.dashboard');
+    $user_id = auth::id();
+    if(count(Enrolment::where('user_id', $user_id)->where('state', 'pending')->get()) > 0){
+    	if(count(Enrolment::where('user_id', $user_id)->get()) > count(Enrolment::where('user_id', $user_id)->where('state', 'pending')->get()) ){
+    		// Alumno que tiene que hacer la matricula, pero ya tiene una antigua (Antiguo alumno).
+    		return redirect('/dashboard/documents');
+    	}
+    	else{
+    		// Alumno que tiene que hacer la matricula, (Alumno nuevo)
+    		return redirect('/dashboard/documents');
+    		
+    	}
+    }
+    else{
+    	// Alumno que ya ha hecho la matricula (actual).
+    	return view('pages.dashboard');
+    }
+
 })->middleware(['auth'])->name('dashboard');
 Route::get('/dashboard/requirements', function () {
     $profile_req = Profile_req::all();
