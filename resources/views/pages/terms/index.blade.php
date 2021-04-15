@@ -26,11 +26,12 @@
                     <th>Darrera modificació</th>
                     <th>Edita</th>
                     <th>Elimina</th>
+                    <th>Clonar</th>
                 </tr>
             </thead>
             <tbody style="display: none">
                 <tr>
-                    <td colspan="9" class="loading inverted"></td>
+                    <td colspan="10" class="loading inverted"></td>
                 </tr>
             </tbody>
             <tfoot>
@@ -44,6 +45,7 @@
                     <th>Darrera modificació</th>
                     <th>Edita</th>
                     <th>Elimina</th>
+                    <th>Clonar</th>
                 </tr>
             </tfoot>
         </table>

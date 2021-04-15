@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+
 use App\Models\Enrolment;
 use App\Models\User;
+use App\Models\Career;
+use App\Models\Mp;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -23,48 +27,17 @@ class EnrolmentController extends Controller
         if ($token) {
             $user = User::select("token")->where('token', $token)->get()[0];
             if ($user['token']) {
-                $filter = $request->header('filter');
-                // Filter enrolments by user (user_id)
-                if (isset($filter) && $filter == "user") {
-                    $user_id = $request->header('user_id');
-                    if (isset($user_id) && $user_id != "empty"){
-                        // Estado de los documentos, nombre de usuario, ciclo y módulo
-                        // ->join('contacts', 'users.id', '=', 'contacts.user_id')
-                        $data = Enrolment::join('users', 'enrolments.user_id', '=', 'users.id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->join('mps', 'career.id', '=', 'mps.career_id')->select("*")->where("user_id", $user_id);
-                        if (sizeof($data) == 0){
-                            return response()->json(['status' => "warning", "text" => 'No hi ha matriculacions']);
-                        } else {
-                            return response()->json($data);
-                        }
-                    } else {
-                        return response()->json(['status' => "error", "text" => "Usuari no trobat"]);
-                    }
-                // Filter enrolments by term (term_id)(Curso)
-                } else if (isset($filter) && $filter == "term"){
-                    $term_id = $request->header('term_id');
-                    if (isset($term_id) && $term_id != "empty") {
-                        $data = Enrolment::join('users', 'enrolments.user_id', '=', 'users.id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->join('mps', 'career.id', '=', 'mps.career_id')->select("*")->where("term_id", $term_id);
-                        if (sizeof($data) == 0){
-                            return response()->json(['status' => "warning", "text" => 'No hi ha matriculacions']);
-                        } else {
-                            return response()->json($data);
-                        }
-                    }else {
-                        return response()->json(['status' => "error", "text" => 'Curs no trobat']);
-                    }
-                // Filter enrolments by career (career_id) (Grado)
-                } else if (isset ($filter) && $filter == "carrer"){
-                    $career_id = $request->header('career_id');
-                    if (isset($career_id) && $career_id != "empty") {
-                        $data = Enrolment::join('users', 'enrolments.user_id', '=', 'users.id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->join('mps', 'career.id', '=', 'mps.career_id')->select("*")->where("career_id", $career_id);
-                        if (sizeof($data) == 0){
-                            return response()->json(['status' => "warning", "text" => 'No hi ha matriculacions']);
-                        } else {
-                            return response()->json($data);
-                        }
-                    } else {
-                        return response()->json(['status' => "error", "text" => 'Curs no trobat']);
-                    }
+                $user_id = $request->header('user_id');
+                if (isset($user_id) && $user_id != "empty") {
+                    // ME FALTA COGER LOS REQUERIMINETOS CON LOS ARCHIVOS
+                    $user = User::where("id", $user_id)->get()[0];
+                    $enrolment = Enrolment::where("user_id", $user_id)->get()[0];
+                    $career = Career::where("id", $enrolment['career_id'])->get()[0];
+                    $mps = Mp::where("career_id", $career['id'])->get();
+                    $data = ["user" => $user, "career" => $career, "mps" => $mps];
+                    return response()->json($data);
+                } else {
+                    return response()->json(['status' => "error", "text" => "Usuari no trobat"]);
                 }
             }
         }
@@ -101,6 +74,11 @@ class EnrolmentController extends Controller
                 $enrolment->career_id = $request->career_id;
                 $enrolment->dni = $request->dni;
                 $enrolment->state = "pending"; // Matrícula. Pending/validated
+                // $status = $enrolment->save();
+                // if ($status) {
+                //     $data = ["status" => "Nova matricula creada correctament."];
+                //     Log::channel('dblogging')->info("Ha creado una nueva matricula", ["user_id" => Auth::id(), "enrolment_id" => $enrolment->id]);
+                // }
                 $status = $enrolment->save();
                 if ($status) {
                     $data = ["status" => "Nova matricula creada correctament."];
@@ -140,6 +118,7 @@ class EnrolmentController extends Controller
      * @param  \App\Models\Enrolment  $enrolment
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, Enrolment $enrolment, User $user)
     {
         $data = ['status' => 'Unauthorized, error 503'];
