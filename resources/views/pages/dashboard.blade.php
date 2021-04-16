@@ -39,42 +39,62 @@
     @section('breadcrumbs')
         {{ Breadcrumbs::render('home') }}
     @endsection
-    <div class="flex flex-col">
+    <div class="grid grid-cols-2 justify-center">
+        <div class="flex flex-col items-center">
+            <h2 class="font-bold text-2xl p-6">ESTAT DE LA MATRICULA: <button class="statuscancel ml-2 flex-initial"></button><button class="statusnothing ml-2 flex-initial"></button></h2>
+            <div class="items-center justify-center w-1/2 text-center container-formlights mt-5 statesdiv content-start">
+                <div class="border-double border-4 border-light-blue-500 w-1/2 mt-2 w-full text-xl p-2">
+                    <label>DNI:</label> 
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                </div>
+                <div class="border-double border-4 border-green-500 w-1/2 mt-2 w-full text-xl p-2">
+                    <label>CATSALUT:</label> 
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                    <button class="statusok ml-2 flex-start"></button>
+                </div>
+                <div class="border-double border-4 border-yellow-500 w-1/2 mt-2 w-full text-xl p-2">
+                    <label>TÍTOL ACADÈMIC:</label> 
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                    <button class="statusprocesing ml-2 flex-initial"></button>
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                </div>
+                <div class="border-double border-4 border-red-500 w-1/2 mt-2 w-full text-xl p-2">
+                    <label>PAGAMENT:</label>
+                    <button class="statuscancel ml-2 flex-initial"></button>
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                    <button class="statusnothing ml-2 flex-initial"></button>
+                </div>
+            </div>
+        </div>
+        <div class="options flex flex-col items-center">
+            <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
+                <div class="px-4">
+                    <img src="{{ asset('images/usuari.png') }}" alt="logo" class="logo w-24 m-4"/>
+                </div>
 
-        <div class="flex flex-col items-center justify-center w-full  ">
-            <h2 class="">Estat de la matricula: <button class="statuscancel ml-2 flex-initial"></button></h2>
-            <div class="flex flex-wrap items-center justify-center w-1/2 text-center container-formlights mt-5 statesdiv content-start">
-                <div class="w-1/2 mt-2 ">DNI: <button class="statusnothing ml-2 flex-initial"></button></div>
-                <div class="w-1/2 mt-2">T. SANITARIA: <button class="statusok ml-2 flex-start"></button></div>
-                <div class="w-1/2 mt-2">TITULO ACADEMICO: <button class="statusprocesing ml-2 flex-initial"></button></div>
-                <div class="w-1/2 mt-2">RESGUARDO PAGO: <button class="statuscancel ml-2 flex-initial"></button></div>
+            
+                <div class="px-6 py-4">
+                    <a href="/dashboard/profile" class="btn primary-btn">Dades personals</a>
+                </div>
             </div>
-        </div>
-        <div class="options p-10">
-        <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
-            <div class="px-4 py-2">
-                <img src="{{ asset('images/usuari.png') }}" alt="logo" class="logo w-24 m-4"/>
+            <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md bg-white">
+                <div class="px-4">
+                    <img src="{{ asset('images/matricula.png') }}" alt="logo" class="logo w-24 m-4"/>
+                </div>
+                <div class="px-6 py-4">
+                    <a href="/dashboard/requirements" class="btn primary-btn">Recalcula matricula</a>
+                </div>
             </div>
-
-        
-            <div class="px-6 py-4">
-                <a href="/dashboard/profile" class="btn primary-btn">Dades personals</a>
-            </div>
-        </div>
-        <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
-            <div class="px-4 py-2">
-                <img src="{{ asset('images/matricula.png') }}" alt="logo" class="logo w-24 m-4"/>
-            </div>
-            <div class="px-6 py-4">
-                <a href="/dashboard/requirements" class="btn primary-btn">Recalcula matricula</a>
-            </div>
-        </div>
-        <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
-            <div class="px-4 py-2">
-                <img src="{{ asset('images/docs.png') }}" alt="logo" class="logo w-24 m-4"/>
-            </div>
-            <div class="px-6 py-4">
-                <a href="/dashboard/documents" class="btn primary-btn">Documents</a>
+            <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
+                <div class="px-4">
+                    <img src="{{ asset('images/docs.png') }}" alt="logo" class="logo w-24 m-4"/>
+                </div>
+                <div class="px-6 py-4">
+                    <a href="/dashboard/documents" class="btn primary-btn">Documents</a>
+                </div>
             </div>
         </div>
     </div>

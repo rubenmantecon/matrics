@@ -21,8 +21,8 @@
     --darkText: rgb(250, 250, 250);
     --saveBtn: #21ba45;
     --saveBtnHover: #20973c;
-    --normalBtn:#e0e1e2; 
-    --normalBtnWriting:#a7a7a7;
+    --normalBtn: #e0e1e2;
+    --normalBtnWriting: #a7a7a7;
     --selectedRow: #68ff6e;
     --cancelBtn: #ff695e;
     --cancelBtnHover: #c92b20;
@@ -530,7 +530,7 @@ table td.loading:after {
 
 .btn.file:hover {
     background-color: var(--normalBtnHover) !important;
-    color:#fff;
+    color: #fff;
 }
 
 .btn.cancel {
@@ -978,7 +978,7 @@ ol.list a:before {
     padding: 20px;
     margin-left: 8px;
     margin-right: 8px;
-    box-shadow: 0 0 12px 2px black;
+    box-shadow: 0 0 10px 0 rgb(78, 78, 78);
 }
 
 form.form {
