@@ -17,9 +17,9 @@ class Enrolment extends Model
     use HasFactory;
 
     protected $fillable = ['dni', 'user_id', 'term_id', 
-    'career_id', 'state','address','population',
+    'career_id', 'state','address','city',
     'postal_code','phone_number','emergency_number',
-    'father_name','father_dni','mother_name','mother_dni'];
+    'tutor_1','tutor_1_dni','tutor_2','tutor_2_dni'];
 
     public function careers()
     {

@@ -77,14 +77,14 @@ class StudentController extends Controller
 
 							//campos nuevos enrolments
 							$interesting_index["address"] = array_search("Municipi residència", $element);
-							$interesting_index["population"] = array_search("Província residència", $element);
+							$interesting_index["city"] = array_search("Província residència", $element);
 							$interesting_index["postal_code"] = array_search("CP", $element);
 							$interesting_index["phone_number"] = array_search("Telèfon", $element);
 							$interesting_index["emergency_number"] = array_search("Telèfon", $element);
-							$interesting_index["father_name"] = array_search("Nom tutor 1", $element);
-							$interesting_index["father_dni"] = array_search("Núm. doc. tutor 1", $element);
-							$interesting_index["mother_name"] = array_search("Nom tutor 2", $element);
-							$interesting_index["mother_dni"] = array_search("Núm. doc. tutor 2", $element);
+							$interesting_index["tutor_1"] = array_search("Nom tutor 1", $element);
+							$interesting_index["tutor_1_dni"] = array_search("Núm. doc. tutor 1", $element);
+							$interesting_index["tutor_2"] = array_search("Nom tutor 2", $element);
+							$interesting_index["tutor_2_dni"] = array_search("Núm. doc. tutor 2", $element);
 
 							$interesting_index["email"] = array_search("Correu electrònic", $element);
 							$interesting_index["career_id"] = array_search("Codi ensenyament P1", $element);
@@ -142,18 +142,6 @@ class StudentController extends Controller
 									'firstname' => $element[$interesting_index["firstname"]],
 									'lastname1' => $element[$interesting_index["lastname1"]],
 									'lastname2' => $element[$interesting_index["lastname2"]],
-									
-									//campos nuevos enrolments
-									'address' => $element[$interesting_index["address"]],
-									'population' => $element[$interesting_index["population"]],
-									'postal_code' => $element[$interesting_index["postal_code"]],
-									'phone_number' => $element[$interesting_index["phone_number"]],
-									'emergency_number' => $element[$interesting_index["emergency_number"]],
-									'father_name' => $element[$interesting_index["father_name"]],
-									'father_dni' => $element[$interesting_index["father_dni"]],
-									'mother_name' => $element[$interesting_index["mother_name"]],
-									'mother_dni' => $element[$interesting_index["mother_dni"]],
-
 									'password' => Hash::make("ieti" . date("Y")),
 									'token' => hash("sha256", $element[$interesting_index["email"]])
 								]
@@ -164,7 +152,18 @@ class StudentController extends Controller
 								// Create Enrolment or update it if exists.
 								$enrollment = Enrolment::updateOrCreate(
 									[
+										//campos nuevos enrolments
 										'dni' => $element[$interesting_index['identificacion']['actual']],
+										'address' => $element[$interesting_index["address"]],
+										'city' => $element[$interesting_index["city"]],
+										'postal_code' => $element[$interesting_index["postal_code"]],
+										'phone_number' => $element[$interesting_index["phone_number"]],
+										'emergency_number' => $element[$interesting_index["emergency_number"]],
+										'tutor_1' => $element[$interesting_index["tutor_1"]],
+										'tutor_1_dni' => $element[$interesting_index["tutor_1_dni"]],
+										'tutor_2' => $element[$interesting_index["tutor_2"]],
+										'tutor_2_dni' => $element[$interesting_index["tutor_2_dni"]],
+
 										'term_id' => $response->term_id,
 										'career_id' => $response->id
 									],
