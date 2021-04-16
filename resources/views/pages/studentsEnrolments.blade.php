@@ -10,7 +10,7 @@
     <div class="container-form-user">
         <div class="grid grid-cols-2 gap-4 p-3">
             <div>
-                <h1>{{ $career->name }}</h1>
+                <h1>{{ $career[0]->code }}. {{ $career[0]->name }}</h1>
             </div>
         </div>
         <div class="grid grid-cols-1 gap-4 p-3">

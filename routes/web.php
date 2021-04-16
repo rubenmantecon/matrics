@@ -64,8 +64,11 @@ Route::get('/dashboard/requirements', function () {
 
 Route::get('/dashboard/enrolments', function () {
     $profile_req = Profile_req::all();
-    $career = Career::where('term_id', '1')->where('id', '1');
-    $mps = Mp::where('career_id', '1'); //Mp::careers();
+    $career = Career::where([
+        ['id', 1],
+        ['term_id', 1]
+    ])->get();
+    $mps = Mp::where('career_id', '1')->get(); //Mp::careers();
     return view('pages.studentsEnrolments', ['profile_req' => $profile_req, 'mps' => $mps, 'career' => $career]);
 });
 
