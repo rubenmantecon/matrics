@@ -1,6 +1,7 @@
 <x-app-layout page="requirements"> 
     <div>
         <form action="enrolments" method="post" required>
+        	@csrf
         	<div class="container-form-user">
 		<label for="code">Perfils de requeriments: <span class="red">*</span></label>
 		@foreach ($profile_req as $prof)

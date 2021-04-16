@@ -73,12 +73,10 @@ Route::get('/dashboard/requirements', function () {
     return view('pages.requirements', ['profile_req' => $profile_req]);
 });
 
-Route::get('/dashboard/enrolments', function () {
-    $profile_req = Profile_req::all();
-    $career = Career::where([
-        ['id', 1],
-        ['term_id', 1]
-    ])->get();
+Route::post('/dashboard/enrolments', function () {
+	$user_id = auth::id();
+	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("user_id", $user_id)->where("state", "pending")->orderBy("id", "DESC")->limit(1)->get(['careers.name', 'careers.id']);
+	dd($career);
     $mps = Mp::where('career_id', '1')->get(); //Mp::careers();
     return view('pages.studentsEnrolments', ['profile_req' => $profile_req, 'mps' => $mps, 'career' => $career]);
 });
