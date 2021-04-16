@@ -18,7 +18,7 @@ class UpdateEnrolmentsTable extends Migration
             $table->string('birth_place')->nullable();
             $table->string('address');
             $table->string('city');
-            $table->integer('postal_code');
+            $table->string('postal_code');
             $table->string('phone_number');
             $table->string('emergency_number');
             $table->string('tutor_1');
