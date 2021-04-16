@@ -47,11 +47,11 @@ class ImportController extends Controller
         if (isset($request->import_file)) {
 
             // Check if the file contains csv extensión.
-            if (!str_contains($request->file, 'data:text/csv;')) {
+            if ($request->import_file != "csv") {
                 $res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
                 return response()->json($res);
             }
-
+            
             $tmp = base64_decode(explode(",", $request->file)[1]);
             $array = array_map("str_getcsv", explode("\n", $tmp));
             $stash_control = array();
@@ -72,10 +72,10 @@ class ImportController extends Controller
                         $stash_control[$element[0]] = array("NOM_CICLE_FORMATIU" => $element[1], "CODI_ADAPTACIO_CURRICULAR" => $element[2], "HORES_CICLE_FORMATIU" => $element[3], "DATA_INICI_CICLE_FORMATIU" => $element[4], "DATA_FI_CICLE_FORMATIU" => $element[5], "modulos" => array());
                     }
                 }
-            }
+            }  
 
             $json = json_encode($stash_control);
-            return $json;
+            return $json;           
         } else {
             // Check if term_id exist
             $careers = json_decode($request->data, true);
