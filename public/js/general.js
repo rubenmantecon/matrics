@@ -121,8 +121,8 @@ function loadLogsPage() {
 /**
  * @description "load all the functionalities of the create admin in HTML"
  */
- function loadCreateAdminPage() {
-     $('form').submit(function (e) {
+function loadCreateAdminPage() {
+    $('form').submit(function (e) {
         console.log('hey');
         e.preventDefault();
         e.stopPropagation();
@@ -139,7 +139,7 @@ function loadLogsPage() {
             generateMessages("error", msg, ".container-messages", 5);
             return false;
         } else e.target.submit();
-     })
+    })
 }
 
 
@@ -159,9 +159,15 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             $("tbody").css("display", "none").html('');
             if (res.data.length > 0) {
                 for (const item of res.data) {
-                    console.log(item);
+                    let state = "";
+                    if (item.state === "pending") {
+                        state = `<div class="circle-box" title="Pendent"><div class="circle orange"></div></div>`;
+                    } else if (item.state === "unregistered") {
+                        state = `<div class="circle-box" title="Sense Registrar"><div class="circle gray"></div></div>`;
+                    }
+                    console.log(state);
                     $("tbody").append(insertNewRow(
-                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, item.id, item.id,
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, state, item.id,
                         "students"
                     ));
                 }
@@ -350,52 +356,73 @@ function loadLogsPage() {
  */
 function loadAdminMatriculationPage() {
     const userId = getUrlParameter("student");
-    $.ajax({
-        url: $("meta[name='url']").attr("content"),
-        method: 'GET',
-        headers: {
-            token: $("meta[name='_token']").attr("content"),
-            user_id: userId,
-        },
-        success: (res) => {
-            console.log(res);
-            $("#name").val(res.user.firstname);
-            $("#surname1").val(res.user.lastname1);
-            $("#surname2").val(res.user.lastname2);
-            $("#mail").val(res.user.email);
-            $("#username").val(res.user.name);
-            $("#cycle").val(res.career.code + " - " + res.career.name);
-            for (const module of res.mps) {
-                $("#modules").append(`<li>${module.code}: ${module.name}</li>`);
+    if (userId === "new") {
+        $("form input[name='_method']").remove();
+        $("form .account-user").css("display", "none");
+        $("form .new-user").css("display", "flex");
+        $("form .modules").css("display", "none");
+        $.ajax({
+            url: $("meta[name='url']").attr("content"),
+            method: 'GET',
+            headers: {
+                token: $("meta[name='_token']").attr("content"),
+                user_id: userId,
+            },
+            success: (res) => {
+                var firstTerm = null;
+                var firstBool = true;
+                for (const term of res.terms) {
+                    if (firstBool) {
+                        firstTerm = term.id;
+                        firstBool = false;
+                    }
+                    $("select#term").append(`<option value="${term.id}">${term.id} - ${term.name}</option>`)
+                }
+                for (const career of res.careers) {
+                    if (career.active == 1 && career.term_id == firstTerm) {
+                        console.log(firstTerm, career);
+                        $("select#career").append(`<option value="${career.id}">${career.id} - ${career.name}</option>`)
+                    }
+                }
+                $("select#term").on("change", function (e) {
+                    var selected = $('select[name="term"]').val();
+                    for (const career of res.careers) {
+                        if (career.active == 1 && career.term_id == selected) {
+                            console.log(selected, career);
+                            $("select#career").append(`<option value="${career.id}">${career.id} - ${career.name}</option>`)
+                        }
+                    }
+                });
             }
-            $('tbody').fadeIn(300);
-            $("body").addClass("body-logs");
-
-
-            $(".form-alumn-data").submit((e) => {
-                e.preventDefault();
-                let changed = false;
-                if ($("#name").val() !== res.user.firstname) {
-                    changed = true;
+        });
+    } else {
+        $.ajax({
+            url: $("meta[name='url']").attr("content"),
+            method: 'GET',
+            headers: {
+                token: $("meta[name='_token']").attr("content"),
+                user_id: userId,
+            },
+            success: (res) => {
+                console.log(res);
+                $("#user_id").val(userId);
+                $("#term_id").val(res.career.term_id);
+                $("#firstname").val(res.user.firstname);
+                $("#lastname1").val(res.user.lastname1);
+                $("#lastname2").val(res.user.lastname2);
+                $("#email").val(res.user.email);
+                $("#dni").val(res.enrolment.dni);
+                $("#name").val(res.user.name);
+                $("#cycle").val(res.career.code + " - " + res.career.name);
+                for (const module of res.mps) {
+                    $("#modules").append(`<li>${module.code}: ${module.name}</li>`);
                 }
-                if ($("#surname1").val() !== res.user.lastname1) {
-                    changed = true;
-                }
-                if ($("#surname2").val() !== res.user.lastname2) {
-                    changed = true;
-                }
-                if ($("#mail").val() !== res.user.email) {
-                    changed = true;
-                }
-                if ($("#username").val() !== res.user.name) {
-                    changed = true;
-                }
-                $("#changed").val(changed);
-
-                // location.href = "/admin/dashboard/students";
-            });
-        }
-    });
+                $('tbody').fadeIn(300);
+                $("body").addClass("body-logs");
+            }
+        });
+        $(".form-alumn-data").prop("action", $("meta[name='url']").attr("content") + "/" + userId);
+    }
 }
 
 /**

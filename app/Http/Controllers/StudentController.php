@@ -23,9 +23,10 @@ class StudentController extends Controller
 		$data = ['status' => 'Unauthorized, error 503'];
 		$token = $request->header('token');
 		if ($token) {
-			$user = User::select("token")->where('token', $token)->get()[0];
-			if ($user['token'])
-				$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
+			$user = User::select("token", "id")->where('token', $token)->get()[0];
+			if ($user['token']) {
+				$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name", "enrolments.state")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
+			}
 		}
 		return response()->json($data);
 	}
