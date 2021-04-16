@@ -18,16 +18,14 @@ class UpdateEnrolmentsTable extends Migration
             $table->string('birth_place');
             $table->string('address');
             $table->string('population');
-            $table->integer('postal_code', 9);
-            $table->integer('phone_number', 15);
-            $table->integer('emergency_number', 15);
+            $table->integer('postal_code');
+            $table->integer('phone_number');
+            $table->integer('emergency_number');
             $table->string('father_name');
             $table->string('father_dni');
             $table->string('mother_name');
             $table->string('mother_dni');
         });
-        //
-
     }
 
 
