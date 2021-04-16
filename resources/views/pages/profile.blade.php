@@ -29,6 +29,26 @@
                     <label for="state.dni">DNI</label>
                     <p>{{ $enrollments[0]->dni }}</p>
                 </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.adreç">Adreça</label>
+                    <p>{{ $enrollments[0]->Adreç }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.pobla">Poblacio</label>
+                    <p>{{ $enrollments[0]->Pobla }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.dni">Telefon</label>
+                    <p>{{ $enrollments[0]->phone }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.dni">Telefon d'emergència </label>
+                    <p>{{ $enrollments[0]->pEmergencia }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.dni">Codigo Postal</label>
+                    <p>{{ $enrollments[0]->CPostal }}</p>
+                </div>
             </form>
             <div class="form-group pt-5">
                 <label for="state.cambio">Solicitar cambios:</label>
