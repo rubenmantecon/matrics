@@ -14,8 +14,8 @@ class UpdateEnrolmentsTable extends Migration
     public function up()
     {
         Schema::table('enrolments', function (Blueprint $table) {
-            $table->date('birth_date');
-            $table->string('birth_place');
+            $table->date('birth_date')->nullable();
+            $table->string('birth_place')->nullable();
             $table->string('address');
             $table->string('population');
             $table->integer('postal_code');
