@@ -80,7 +80,7 @@ class StudentController extends Controller
 							$interesting_index["population"] = array_search("Província residència", $element);
 							$interesting_index["postal_code"] = array_search("CP", $element);
 							$interesting_index["phone_number"] = array_search("Telèfon", $element);
-							$interesting_index["emergency_number"] = array_search("Núm. doc. tutor 1", $element);
+							$interesting_index["emergency_number"] = array_search("Telèfon", $element);
 							$interesting_index["father_name"] = array_search("Nom tutor 1", $element);
 							$interesting_index["father_dni"] = array_search("Núm. doc. tutor 1", $element);
 							$interesting_index["mother_name"] = array_search("Nom tutor 2", $element);
