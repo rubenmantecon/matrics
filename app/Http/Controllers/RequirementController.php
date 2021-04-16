@@ -73,9 +73,12 @@ class RequirementController extends Controller
                     Log::channel('dblogging')->info("Ha creado un nuevo requerimiento", ["user_id" => Auth::id(), "requirement_id" => $req->id]);
                 }
             }
-            return response()->json($data);
-        }
-    }
+					}
+					if (isset($data['status'])) {
+						Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503");
+					}
+					return response()->json($data);
+				}
 
     /**
      * Display the specified resource.
@@ -113,11 +116,10 @@ class RequirementController extends Controller
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
             if ($user['token']) {
-                $requirement->profile_id = $request->profile_id;
                 $requirement->name = $request->name;
                 $requirement->touch();
 
-                $status = $requirement->save();
+                $status = $requirement->update();
                 if ($status){
                     $data = ["status" => "Requeriment actualitzat correctament."];
                     Log::channel('dblogging')->info("Ha actualizado un requerimiento", ["user_id" => Auth::id(), "requirement_id" => $requirement->id]);
@@ -126,6 +128,9 @@ class RequirementController extends Controller
                 }
             }
         }
+				if (isset($data['status'])) {
+					Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503");
+				}
         return response()->json($data);
     }
 

@@ -100,6 +100,93 @@ function filterStudentsPage() {
     });
 }
 
+function filterCareerPage() {
+    const term_id = getUrlParameter("term");
+    console.log(term_id);
+
+    data = {};
+    formChildren = $("section.filter > *");
+    for (const elem of formChildren) {
+        if (elem.value != "") {
+            data[elem.name] = elem.value;
+            console.log(data[elem.name]);
+        }
+    }
+
+    $.ajax({
+        url:
+            $("meta[name='url']").attr("content") +
+            "?term=" +
+            term_id +
+            "&filter=" +
+            encodeURI(JSON.stringify(data)),
+        method: "GET",
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+            "term-id": !term_id ? "empty" : term_id,
+        },
+        success: (res) => {
+            if (res.status) {
+                generateMessages(
+                    res.status,
+                    res.text,
+                    ".container-messages",
+                    3
+                );
+                // setTimeout(() => location.href = "/admin/dashboard/terms", 3000);
+            } else {
+                $("tbody").css("display", "none").html("");
+                if (res.length > 0) {
+                    for (const item of res) {
+                        let end = momentFormat(item.end, null, "DD-MM-YYYY");
+                        if (end == "Invalid date") {
+                            end = null;
+                        }
+                        $("tbody").append(
+                            insertNewRow(
+                                item.id,
+                                item.code,
+                                item.name,
+                                item.description,
+                                item.hours,
+                                momentFormat(
+                                    item.start,
+                                    "YYYY-MM-DD",
+                                    "DD-MM-YYYY"
+                                ),
+                                end,
+                                null,
+                                "careers"
+                            )
+                        );
+                    }
+                } else {
+                    $("tbody").append(
+                        `<tr>
+											<td colspan="9"><p>No s'ha trobat cap cicle.</p></td>
+									</tr>`
+                    );
+                }
+                $("tbody")
+                    .append(
+                        `<tr>
+									<td colspan="9"><button type="button" id="new" class="btn secondary-btn"><i class="far fa-calendar-plus"></i> Afegeix un nou curs</button></td>
+							</tr>`
+                    )
+                    .fadeIn(300);
+
+                $("body").addClass("body-term");
+                $("#new, #edit").on("click", (e) =>
+                    rowEventEditAndNew(e.target, "careers")
+                );
+            }
+        },
+        error: (res) => {
+            console.log(res.responseJSON);
+        },
+    });
+}
+
 /**
  * @description "get parameter value from url"
  * @param {String} param
@@ -1285,6 +1372,7 @@ $(function () {
         location.pathname.endsWith("/admin/dashboard/careers/") ||
         location.pathname.endsWith("/admin/dashboard/careers")
     ) {
+        $("button.filter").on("click", filterCareerPage);
         loadCareerPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
