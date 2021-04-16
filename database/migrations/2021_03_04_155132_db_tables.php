@@ -60,17 +60,6 @@ class DbTables extends Migration
             $table->foreignId('term_id')->constrained();
             $table->foreignId('career_id')->constrained();
             $table->string('dni');
-            $table->date('birth_date');
-            $table->string('birth_place');
-            $table->string('address');
-            $table->string('population');
-            $table->integer('postal_code', 9);
-            $table->integer('phone_number', 15);
-            $table->integer('emergency_number', 15);
-            $table->string('father_name');
-            $table->string('father_dni');
-            $table->string('mother_name');
-            $table->string('mother_dni');
             $table->enum('state', ['registered', 'unregistered']);
             $table->timestamps();
         });
