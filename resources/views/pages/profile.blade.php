@@ -30,24 +30,24 @@
                     <p>{{ $enrollments[0]->dni }}</p>
                 </div>
                 <div class="form-group grid sm:grid-cols-2">
-                    <label for="state.adreç">Adreça</label>
-                    <p>{{ $enrollments[0]->Adreç }}</p>
+                    <label for="state.address">Adreça</label>
+                    <p>{{ $enrollments[0]->address }}</p>
                 </div>
                 <div class="form-group grid sm:grid-cols-2">
-                    <label for="state.pobla">Poblacio</label>
-                    <p>{{ $enrollments[0]->Pobla }}</p>
+                    <label for="state.population">Poblacio</label>
+                    <p>{{ $enrollments[0]->population }}</p>
                 </div>
                 <div class="form-group grid sm:grid-cols-2">
-                    <label for="state.dni">Telefon</label>
-                    <p>{{ $enrollments[0]->phone }}</p>
+                    <label for="state.phone_number">Telefon</label>
+                    <p>{{ $enrollments[0]->phone_number }}</p>
                 </div>
                 <div class="form-group grid sm:grid-cols-2">
-                    <label for="state.dni">Telefon d'emergència </label>
-                    <p>{{ $enrollments[0]->pEmergencia }}</p>
+                    <label for="state.emergency_number">Telefon d'emergència </label>
+                    <p>{{ $enrollments[0]->emergency_number }}</p>
                 </div>
                 <div class="form-group grid sm:grid-cols-2">
-                    <label for="state.dni">Codigo Postal</label>
-                    <p>{{ $enrollments[0]->CPostal }}</p>
+                    <label for="state.postal_code">Codigo Postal</label>
+                    <p>{{ $enrollments[0]->postal_code }}</p>
                 </div>
             </form>
             <div class="form-group pt-5">
