@@ -19,6 +19,8 @@ use App\Http\Controllers\Profile_reqController;
 use App\Http\Controllers\RequirementController;
 use App\Models\Profile_req;
 use App\Http\Controllers\RegisterAdminController;
+use App\Models\Career;
+use App\Models\Mp;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,12 +59,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 Route::get('/dashboard/requirements', function () {
     $profile_req = Profile_req::all();
-    return view('pages.requirements' , ['profile_req' => $profile_req]);
+    return view('pages.requirements', ['profile_req' => $profile_req]);
 });
 
 Route::get('/dashboard/enrolments', function () {
     $profile_req = Profile_req::all();
-    return view('pages.studentsEnrolments' , ['profile_req' => $profile_req]);
+    $mps = Mp::all();
+    return view('pages.studentsEnrolments', ['profile_req' => $profile_req, 'mps' => $mps]);
 });
 
 Route::get('/dashboard/documents', function () {
@@ -117,4 +120,3 @@ Breadcrumbs::for('enrolments', static function ($trail) {
     $trail->parent('home');
     $trail->push('Preu', '/dashboard/enrolments');
 });
-
