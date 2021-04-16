@@ -857,6 +857,17 @@ function selectedModule(selectedInputParent) {
     }
 }
 
+function selectedUf(selectedInputParent) {
+    let groupOfSelectedInput = $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == false) {
+        for(selectedInput of groupOfSelectedInput) {
+            if($(selectedInput).prop('checked') == false) {
+                $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', false);
+            }
+        }
+    }
+}
+
 /**
  * @description "JQuery DOM Ready: detect what is the current page of the user to load the functions"
  */

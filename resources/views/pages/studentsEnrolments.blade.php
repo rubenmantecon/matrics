@@ -10,7 +10,7 @@
     <div class="container-form-user">
         <div class="grid grid-cols-2 gap-4 p-3">
             <div>
-                <h1>{{ $career[0]->code }}. {{ $career[0]->name }}</h1>
+                <h1 class="text-2xl">{{ $career[0]->code }}. {{ $career[0]->name }}</h1>
             </div>
         </div>
         <div class="grid grid-cols-1 gap-4 p-3">
@@ -33,7 +33,7 @@
                             x-bind:style="selected == 1 ? 'max-height: ' + $refs.module{{ $key+1 }}.scrollHeight + 'px' : ''">
                             @foreach ($mp->ufs as $uf)
                             <div class="p-6">
-                                <div class="ml-14 p-2.5"><input type="checkbox" id="uf" group="module{{ $key+1 }}" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent"> {{ $uf->code }}. {{ $uf->name}}</div>
+                                <div class="ml-14 p-2.5"><input type="checkbox" id="uf" group="module{{ $key+1 }}" onclick="selectedUf(this)" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent"> {{ $uf->code }}. {{ $uf->name}}</div>
                             </div>
                             @endforeach
                         </div>
