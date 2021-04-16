@@ -8,22 +8,28 @@
     {{ Breadcrumbs::render('enrolments') }}
     @endsection
     <div class="container-form-user">
-        <div class="grid grid-cols-2 gap-4 p-3">
-            <div>
+        <div class="grid grid-cols-4 gap-4 p-3">
+            <div class="col-span-3">
                 <h1 class="text-2xl">{{ $career[0]->code }}. {{ $career[0]->name }}</h1>
             </div>
+            <div class="p-1.5 border-gray-200 bg-white w-full border border-gray-300">
+                <label>
+                    <input type="checkbox" class="mr-2 appearance-none checked:bg-blue-600 checked:border-transparent" checked>
+                    Fer tot el curs
+                </label>
+            </div>
         </div>
-        <div class="grid grid-cols-1 gap-4 p-3">
+        <div id="selectionCareerIncomplete" class="grid grid-cols-1 gap-4 p-3">
             @foreach ($mps as $key => $mp)
             <div class="bg-white w-full border border-gray-300" x-data="{selected:null}">
                 <ul class="shadow-box">
                     <li class="relative border-b border-gray-200">
                         <button type="button" class="w-full px-8 py-6 text-left">
                             <div class="flex items-center justify-between">
-                                <span>
+                                <label>
                                     <input type="checkbox" onclick="selectedModule(this)" id="module" group="module{{ $key+1 }}" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent">
                                     {{ $mp->code }}.{{ $mp->name}}
-                                </span>
+                                </label>
                                 <span class="ico-plus text-2xl text-gray-500" @click="selected !== 1 ? selected = 1 : selected = null">
                                     <i class="fas fa-chevron-down"></i>
                                 </span>
@@ -33,7 +39,10 @@
                             x-bind:style="selected == 1 ? 'max-height: ' + $refs.module{{ $key+1 }}.scrollHeight + 'px' : ''">
                             @foreach ($mp->ufs as $uf)
                             <div class="p-6">
-                                <div class="ml-14 p-2.5"><input type="checkbox" id="uf" group="module{{ $key+1 }}" onclick="selectedUf(this)" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent"> {{ $uf->code }}. {{ $uf->name}}</div>
+                                <label class="ml-14 p-2.5">
+                                    <input type="checkbox" id="uf" group="module{{ $key+1 }}" onclick="selectedUf(this)" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent">
+                                    {{ $uf->code }}. {{ $uf->name}}
+                                </label>
                             </div>
                             @endforeach
                         </div>
@@ -43,7 +52,11 @@
             @endforeach
         </div>
 
-        <div class="grid grid-cols-1 gap-4 p-3">
+        <div class="grid grid-cols-4 gap-4 p-3">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div class="text-right">Total 24234</div>
         </div>
     </div>
 </x-app-layout>
