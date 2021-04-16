@@ -74,6 +74,8 @@ class StudentController extends Controller
 							$interesting_index["firstname"] = array_search("Nom", $element);
 							$interesting_index["lastname1"] = array_search("Primer cognom", $element);
 							$interesting_index["lastname2"] = array_search("Segon cognom", $element);
+
+							//campos nuevos enrolments
 							$interesting_index["address"] = array_search("Municipi residència", $element);
 							$interesting_index["population"] = array_search("Província residència", $element);
 							$interesting_index["postal_code"] = array_search("CP", $element);
@@ -83,6 +85,7 @@ class StudentController extends Controller
 							$interesting_index["father_dni"] = array_search("Núm. doc. tutor 1", $element);
 							$interesting_index["mother_name"] = array_search("Nom tutor 2", $element);
 							$interesting_index["mother_dni"] = array_search("Núm. doc. tutor 2", $element);
+
 							$interesting_index["email"] = array_search("Correu electrònic", $element);
 							$interesting_index["career_id"] = array_search("Codi ensenyament P1", $element);
 							$interesting_index["identificacion"]["dni"] = array_search("DNI", $element);
@@ -139,6 +142,8 @@ class StudentController extends Controller
 									'firstname' => $element[$interesting_index["firstname"]],
 									'lastname1' => $element[$interesting_index["lastname1"]],
 									'lastname2' => $element[$interesting_index["lastname2"]],
+									
+									//campos nuevos enrolments
 									'address' => $element[$interesting_index["address"]],
 									'population' => $element[$interesting_index["population"]],
 									'postal_code' => $element[$interesting_index["postal_code"]],
@@ -148,6 +153,7 @@ class StudentController extends Controller
 									'father_dni' => $element[$interesting_index["father_dni"]],
 									'mother_name' => $element[$interesting_index["mother_name"]],
 									'mother_dni' => $element[$interesting_index["mother_dni"]],
+
 									'password' => Hash::make("ieti" . date("Y")),
 									'token' => hash("sha256", $element[$interesting_index["email"]])
 								]
