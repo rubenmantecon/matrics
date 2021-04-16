@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Enrolment;
+use App\Models\Log;
 use Carbon\Carbon;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\CareerController;
@@ -47,14 +48,17 @@ Route::get('/dashboard/profile', function () {
     return view('pages.profile', ['enrollments' => $enrollments]);
 });
 Route::get('/dashboard', function () {
-    /*$user = Auth::user();
-    if ($user->enrolments()->first()->state) {
-        return view('pages.dashboard');
+    /*$user_id = auth::id();
+    $logs_user = Log::where('user_id', $user_id)->get()->count();
+    if ($logs_user == 15) {
+        $enrollments = Enrolment::where('user_id', $user_id)->get();
+        return redirect()->route('profile')->with(['enrollments' => $enrollments]);
     }else{
-        return view('pages.matriculacion');
+        return view('pages.dashboard');
     }*/
     return view('pages.dashboard');
 })->middleware(['auth'])->name('dashboard');
+
 Route::get('/dashboard/requirements', function () {
     $profile_req = Profile_req::all();
     return view('pages.requirements' , ['profile_req' => $profile_req]);
