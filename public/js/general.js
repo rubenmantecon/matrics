@@ -848,6 +848,15 @@ function validationTermForm(page) {
     } else return true;
 }
 
+function selectedModule(selectedInputParent) {
+    let groupOfSelectedInput = $('input[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == true) {
+        for(selectedInput of groupOfSelectedInput) {
+            $(selectedInput).prop('checked', true);
+        }
+    }
+}
+
 /**
  * @description "JQuery DOM Ready: detect what is the current page of the user to load the functions"
  */
