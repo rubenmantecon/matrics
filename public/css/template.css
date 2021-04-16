@@ -205,7 +205,7 @@ body.night ul.pagination li.pageNumber a {
 /* SEMAFORO*/
 
 .statusok {
-    background: radial-gradient(#2cec59, #0c3717);
+    background: radial-gradient(#1ec445, #17692c);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -215,7 +215,7 @@ body.night ul.pagination li.pageNumber a {
 }
 
 .statuscancel {
-    background: radial-gradient(#f42626, #3a0909);
+    background: radial-gradient(#f42626, #691111);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -224,7 +224,7 @@ body.night ul.pagination li.pageNumber a {
     border-radius: 50%;
 }
 .statusprocesing {
-    background: radial-gradient(#f58027, #552c0d);
+    background: radial-gradient(#f58027, #864615);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
