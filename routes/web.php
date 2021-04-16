@@ -51,11 +51,11 @@ Route::get('/dashboard', function () {
     if(count(Enrolment::where('user_id', $user_id)->where('state', 'pending')->get()) > 0){
     	if(count(Enrolment::where('user_id', $user_id)->get()) > count(Enrolment::where('user_id', $user_id)->where('state', 'pending')->get()) ){
     		// Alumno que tiene que hacer la matricula, pero ya tiene una antigua (Antiguo alumno).
-    		return redirect('/dashboard/documents');
+    		return redirect('/dashboard/requirements');
     	}
     	else{
     		// Alumno que tiene que hacer la matricula, (Alumno nuevo)
-    		return redirect('/dashboard/documents');
+    		return redirect('/dashboard/requirements');
     		
     	}
     }
@@ -65,10 +65,12 @@ Route::get('/dashboard', function () {
     }
 
 })->middleware(['auth'])->name('dashboard');
+
 Route::get('/dashboard/requirements', function () {
     $profile_req = Profile_req::all();
     return view('pages.requirements' , ['profile_req' => $profile_req]);
 });
+
 Route::get('/dashboard/documents', function () {
     return view('pages.documents');
 });
