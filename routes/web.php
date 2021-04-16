@@ -19,6 +19,8 @@ use App\Http\Controllers\Profile_reqController;
 use App\Http\Controllers\RequirementController;
 use App\Models\Profile_req;
 use App\Http\Controllers\RegisterAdminController;
+use App\Models\Career;
+use App\Models\Mp;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +70,17 @@ Route::get('/dashboard', function () {
 
 Route::get('/dashboard/requirements', function () {
     $profile_req = Profile_req::all();
-    return view('pages.requirements' , ['profile_req' => $profile_req]);
+    return view('pages.requirements', ['profile_req' => $profile_req]);
+});
+
+Route::get('/dashboard/enrolments', function () {
+    $profile_req = Profile_req::all();
+    $career = Career::where([
+        ['id', 1],
+        ['term_id', 1]
+    ])->get();
+    $mps = Mp::where('career_id', '1')->get(); //Mp::careers();
+    return view('pages.studentsEnrolments', ['profile_req' => $profile_req, 'mps' => $mps, 'career' => $career]);
 });
 
 Route::get('/dashboard/documents', function () {
@@ -104,7 +116,7 @@ Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
 // Dashboard
 Breadcrumbs::for('home', static function ($trail) {
     $trail->push('Inici', route('dashboard'));
-});   
+});
 
 // Dashboard > Profile
 Breadcrumbs::for('profile', static function ($trail) {
@@ -118,3 +130,8 @@ Breadcrumbs::for('documents', static function ($trail) {
     $trail->push('Documents', '/dashboard/documents');
 });
 
+// Dashboard > Enrolments
+Breadcrumbs::for('enrolments', static function ($trail) {
+    $trail->parent('home');
+    $trail->push('Preu', '/dashboard/enrolments');
+});

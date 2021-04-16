@@ -848,6 +848,26 @@ function validationTermForm(page) {
     } else return true;
 }
 
+function selectedModule(selectedInputParent) {
+    let groupOfSelectedInput = $('input[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == true) {
+        for(selectedInput of groupOfSelectedInput) {
+            $(selectedInput).prop('checked', true);
+        }
+    }
+}
+
+function selectedUf(selectedInputParent) {
+    let groupOfSelectedInput = $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == false) {
+        for(selectedInput of groupOfSelectedInput) {
+            if($(selectedInput).prop('checked') == false) {
+                $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', false);
+            }
+        }
+    }
+}
+
 /**
  * @description "JQuery DOM Ready: detect what is the current page of the user to load the functions"
  */
