@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\Users;
 use App\Models\Enrolment;
 use Carbon\Carbon;
@@ -50,15 +51,14 @@ Route::get('/dashboard/profile', function () {
 });
 Route::get('/dashboard', function () {
     $user_id = auth::id();
-    if(count(Enrolment::where('user_id', $user_id)->where('state', 'pending')->get()) > 0){
-    	if(count(Enrolment::where('user_id', $user_id)->get()) > count(Enrolment::where('user_id', $user_id)->where('state', 'pending')->get()) ){
+    if(count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get()) > 0){
+    	if(count(Enrolment::where('user_id', $user_id)->get()) > count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get()) ){
     		// Alumno que tiene que hacer la matricula, pero ya tiene una antigua (Antiguo alumno).
     		return redirect('/dashboard/requirements');
     	}
     	else{
     		// Alumno que tiene que hacer la matricula, (Alumno nuevo)
     		return redirect('/dashboard/requirements');
-    		
     	}
     }
     else{
@@ -73,12 +73,22 @@ Route::get('/dashboard/requirements', function () {
     return view('pages.requirements', ['profile_req' => $profile_req]);
 });
 
-Route::post('/dashboard/enrolments', function () {
+Route::post('/dashboard/enrolments', function (Request $request) {
 	$user_id = auth::id();
-	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("user_id", $user_id)->where("state", "pending")->orderBy("id", "DESC")->limit(1)->get(['careers.name', 'careers.id']);
-	dd($career);
-    $mps = Mp::where('career_id', '1')->get(); //Mp::careers();
-    return view('pages.studentsEnrolments', ['profile_req' => $profile_req, 'mps' => $mps, 'career' => $career]);
+	
+	/*
+		Podemos enviarlos a la siguiente pagina
+		o
+		Podemos almacenarlos en la db (por si el usuario se queda a medias)
+	*/
+	
+	$rights = ["image" => $request->pr_image, "excursions" => $request->pr_excursions, "extracurricular" => $request->pr_extracurricular];
+	
+	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['careers.code', 'careers.name', 'careers.id']);
+	
+    $mps = Mp::where('career_id', $career["id"])->get(); //Mp::careers();
+    
+    return view('pages.studentsEnrolments', ['career' => $career, 'mps' => $mps, 'rights' => $rights]);
 });
 
 Route::get('/dashboard/documents', function () {
