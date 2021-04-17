@@ -1153,11 +1153,13 @@ body.body-term {
 .students,
 .import,
 .careers,
+.profile-req,
 .createAdmin {
     margin: 3% 0;
 }
 
-.terms .text {
+.terms .text,
+.profile-req .text {
     font-size: 18px;
     margin: 10px 0;
     text-align: center;
@@ -1591,6 +1593,85 @@ main.login .container-form a img.logo {
 .import .btn-start-import button {
     width: 230px;
     height: 45px;
+}
+
+/* REQUIREMENTS */
+.profile-req .cards {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 2em 0;
+}
+
+.profile-req .cards .card-box {
+    width: 33%;
+    margin: 1em 0;
+}
+
+.profile-req .cards .card-box .card {
+    border: 2px solid #ffffff75;
+    border-radius: 16px;
+    background-color: #212121;
+    box-shadow: 0 0 6px black;
+    text-align: center;
+    width: 85%;
+    margin: auto;
+}
+
+.profile-req .cards .card-box .card .header {
+    padding: 10px 0;
+    border-bottom: 2px solid #878787;
+    font-size: 25px;
+    font-weight: bold;
+    background-color: #111111bd;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.profile-req .cards .card-box .card .body {
+    box-shadow: 0 0 15px 3px inset black;
+    padding: 20px;
+}
+
+.profile-req .cards .card-box .card .body .title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.profile-req .cards .card-box .card .body .row-req {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.profile-req .cards .card-box .card .body .row-req>* {
+    margin: 0 5px;
+}
+
+.profile-req .cards .card-box .card .body .row-req button {
+    padding: .8em .9em;
+}
+
+.profile-req .cards .card-box .card .footer {
+    padding: 10px 0;
+    border-top: 2px solid #878787;
+    background-color: #111111bd;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.modal-req select {
+    padding: 10px;
+    color: #000;
+}
+
+.btn-create-profile {
+    text-align: right;
+    width: 90%;
 }
 
 /* PAGINATION */

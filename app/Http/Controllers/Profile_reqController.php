@@ -142,7 +142,12 @@ class Profile_reqController extends Controller
 	// }
 	public function destroy(Request $request, Profile_req $pro)
 	{
-		$id = $pro->id;
-		Profile_req::destroy($id);
+		$id = $request->id;
+        $status = Profile_req::destroy($id);
+        if ($status) {
+            return response()->json(["status" => "success", "text" => "Perfil esborrat correctament."]);
+        } else {
+            return response()->json(["status" => "error", "text" => "No s'ha pogut esborrar el perfil."]);
+        }
 	}
 }

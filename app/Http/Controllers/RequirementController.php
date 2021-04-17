@@ -25,8 +25,8 @@ class RequirementController extends Controller
             if ($user['token']) {
                 $profile_req_id = $request->header('profile_req_id');
                 if (isset($profile_req_id) && $profile_req_id != "empty") {
-                    $data = Requirement::select("*")->where("profile_req_id", $profile_req_id)->get();
-                    if (sizeof($data) == 0){
+                    $data = Requirement::select("*")->where("profile_id", $profile_req_id)->get();
+                    if (sizeof($data) == 0) {
                         return response()->json(['status' => "warning", "text" => 'No hi ha requeriments per aquest perfil.']);
                     } else {
                         return response()->json($data);
@@ -57,28 +57,27 @@ class RequirementController extends Controller
      */
     public function store(Request $request)
     {
-        $data = ['status' => 'Unauthorized, error 503'];
+        $data = ['status' => 'Unauthorized, error 509'];
         $token = $request->header('token');
         if ($token) {
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
-            if ($user['token']) {
-
+            if (isset($user)) {
                 $req = new Requirement;
                 $req->profile_id = $request->profile_id;
                 $req->name = $request->name;
 
                 $status = $req->save();
                 if ($status) {
-                    $data = ["status" => "Nou requeriment creat correctament."];
-                    Log::channel('dblogging')->info("Ha creado un nuevo requerimiento", ["user_id" => Auth::id(), "requirement_id" => $req->id]);
+                    $data = ["status" => "success", "text" => "Nou requeriment creat correctament."];
+                    Log::channel('dblogging')->info("Ha creado un nuevo requerimiento", ["user_id" => $user['id'], "requirement_id" => $req->id]);
                 }
             }
-					}
-					if (isset($data['status'])) {
-						Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503");
-					}
-					return response()->json($data);
-				}
+        }
+        if (isset($data['status'])) {
+            Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503", ["user_id" => null, "requirement_id" => null]);
+        }
+        return response()->json($data);
+    }
 
     /**
      * Display the specified resource.
@@ -120,17 +119,17 @@ class RequirementController extends Controller
                 $requirement->touch();
 
                 $status = $requirement->update();
-                if ($status){
-                    $data = ["status" => "Requeriment actualitzat correctament."];
+                if ($status) {
+                    $data = ["status" => "success", "text" => "Requeriment actualitzat correctament."];
                     Log::channel('dblogging')->info("Ha actualizado un requerimiento", ["user_id" => Auth::id(), "requirement_id" => $requirement->id]);
                 } else {
-                    $data = ["status" => "Requeriment NO actualitzat."];
+                    $data = ["status" => "error", "text" => "Requeriment NO actualitzat."];
                 }
             }
         }
-				if (isset($data['status'])) {
-					Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503");
-				}
+        if (isset($data['status'])) {
+            Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503", ["user_id" => null, "requirement_id" => null]);
+        }
         return response()->json($data);
     }
 
@@ -147,7 +146,12 @@ class RequirementController extends Controller
 
     public function destroy(Request $request, Requirement $req)
     {
-        $id = $req->id;
-        Requirement::destroy($id);
+        $id = $request->id;
+        $status = Requirement::destroy($id);
+        if ($status) {
+            return response()->json(["status" => "success", "text" => "Requeriment esborrat correctament."]);
+        } else {
+            return response()->json(["status" => "error", "text" => "No s'ha pogut esborrar el requeriment."]);
+        }
     }
 }

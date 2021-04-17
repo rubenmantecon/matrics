@@ -114,8 +114,7 @@ function filterCareerPage() {
     }
 
     $.ajax({
-        url:
-            $("meta[name='url']").attr("content") +
+        url: $("meta[name='url']").attr("content") +
             "?term=" +
             term_id +
             "&filter=" +
@@ -252,8 +251,8 @@ function countdown(parentName, id, seconds) {
     setTimeout(() => {
         $(parentName + " .message#" + id).fadeOut(400, () =>
             $(parentName + " .message")
-                .last()
-                .remove()
+            .last()
+            .remove()
         );
     }, seconds * 1000);
 }
@@ -281,10 +280,10 @@ function loadLogsPage() {
                         msg = item.message;
                     }
                     var output_badge =
-                        item.level == 200
-                            ? (output_badge =
-                                  '<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1">Info</span>')
-                            : (output_badge = item.level);
+                        item.level == 200 ?
+                        (output_badge =
+                            '<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1">Info</span>') :
+                        (output_badge = item.level);
 
                     $("tbody").append(
                         insertNewRow(
@@ -701,6 +700,216 @@ function loadAdminMatriculationPage() {
 
                 // location.href = "/admin/dashboard/students";
             });
+        },
+    });
+}
+
+/**
+ * @description "load all the data of the logs end point in the tbody HTML"
+ */
+function loadProfileReqPage() {
+    $("body").addClass("body-term");
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: "GET",
+        headers: {
+            token: $("meta[name='_token']").attr("content")
+        },
+        success: async (res) => {
+            $(".cards").html('');
+            for (const profile of res) {
+                let card = `
+                <div class="card-box">
+                    <div class="card" style="display: none" data-id="${profile.id}">
+                        <div class="header">
+                            <p>${profile.id} - ${profile.name}</p>
+                        </div>
+                        <div class="body">
+                            <p class="title">Requeriments</p>
+                            <button type="button" class="btn primary-btn" id="new">Nou requeriment</button>`;
+                await $.ajax({
+                    url: '/api/requirements',
+                    method: "GET",
+                    headers: {
+                        token: $("meta[name='_token']").attr("content"),
+                        profile_req_id: profile.id
+                    },
+                    success: (res) => {
+                        if (res.status) {
+                            card += `<div class="row-req" data-id="null">
+                            <p>${res.text}</p>
+                        </div>`
+                        } else {
+                            for (const req of res) {
+                                card += `<div class="row-req" data-id="${req.id}">
+                            <p class="name-req">${req.name}</p>
+                            <div class="btns">
+								<button class="btn save edit"><i class="fas fa-pen"></i></button>
+								<button class="btn cancel remove"><i class="fas fa-trash"></i></button>
+							</div>
+                        </div>`
+                            }
+                        }
+                    },
+                });
+                card += `
+                    </div>
+                    <div class="footer">
+                        <button class="btn save edit"><i class="fas fa-pen"></i> Editar</button>
+                        <button class="btn cancel remove"><i class="fas fa-trash"></i> Eliminar</button>
+                    </div>
+                </div>`;
+                $(".cards").append(card);
+                $(".card").last().fadeIn(400);
+            }
+            $(".cards #new, .card .btns .edit").on("click", function (e) {
+                const tag = e.target;
+                let id = $(e.target).closest(".row-req").attr("data-id");
+                $("html").css("overflow", "hidden");
+                $(".bg-dialog").addClass("bg-opacity");
+                const rowSelected = (id) ? $(tag).closest(".row-req") : null;
+                let nameReq = $(rowSelected).children("p").text();
+                let dialog = $(".modal-req").dialog({
+                    modal: true,
+                    dialogClass: "dialog-top",
+                    buttons: {
+                        Desa: () => {
+                            dialog.dialog("close");
+                            updateOrCreateRequirement(tag.id, id);
+                            $("html").css("overflow", "auto");
+                            setTimeout(
+                                () => $(".bg-dialog").removeClass("bg-opacity"),
+                                700
+                            );
+                        },
+                        Cancela: () => {
+                            dialog.dialog("close");
+                            $("html").css("overflow", "auto");
+                            setTimeout(
+                                () => $(".bg-dialog").removeClass("bg-opacity"),
+                                700
+                            );
+                        },
+                    },
+                    close: () => {
+                        $("html").css("overflow", "auto");
+                        $(".bg-dialog").removeClass("bg-opacity");
+                    },
+                    show: {
+                        effect: "fold",
+                        duration: 700,
+                    },
+                    hide: {
+                        effect: "fold",
+                        duration: 700,
+                    },
+                });
+                $(".modal-req select#profile_id").html('');
+                if (tag.id == "new") {
+                    $(".modal-req #name").val('');
+                    for (const profile of res) {
+                        $("select#profile_id").append(`<option value="${profile.id}">${profile.id} - ${profile.name}</option>`);
+                    }
+                } else {
+                    for (const profile of res) {
+                        const profileIdSelected = $(rowSelected).closest(".card").children(".header").children("p").text().split(" - ")[0];
+                        if (profileIdSelected == profile.id) {
+                            $("select#profile_id").append(`<option value="${profile.id}">${profile.id} - ${profile.name}</option>`);
+                        }
+                    }
+                    $(".modal-req #name").val(nameReq);
+                }
+                let childrens = $(".ui-dialog-buttonset")
+                    .addClass("buttons-group")
+                    .children();
+                $(childrens[1]).attr("class", "btn cancel");
+                $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
+                $(childrens[0])
+                    .attr("class", "btn save")
+                    .text(tag.id === "new" ? "Crea" : "Desa")
+                    .after('<div class="or"></div>');
+                $(".ui-dialog-title").text(tag.id === "new" ? "Nou" : "Modicació");
+            });
+
+            $(".btns .cancel.remove").on("click", function (e) {
+                let id = $(e.target).closest(".row-req").attr("data-id");
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                    },
+                });
+                $.ajax({
+                    url: "/api/requirements/" + id,
+                    type: 'DELETE',
+                    data: {
+                        id
+                    },
+                    success: function (res) {
+                        generateMessages(res.status, res.text, ".container-messages", 3);
+                        if (res.status === "success") {
+                            loadProfileReqPage();
+                        }
+                    },
+                });
+            })
+
+            $(".footer .cancel.remove").on("click", function (e) {
+                let id = $(e.target).closest(".card").attr("data-id");
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        ),
+                    },
+                });
+                $.ajax({
+                    url: $("meta[name='url']").attr("content") + "/" + id,
+                    type: 'DELETE',
+                    data: {
+                        id
+                    },
+                    success: function (res) {
+                        generateMessages(res.status, res.text, ".container-messages", 3);
+                        if (res.status === "success") {
+                            loadProfileReqPage();
+                        }
+                    },
+                });
+            })
+        },
+
+    });
+}
+
+function updateOrCreateRequirement(method, id) {
+    const url = (method == "new") ? "/api/requirements" : "/api/requirements/" + id;
+    const profile_id = $(".modal-req #profile_id").val();
+    const name = $(".modal-req #name").val();
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                "content"
+            ),
+        },
+    });
+    $.ajax({
+        url,
+        type: 'POST',
+        headers: {
+            token: $("meta[name='_token']").attr("content")
+        },
+        data: {
+            _method: 'PUT',
+            profile_id,
+            name,
+        },
+        success: function (res) {
+            generateMessages(res.status, res.text, ".container-messages", 3);
+            if (res.status === "success") {
+                loadProfileReqPage();
+            }
         },
     });
 }
@@ -1452,6 +1661,11 @@ $(function () {
         location.pathname.endsWith("/admin/dashboard/students/matriculation/")
     ) {
         loadAdminMatriculationPage();
+    } else if (
+        location.pathname.endsWith("/admin/dashboard/profileReq") ||
+        location.pathname.endsWith("/admin/dashboard/profileReq/")
+    ) {
+        loadProfileReqPage();
     }
 
     //"DARK-MODE"
