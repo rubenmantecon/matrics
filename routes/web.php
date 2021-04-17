@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\Users;
 use App\Models\Enrolment;
 use Carbon\Carbon;
@@ -49,27 +50,45 @@ Route::get('/dashboard/profile', function () {
     return view('pages.profile', ['enrollments' => $enrollments]);
 });
 Route::get('/dashboard', function () {
-    /*$user = Auth::user();
-    if ($user->enrolments()->first()->state) {
-        return view('pages.dashboard');
-    }else{
-        return view('pages.matriculacion');
-    }*/
-    return view('pages.dashboard');
+    $user_id = auth::id();
+    if(count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get()) > 0){
+    	if(count(Enrolment::where('user_id', $user_id)->get()) > count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get()) ){
+    		// Alumno que tiene que hacer la matricula, pero ya tiene una antigua (Antiguo alumno).
+    		return redirect('/dashboard/requirements');
+    	}
+    	else{
+    		// Alumno que tiene que hacer la matricula, (Alumno nuevo)
+    		return redirect('/dashboard/requirements');
+    	}
+    }
+    else{
+    	// Alumno que ya ha hecho la matricula (actual).
+    	return view('pages.dashboard');
+    }
+
 })->middleware(['auth'])->name('dashboard');
+
 Route::get('/dashboard/requirements', function () {
     $profile_req = Profile_req::all();
     return view('pages.requirements', ['profile_req' => $profile_req]);
 });
 
-Route::get('/dashboard/enrolments', function () {
-    $profile_req = Profile_req::all();
-    $career = Career::where([
-        ['id', 1],
-        ['term_id', 1]
-    ])->get();
-    $mps = Mp::where('career_id', '1')->get(); //Mp::careers();
-    return view('pages.studentsEnrolments', ['profile_req' => $profile_req, 'mps' => $mps, 'career' => $career]);
+Route::post('/dashboard/enrolments', function (Request $request) {
+	$user_id = auth::id();
+	
+	/*
+		Podemos enviarlos a la siguiente pagina
+		o
+		Podemos almacenarlos en la db (por si el usuario se queda a medias)
+	*/
+	
+	$rights = ["image" => $request->pr_image, "excursions" => $request->pr_excursions, "extracurricular" => $request->pr_extracurricular];
+	
+	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['careers.code', 'careers.name', 'careers.id']);
+	
+    $mps = Mp::where('career_id', $career["id"])->get(); //Mp::careers();
+    
+    return view('pages.studentsEnrolments', ['career' => $career, 'mps' => $mps, 'rights' => $rights]);
 });
 
 Route::get('/dashboard/documents', function () {
