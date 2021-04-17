@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profile_req;
+use App\Models\Requirement;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,7 @@ class Profile_reqController extends Controller
 			if ($user['token']) {
 				$data = Profile_req::all();
 				if (sizeof($data) == 0) {
-					return response()->json(['status' => "warning", "text" => 'No hi ha requeriments per aquest perfil.']);
+					return response()->json(['status' => "warning", "text" => 'No hi ha cap perfil.']);
 				} else {
 					return response()->json($data);
 				}
@@ -64,12 +65,12 @@ class Profile_reqController extends Controller
 
 				$status = $pro->save();
 				if ($status) {
-					$data = ["status" => "Nou perfil de requeriments creat correctament."];
+					$data = ["status" => "success", "text" => "Nou perfil de requeriments creat correctament."];
 					Log::channel('dblogging')->info("Ha creado un nuevo perfil de requerimientos", ["user_id" => Auth::id(), "profile_reqs_id" => $pro->id]);
 				}
 			}
 			if (isset($data['status'])) {
-				Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503");
+				Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503", ["user_id" => null, "requirement_id" => null]);
 			}
 			return response()->json($data);
 		}
@@ -106,17 +107,18 @@ class Profile_reqController extends Controller
 	 */
 	public function update(Request $request, Profile_req $pro)
 	{
-		$data = ['status' => 'Unauthorized, error 503'];
+		$data = ['status' => 'Unauthorized, error 500'];
 		$token = $request->header('token');
 		if ($token) {
 			$user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
 			if ($user['token']) {
+				$pro = Profile_req::select("*")->where("id", $request->id)->get()[0];
 				$pro->name = $request->name;
 				$pro->touch();
 				$status = $pro->update();
 
 				if ($status) {
-					$data = ["status" => "Perfil de requeriments actualitzat correctament."];
+					$data = ["status" => "success", "text" => "Perfil de requeriments actualitzat correctament."];
 					Log::channel('dblogging')->info("Ha actualizado un perfil de requerimientos", ["user_id" => Auth::id(), "profile_reqs" => $pro->id]);
 				} else {
 					Log::channel('dblogging')->info("Fallo al actualizar el perfil. No se ha encontrado el perfil de requerimientos a modificar.");
@@ -125,7 +127,7 @@ class Profile_reqController extends Controller
 			}
 		}
 		if (isset($data['status'])) {
-			Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503");
+			Log::channel('dblogging')->info("No se ha enviado token de identificación en la request. Conexión rechazada. HTTP 503", ["user_id" => null, "requirement_id" => null]);
 		}
 		return response()->json($data);
 	}
@@ -143,7 +145,9 @@ class Profile_reqController extends Controller
 	public function destroy(Request $request, Profile_req $pro)
 	{
 		$id = $request->id;
+		Requirement::where('profile_id', $id)->delete();
         $status = Profile_req::destroy($id);
+
         if ($status) {
             return response()->json(["status" => "success", "text" => "Perfil esborrat correctament."]);
         } else {

@@ -1604,6 +1604,12 @@ main.login .container-form a img.logo {
     margin: 2em 0;
 }
 
+.profile-req .cards .without {
+    font-size: 27px;
+    font-weight: bold;
+    text-shadow: 0 0 7px black;
+}
+
 .profile-req .cards .card-box {
     width: 33%;
     margin: 1em 0;

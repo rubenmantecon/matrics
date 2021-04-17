@@ -717,8 +717,12 @@ function loadProfileReqPage() {
         },
         success: async (res) => {
             $(".cards").html('');
-            for (const profile of res) {
-                let card = `
+            if (res.status) {
+                generateMessages(res.status, res.text, ".container-messages", 3);
+                $(".cards").append(`<p class="without">${res.text}</p>`)
+            } else {
+                for (const profile of res) {
+                    let card = `
                 <div class="card-box">
                     <div class="card" style="display: none" data-id="${profile.id}">
                         <div class="header">
@@ -727,41 +731,43 @@ function loadProfileReqPage() {
                         <div class="body">
                             <p class="title">Requeriments</p>
                             <button type="button" class="btn primary-btn" id="new">Nou requeriment</button>`;
-                await $.ajax({
-                    url: '/api/requirements',
-                    method: "GET",
-                    headers: {
-                        token: $("meta[name='_token']").attr("content"),
-                        profile_req_id: profile.id
-                    },
-                    success: (res) => {
-                        if (res.status) {
-                            card += `<div class="row-req" data-id="null">
-                            <p>${res.text}</p>
+                    await $.ajax({
+                        url: '/api/requirements',
+                        method: "GET",
+                        headers: {
+                            token: $("meta[name='_token']").attr("content"),
+                            profile_req_id: profile.id
+                        },
+                        success: (res) => {
+                            if (res.status) {
+                                card += `<div class="row-req" data-id="null">
+                            <p style="text-align:center;">${res.text}</p>
                         </div>`
-                        } else {
-                            for (const req of res) {
-                                card += `<div class="row-req" data-id="${req.id}">
+                            } else {
+                                for (const req of res) {
+                                    card += `<div class="row-req" data-id="${req.id}">
                             <p class="name-req">${req.name}</p>
                             <div class="btns">
 								<button class="btn save edit"><i class="fas fa-pen"></i></button>
 								<button class="btn cancel remove"><i class="fas fa-trash"></i></button>
 							</div>
                         </div>`
+                                }
                             }
-                        }
-                    },
-                });
-                card += `
+                        },
+                    });
+                    card += `
                     </div>
                     <div class="footer">
                         <button class="btn save edit"><i class="fas fa-pen"></i> Editar</button>
                         <button class="btn cancel remove"><i class="fas fa-trash"></i> Eliminar</button>
                     </div>
                 </div>`;
-                $(".cards").append(card);
-                $(".card").last().fadeIn(400);
+                    $(".cards").append(card);
+                    $(".card").last().fadeIn(400);
+                }
             }
+
             $(".cards #new, .card .btns .edit").on("click", function (e) {
                 const tag = e.target;
                 let id = $(e.target).closest(".row-req").attr("data-id");
@@ -774,13 +780,17 @@ function loadProfileReqPage() {
                     dialogClass: "dialog-top",
                     buttons: {
                         Desa: () => {
-                            dialog.dialog("close");
-                            updateOrCreateRequirement(tag.id, id);
-                            $("html").css("overflow", "auto");
-                            setTimeout(
-                                () => $(".bg-dialog").removeClass("bg-opacity"),
-                                700
-                            );
+                            if (!isNull($(".modal-req #name").val())) {
+                                dialog.dialog("close");
+                                updateOrCreateRequirement(tag.id, id);
+                                $("html").css("overflow", "auto");
+                                setTimeout(
+                                    () => $(".bg-dialog").removeClass("bg-opacity"),
+                                    700
+                                );
+                            } else {
+                                generateMessages("error", "El nom no pot estar buit.", ".container-messages", 3);
+                            }
                         },
                         Cancela: () => {
                             dialog.dialog("close");
@@ -808,17 +818,23 @@ function loadProfileReqPage() {
                 if (tag.id == "new") {
                     $(".modal-req #name").val('');
                     for (const profile of res) {
-                        $("select#profile_id").append(`<option value="${profile.id}">${profile.id} - ${profile.name}</option>`);
+                        const profileIdSelected = $(tag).closest(".card").attr("data-id");
+                        if (profileIdSelected == profile.id) {
+                            $("select#profile_id").append(`<option selected value="${profile.id}">${profile.id} - ${profile.name}</option>`);                        
+                        } else {
+                            $("select#profile_id").append(`<option value="${profile.id}">${profile.id} - ${profile.name}</option>`);
+                        }
                     }
                 } else {
                     for (const profile of res) {
-                        const profileIdSelected = $(rowSelected).closest(".card").children(".header").children("p").text().split(" - ")[0];
+                        const profileIdSelected = $(tag).closest(".card").attr("data-id");
                         if (profileIdSelected == profile.id) {
                             $("select#profile_id").append(`<option value="${profile.id}">${profile.id} - ${profile.name}</option>`);
                         }
                     }
                     $(".modal-req #name").val(nameReq);
                 }
+
                 let childrens = $(".ui-dialog-buttonset")
                     .addClass("buttons-group")
                     .children();
@@ -829,6 +845,70 @@ function loadProfileReqPage() {
                     .text(tag.id === "new" ? "Crea" : "Desa")
                     .after('<div class="or"></div>');
                 $(".ui-dialog-title").text(tag.id === "new" ? "Nou" : "Modicació");
+            });
+
+            $(".btn-create-profile #new-profile, .footer .edit").on("click", function (e) {
+                const tag = e.target;
+                let id = $(tag).closest(".card").attr("data-id");
+                $("html").css("overflow", "hidden");
+                $(".bg-dialog").addClass("bg-opacity");
+                const rowSelected = (id) ? $(tag).closest(".card") : null;
+                let nameReq = $(rowSelected).children(".header").children("p").text().split(" - ")[1];
+                let dialog = $(".modal-profile-req").dialog({
+                    modal: true,
+                    dialogClass: "dialog-top",
+                    buttons: {
+                        Desa: () => {
+                            if (!isNull($(".modal-profile-req #name").val())) {
+                                dialog.dialog("close");
+                                updateOrCreateProfile(tag.id, id);
+                                $("html").css("overflow", "auto");
+                                setTimeout(
+                                    () => $(".bg-dialog").removeClass("bg-opacity"),
+                                    700
+                                );
+                            } else {
+                                generateMessages("error", "El nom no pot estar buit.", ".container-messages", 3);
+                            }
+                        },
+                        Cancela: () => {
+                            dialog.dialog("close");
+                            $("html").css("overflow", "auto");
+                            setTimeout(
+                                () => $(".bg-dialog").removeClass("bg-opacity"),
+                                700
+                            );
+                        },
+                    },
+                    close: () => {
+                        $("html").css("overflow", "auto");
+                        $(".bg-dialog").removeClass("bg-opacity");
+                    },
+                    show: {
+                        effect: "fold",
+                        duration: 700,
+                    },
+                    hide: {
+                        effect: "fold",
+                        duration: 700,
+                    },
+                });
+                $(".modal-profile-req select#profile_id").html('');
+                if (tag.id == "new-profile") {
+                    $(".modal-profile-req #name").val('');
+                } else {
+                    $(".modal-profile-req #name").val(nameReq);
+                }
+                let childrens = $(".ui-dialog-buttonset")
+                    .addClass("buttons-group")
+                    .children();
+                $(childrens[1]).attr("class", "btn cancel");
+                $(".ui-dialog-titlebar-close").html('<i class="fas fa-times-circle"></i>');
+                $(childrens[0])
+                    .attr("class", "btn save")
+                    .text(tag.id === "new-profile" ? "Crea" : "Desa")
+                    .after('<div class="or"></div>');
+                $(".ui-dialog-title").text(tag.id === "new-profile" ? "Nou" : "Modicació");
             });
 
             $(".btns .cancel.remove").on("click", function (e) {
@@ -883,10 +963,24 @@ function loadProfileReqPage() {
     });
 }
 
-function updateOrCreateRequirement(method, id) {
-    const url = (method == "new") ? "/api/requirements" : "/api/requirements/" + id;
-    const profile_id = $(".modal-req #profile_id").val();
-    const name = $(".modal-req #name").val();
+function updateOrCreateProfile(method, id) {
+    let url = null;
+    let data = null;
+    const name = $(".modal-profile-req #name").val();
+    if (method == "new-profile") {
+        url = $("meta[name='url']").attr("content");
+        data = {
+            name,
+        }
+    } else {
+        url = $("meta[name='url']").attr("content") + "/" + id;
+        data = {
+            _method: 'PUT',
+            name,
+            id
+        }
+    }
+    console.log(url, data);
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -900,11 +994,50 @@ function updateOrCreateRequirement(method, id) {
         headers: {
             token: $("meta[name='_token']").attr("content")
         },
-        data: {
+        data,
+        success: function (res) {
+            console.log(res);
+            generateMessages(res.status, res.text, ".container-messages", 3);
+            if (res.status === "success") {
+                loadProfileReqPage();
+            }
+        },
+    });
+}
+
+function updateOrCreateRequirement(method, id) {
+    let url = null;
+    let data = null;
+    const profile_id = $(".modal-req #profile_id").val();
+    const name = $(".modal-req #name").val();
+    if (method == "new") {
+        url = "/api/requirements";
+        data = {
+            profile_id,
+            name,
+        }
+    } else {
+        url = "/api/requirements/" + id;
+        data = {
             _method: 'PUT',
             profile_id,
             name,
+        }
+    }
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                "content"
+            ),
         },
+    });
+    $.ajax({
+        url,
+        type: 'POST',
+        headers: {
+            token: $("meta[name='_token']").attr("content")
+        },
+        data,
         success: function (res) {
             generateMessages(res.status, res.text, ".container-messages", 3);
             if (res.status === "success") {

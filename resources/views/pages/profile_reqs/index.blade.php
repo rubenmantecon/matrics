@@ -22,21 +22,7 @@
         <div class="modal-profile-req dis-none" title="Nou Perfil de Requeriments">
             <div class="label-group">
                 <label for="name">Nom: <span class="red">*</span></label>
-                <input type="text" id="name" class="input">
-            </div>
-            <div class="label-group">
-                <label for="description">Descripció: <span class="red">*</span></label>
-                <input type="text" id="description" class="input">
-            </div>
-            <div class="row">
-                <div class="label-group">
-                    <label for="start">Data d'inici: <span class="red">*</span></label>
-                    <input type="text" id="start" class="input">
-                </div>
-                <div class="label-group">
-                    <label for="end">Data de fi: <span class="red">*</span></label>
-                    <input type="text" id="end" class="input">
-                </div>
+                <input type="text" id="name" name="name" class="input">
             </div>
         </div>
         <div class="modal-req dis-none" title="Nou Requeriment">
