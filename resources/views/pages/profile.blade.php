@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group grid sm:grid-cols-2">
                     <label for="state.population">Poblacio</label>
-                    <p>{{ $enrollments[0]->population }}</p>
+                    <p>{{ $enrollments[0]->city }}</p>
                 </div>
                 <div class="form-group grid sm:grid-cols-2">
                     <label for="state.phone_number">Telefon</label>
