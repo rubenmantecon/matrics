@@ -21,10 +21,10 @@ class UpdateEnrolmentsTable extends Migration
             $table->string('postal_code');
             $table->string('phone_number');
             $table->string('emergency_number');
-            $table->string('tutor_1');
-            $table->string('tutor_1_dni');
-            $table->string('tutor_2');
-            $table->string('tutor_2_dni');
+            $table->string('tutor_1')->nullable();
+            $table->string('tutor_1_dni')->nullable();
+            $table->string('tutor_2')->nullable();
+            $table->string('tutor_2_dni')->nullable();
         });
     }
 
