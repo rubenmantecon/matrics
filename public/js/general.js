@@ -854,6 +854,10 @@ function selectedModule(selectedInputParent) {
         for(selectedInput of groupOfSelectedInput) {
             $(selectedInput).prop('checked', true);
         }
+
+        if($('input#module').length == $('input#module:checked').length) {
+            $('input[type=checkbox]#allCourse').prop('checked', true);
+        }
     } else if($(selectedInputParent).prop('checked') == false) {
         for(selectedInput of groupOfSelectedInput) {
             $(selectedInput).prop('checked', false);
@@ -877,6 +881,10 @@ function selectedUf(selectedInputParent) {
         if(groupOfSelectedInput.length == $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]:checked').length) {
             $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', true);
         }
+
+        if($('input#module').length == $('input#module:checked').length) {
+            $('input[type=checkbox]#allCourse').prop('checked', true);
+        }
     }
 }
 
@@ -889,6 +897,7 @@ function selectedAllCourse(selectedInputParent) {
 }
 
 function calculatePrice(requirementParameters) {
+    console.log('calculating');
     $.getJSON('/data/prices.json', function(prices) {
         if($('#codeCareer').text().includes('CFPM')) {
             if($('input#allCourse').prop('checked') == true) {

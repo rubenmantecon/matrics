@@ -59,8 +59,12 @@
             <div id="totalSelected" class="text-center">0</div>
         </div>
 
-        <script>
+        <script type="text/javascript" defer>
             calculatePrice({!! $rights !!});
+
+            document.querySelector('.container-form-user input[type=checkbox]').addEventListener('change', function () {
+                calculatePrice({!! $rights !!});
+            });
         </script>
     </div>
 </x-app-layout>
