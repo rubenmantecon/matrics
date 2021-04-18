@@ -75,19 +75,19 @@ Route::get('/dashboard/requirements', function () {
 
 Route::post('/dashboard/enrolments', function (Request $request) {
 	$user_id = auth::id();
-	
+
 	/*
 		Podemos enviarlos a la siguiente pagina
 		o
 		Podemos almacenarlos en la db (por si el usuario se queda a medias)
 	*/
-	
-	$rights = ["image" => $request->pr_image, "excursions" => $request->pr_excursions, "extracurricular" => $request->pr_extracurricular];
-	
+
+	$rights = '{"image": "'.$request->pr_image.'", "excursions": "'.$request->pr_excursions.'", "extracurricular": "'.$request->pr_extracurricular.'"}';
+
 	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['careers.code', 'careers.name', 'careers.id']);
-	
+
     $mps = Mp::where('career_id', $career["id"])->get(); //Mp::careers();
-    
+
     return view('pages.studentsEnrolments', ['career' => $career, 'mps' => $mps, 'rights' => $rights]);
 });
 

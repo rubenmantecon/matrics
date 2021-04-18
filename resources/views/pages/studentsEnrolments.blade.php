@@ -10,11 +10,11 @@
     <div class="container-form-user">
         <div class="grid grid-cols-4 gap-4 p-3">
             <div class="col-span-3">
-                <h1 class="text-2xl"></h1>
+                <h1 class="text-2xl"><span id="codeCareer">{{ $career->code }}</span>. {{ $career->name }}</h1>
             </div>
             <div class="p-1.5 border-gray-200 bg-white w-full border border-gray-300">
                 <label>
-                    <input type="checkbox" class="mr-2 appearance-none checked:bg-blue-600 checked:border-transparent" checked>
+                    <input type="checkbox" id="allCourse" onchange="selectedAllCourse(this)" class="mr-2 appearance-none checked:bg-blue-600 checked:border-transparent" checked>
                     Fer tot el curs
                 </label>
             </div>
@@ -27,8 +27,8 @@
                         <button type="button" class="w-full px-8 py-6 text-left">
                             <div class="flex items-center justify-between">
                                 <label>
-                                    <input type="checkbox" onclick="selectedModule(this)" id="module" group="module{{ $key+1 }}" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent">
-                                    {{ $mp->code }}.{{ $mp->name}}
+                                    <input type="checkbox" onchange="selectedModule(this)" id="module" group="module{{ $key+1 }}" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent" checked>
+                                    {{ $mp->code }}. {{ $mp->name}}
                                 </label>
                                 <span class="ico-plus text-2xl text-gray-500" @click="selected !== 1 ? selected = 1 : selected = null">
                                     <i class="fas fa-chevron-down"></i>
@@ -40,7 +40,7 @@
                             @foreach ($mp->ufs as $uf)
                             <div class="p-6">
                                 <label class="ml-14 p-2.5">
-                                    <input type="checkbox" id="uf" group="module{{ $key+1 }}" onclick="selectedUf(this)" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent">
+                                    <input type="checkbox" id="uf" group="module{{ $key+1 }}" onclick="selectedUf(this)" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent" checked>
                                     {{ $uf->code }}. {{ $uf->name}}
                                 </label>
                             </div>
@@ -55,8 +55,12 @@
         <div class="grid grid-cols-4 gap-4 p-3">
             <div></div>
             <div></div>
-            <div></div>
-            <div class="text-right">Total 24234</div>
+            <div class="text-right">Total</div>
+            <div id="totalSelected" class="text-center">0</div>
         </div>
+
+        <script>
+            calculatePrice({!! $rights !!});
+        </script>
     </div>
 </x-app-layout>

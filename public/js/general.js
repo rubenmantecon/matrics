@@ -854,6 +854,11 @@ function selectedModule(selectedInputParent) {
         for(selectedInput of groupOfSelectedInput) {
             $(selectedInput).prop('checked', true);
         }
+    } else if($(selectedInputParent).prop('checked') == false) {
+        for(selectedInput of groupOfSelectedInput) {
+            $(selectedInput).prop('checked', false);
+        }
+        $('input[type=checkbox]#allCourse').prop('checked', false);
     }
 }
 
@@ -863,9 +868,36 @@ function selectedUf(selectedInputParent) {
         for(selectedInput of groupOfSelectedInput) {
             if($(selectedInput).prop('checked') == false) {
                 $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', false);
+                $('input[type=checkbox]#allCourse').prop('checked', false);
             }
         }
     }
+
+    if($(selectedInputParent).prop('checked') == true) {
+        if(groupOfSelectedInput.length == $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]:checked').length) {
+            $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', true);
+        }
+    }
+}
+
+function selectedAllCourse(selectedInputParent) {
+    if($(selectedInputParent).prop('checked') == true) {
+        $('.container-form-user input[type=checkbox]').prop('checked', true);
+    } else {
+        $('.container-form-user input[type=checkbox]').prop('checked', false);
+    }
+}
+
+function calculatePrice(requirementParameters) {
+    $.getJSON('/data/prices.json', function(prices) {
+        if($('#codeCareer').text().includes('CFPM')) {
+            if($('input#allCourse').prop('checked') == true) {
+                $('#totalSelected').text(+ prices['middle_career']['all']['less28']['base'] + prices['middle_career']['all']['less28']['material']);
+            } else if ($('input#allCourse').prop('checked') == false) {
+
+            }
+        }
+    });
 }
 
 /**
