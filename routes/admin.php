@@ -60,8 +60,8 @@ Route::get('/dashboard/students', function () {
     return view('pages.students');
 });
 
-Route::get('/dashboard/createAdmin', function () {
-    return view('pages.createAdmin');
+Route::get('/dashboard/admins', function () {
+    return view('pages.admins');
 });
 
 Route::get('/dashboard/students/matriculation', function () {
@@ -98,9 +98,9 @@ Breadcrumbs::for('terms', static function ($trail) {
 });
 
 // Dashboard > Create admin
-Breadcrumbs::for('createAdmin', function ($trail) {
+Breadcrumbs::for('admins', function ($trail) {
     $trail->parent('dashboard');
-    $trail->push("Crea admin", '/admin/dashboard/createAdmin');
+    $trail->push("Admins", '/admin/dashboard/admins');
 });
 
 // Dashboard > Terms > Delete[Term]

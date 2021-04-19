@@ -48,17 +48,16 @@ function filterStudentsPage() {
             $("tbody").css("display", "none").html("");
             if (res.data.length > 0) {
                 for (const item of res.data) {
-                    console.log(item);
-                    $("tbody").append(
-                        insertNewRow(
-                            item.firstname,
-                            item.lastname1 + " " + item.lastname2,
-                            item.email,
-                            item.name,
-                            item.id,
-                            "students"
-                        )
-                    );
+                    let state = "";
+                    if (item.state === "pending") {
+                        state = `<div class="circle-box" title="Pendent"><div class="circle orange"></div></div>`;
+                    } else if (item.state === "unregistered") {
+                        state = `<div class="circle-box" title="Sense Registrar"><div class="circle gray"></div></div>`;
+                    }
+                    $("tbody").append(insertNewRow(
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, state, `?student=${item.id}&term=${item.term_id}`,
+                        "students"
+                    ));
                 }
                 for (const item of res.links) {
                     if (item.label === "&laquo; Previous")
@@ -315,36 +314,54 @@ function loadLogsPage() {
     });
 }
 
-/* CREATE ADMIN */
+/* ADMIN */
 /**
- * @description "load all the functionalities of the create admin in HTML"
+ * @description "load all the functionalities of the admins in HTML"
  */
- function loadCreateAdminPage() {
-     $('form').submit(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        let msg = "";
-        if (isNull($("input#username").val()))
-            msg += "El camp 'Nom d'usuari' no pot estar buit.\n";
-        if (isNull($("input#firstname").val()))
-            msg += "El camp 'Nom' no pot estar buit.\n";
-        if (isNull($("input#lastname1").val()))
-            msg += "El camp 'Cognom' no pot estar buit.\n";
-        if (isNull($("input#lastname2").val()))
-            msg += "El camp 'Segon cognom' no pot estar buit.\n";
-        if (isNull($("input#password").val()))
-            msg += "El camp 'Contrasenya' no pot estar buit.\n";
-        if (isNull($("input#password_confirmation").val()))
-            msg += "El camp 'Confirma contrasenya' no pot estar buit.\n";
-        if ($("input#password_confirmation").val() != $("input#password").val())
-            msg += "Les contrasenyes no coincideixen.\n";
+ function loadAdminsPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                let contRows = 0;
+                for (const item of res) {
+                    $("tbody").append(insertNewRow(
+                        item.id,
+                        item.name,
+                        item.email,
+                        item.firstname,
+                        item.lastname1,
+                        item.lastname2,
+                        contRows,
+                        "admins"
+                    ));
+                    contRows++;
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="10"><p>No s'ha trobat cap admin que no siguis tu.</p></td>
+                    </tr>`
+                );
+            }
+            $("tbody").append(
+                `<tr>
+                    <td colspan="10"><button type="button" id="new" class="btn secondary-btn"><i class="fas fa-user"></i> Afegeix un nou admin</button></td>
+                </tr>`
+            ).fadeIn(300);
 
-        if (msg) {
-            generateMessages("error", msg, ".container-messages", 5);
-            return false;
-        } else e.target.submit();
+            $("body").addClass("body-term");
+            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "admins"));
+        }
     });
 }
+
+
 
 /* STUDENTS */
 /**
@@ -359,21 +376,20 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
             token: $("meta[name='_token']").attr("content"),
         },
         success: (res) => {
+            console.log(res);
             $("tbody").css("display", "none").html("");
             if (res.data.length > 0) {
                 for (const item of res.data) {
-                    console.log(item);
-                    $("tbody").append(
-                        insertNewRow(
-                            item.firstname,
-                            item.lastname1 + " " + item.lastname2,
-                            item.email,
-                            item.name,
-                            item.id,
-                            item.id,
-                            "students"
-                        )
-                    );
+                    let state = "";
+                    if (item.state === "pending") {
+                        state = `<div class="circle-box" title="Pendent"><div class="circle orange"></div></div>`;
+                    } else if (item.state === "unregistered") {
+                        state = `<div class="circle-box" title="Sense Registrar"><div class="circle gray"></div></div>`;
+                    }
+                    $("tbody").append(insertNewRow(
+                        item.firstname, item.lastname1 + " " + item.lastname2, item.email, item.name, state, `?student=${item.id}&term=${item.term_id}`,
+                        "students"
+                    ));
                 }
                 $("ul.pagination").html('');
                 for (const item of res.links) {
@@ -657,51 +673,124 @@ function loadLogsPage() {
  */
 function loadAdminMatriculationPage() {
     const userId = getUrlParameter("student");
-    $.ajax({
-        url: $("meta[name='url']").attr("content"),
-        method: "GET",
-        headers: {
-            token: $("meta[name='_token']").attr("content"),
-            user_id: userId,
-        },
-        success: (res) => {
-            console.log(res);
-            $("#name").val(res.user.firstname);
-            $("#surname1").val(res.user.lastname1);
-            $("#surname2").val(res.user.lastname2);
-            $("#mail").val(res.user.email);
-            $("#username").val(res.user.name);
-            $("#cycle").val(res.career.code + " - " + res.career.name);
-            for (const module of res.mps) {
-                $("#modules").append(`<li>${module.code}: ${module.name}</li>`);
+    const termId = getUrlParameter("term");
+    if (userId === "new") {
+        $("form input[name='_method']").remove();
+        $("form .account-user").css("display", "none");
+        $("form .new-user").css("display", "flex");
+        $("form .modules").css("display", "none");
+        $.ajax({
+            url: $("meta[name='url']").attr("content"),
+            method: 'GET',
+            headers: {
+                token: $("meta[name='_token']").attr("content"),
+                user_id: userId,
+                term_id: "new",
+            },
+            success: (res) => {
+                var firstTerm = null;
+                var firstBool = true;
+                for (const term of res.terms) {
+                    if (firstBool) {
+                        firstTerm = term.id;
+                        firstBool = false;
+                    }
+                    $("select#term").append(`<option value="${term.id}">${term.id} - ${term.name}</option>`)
+                }
+                for (const career of res.careers) {
+                    if (career.active == 1 && career.term_id == firstTerm) {
+                        $("select#career").append(`<option value="${career.id}">${career.id} - ${career.name}</option>`)
+                    }
+                }
+                $("select#term").on("change", function (e) {
+                    var selected = $('select[name="term"]').val();
+                    $("select#career").html('');
+                    for (const career of res.careers) {
+                        if (career.active == 1 && career.term_id == selected) {
+                            $("select#career").append(`<option value="${career.id}">${career.id} - ${career.name}</option>`)
+                        }
+                    }
+                });
             }
-            $("tbody").fadeIn(300);
-            $("body").addClass("body-logs");
-
-            $(".form-alumn-data").submit((e) => {
-                e.preventDefault();
-                let changed = false;
-                if ($("#name").val() !== res.user.firstname) {
-                    changed = true;
+        });
+    } else {
+        $.ajax({
+            url: $("meta[name='url']").attr("content"),
+            method: 'GET',
+            headers: {
+                token: $("meta[name='_token']").attr("content"),
+                user_id: userId,
+                term_id: termId,
+            },
+            success: (res) => {
+                console.log(res);
+                $("#user_id").val(userId);
+                $("#term_id").val(termId);
+                $("#firstname").val(res.user.firstname);
+                $("#lastname1").val(res.user.lastname1);
+                $("#lastname2").val(res.user.lastname2);
+                $("#email").val(res.user.email);
+                $("#dni").val(res.enrolment.dni);
+                $("#name").val(res.user.name);
+                $("#term2").val(res.career.term_name + " (" + momentFormat(res.career.start, "YYYY-MM-DD", "DD/MM/YYYY") + "-" + momentFormat(res.career.end, "YYYY-MM-DD", "DD/MM/YYYY") + ")");
+                $("#career2").val(res.career.career_code + " - " + res.career.career_name);
+                for (const module of res.mps) {
+                    $("#modules").append(`<div class="tag">${module.code}: ${module.name}</div>`);
                 }
-                if ($("#surname1").val() !== res.user.lastname1) {
-                    changed = true;
+                let filesHtml = "";
+                for (const file of res.files) {
+                    let statusFile = `Estat: <div class="state red"></div> Sense pujar <div class="state red"></div>`;
+                    let image = `<button type="button" data-id="${file.upload_id}" class="btn primary-btn get-image"><i class="fas fa-eye"></i> Veure</button>`;
+                    $(".req .profile-name span").text(file.profile_name);
+                    if (file.status == "registered") {
+                        statusFile = `Estat: <div class="state orange"></div> Sense pujar <div class="state orange"></div>`;
+                    }
+                    filesHtml += `                    
+                    <div class="file">
+                        <div class="header">
+                            <p>${file.req_name}</p>
+                        </div>
+                        <div class="body">
+                            <div class="icons">
+                                <i class="fas fa-file"></i>
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <img data-src="" class="dis-none" />
+                            ${image}
+                        </div>
+                        <div class="footer">
+                            <div>${statusFile}</div>
+                        </div>
+                    </div>`;
                 }
-                if ($("#surname2").val() !== res.user.lastname2) {
-                    changed = true;
-                }
-                if ($("#mail").val() !== res.user.email) {
-                    changed = true;
-                }
-                if ($("#username").val() !== res.user.name) {
-                    changed = true;
-                }
-                $("#changed").val(changed);
-
-                // location.href = "/admin/dashboard/students";
-            });
-        },
-    });
+                $(".req .files").append(filesHtml);
+                $('tbody').fadeIn(300);
+                $("body").addClass("body-logs");
+                $(".file .body .get-image").on("click", async function (e) {
+                    const uploadId = $(e.target).attr("data-id");
+                    if (!$(e.target).prev().attr("data-src")) {
+                        await $.ajax({
+                            url: "/api/uploads",
+                            method: "GET",
+                            headers: {
+                                token: $("meta[name='_token']").attr("content"),
+                                upload_id: uploadId,
+                            },
+                            success: async (res) => {
+                                $(e.target).prev().attr("data-src", res.data);
+                            }
+                        });
+                    }
+                    $(".bg-image img").attr("src", $(e.target).prev().attr("data-src"));
+                    $(".bg-image").fadeIn(400);
+                });
+                $(".form-alumn-data").prop("action", $("meta[name='url']").attr("content") + "/" + res.enrolment.id);
+            }
+        });
+        $(".enrolments .bg-image div.close").on("click", function (e) {
+            $(".bg-image").fadeOut(400);
+        });
+    }
 }
 
 /**
@@ -820,7 +909,7 @@ function loadProfileReqPage() {
                     for (const profile of res) {
                         const profileIdSelected = $(tag).closest(".card").attr("data-id");
                         if (profileIdSelected == profile.id) {
-                            $("select#profile_id").append(`<option selected value="${profile.id}">${profile.id} - ${profile.name}</option>`);                        
+                            $("select#profile_id").append(`<option selected value="${profile.id}">${profile.id} - ${profile.name}</option>`);
                         } else {
                             $("select#profile_id").append(`<option value="${profile.id}">${profile.id} - ${profile.name}</option>`);
                         }
@@ -980,7 +1069,6 @@ function updateOrCreateProfile(method, id) {
             id
         }
     }
-    console.log(url, data);
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -996,7 +1084,6 @@ function updateOrCreateProfile(method, id) {
         },
         data,
         success: function (res) {
-            console.log(res);
             generateMessages(res.status, res.text, ".container-messages", 3);
             if (res.status === "success") {
                 loadProfileReqPage();
@@ -1217,6 +1304,41 @@ function importCSV(page) {
     }
 }
 
+function importIMG(doc_name) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+        var fr = new FileReader(doc_name);
+        fr.onload = function () {
+            
+            var file = fr.result;
+            $.ajax({
+                url: "/api/documents",
+                method: 'POST',
+                headers: {
+                    token: $("meta[name='_token']").attr("content"),
+                },
+                data: {
+                    import_file: doc_name,
+                    file
+                },
+                success: (res) => {
+                    generateMessages(res.status, res.text, ".container-messages", 3);
+                    $("tbody").html('');
+                    
+                },
+                error: (res) => {
+                    console.log(res.responseJSON.message);
+                    generateMessages("error", "Error al pujar el Document, intenta-ho més tard", ".container-messages", 3)
+                }
+            });
+        }
+        fr.readAsDataURL($('#'+doc_name)[0].files[0]);
+    
+}
+
 /**
  *  @description "event for clone the term"
  */
@@ -1264,6 +1386,8 @@ function rowEventEditAndNew(tag, page) {
                         updateTableRowTerm(rowSelected.children());
                     } else if (page === "careers") {
                         updateTableRowCareers(rowSelected.children());
+                    } else if (page === "admins") {
+                        updateTableRowAdmin(rowSelected.children());
                     }
                     $("html").css("overflow", "auto");
                     setTimeout(
@@ -1328,6 +1452,10 @@ function rowEventEditAndNew(tag, page) {
             "end",
         ];
         getInfoForModal(colsValues, inputsIds);
+    } else if (page === "admins") {
+        const colsValues = [cols[0], cols[1], cols[2], cols[3], cols[4], cols[5]];
+        const inputsIds = ["id" ,"user", "email", "name", "surname", "secondsurname"];
+        getInfoForModal(colsValues, inputsIds);
     }
 }
 
@@ -1369,29 +1497,38 @@ function insertNewRow(...params) {
         row += `<td>${params[i] ? params[i] : ""}</td>`;
     }
 
-    console.log("aaa", params);
     let lastParam = params[params.length - 1];
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/${lastParam}/delete/${
-            params[0]
-        }" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
-                <td><button class="btn save clone" data="${
-                    params[params.length - 2]
-                }" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>
+                <td><button class="btn save clone" data="${params[params.length - 2]}" title="Clonar"><i class="fas fa-clone"></i></button></td>`;
     } else if (lastParam == "careers") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
-                <td><a href="/admin/dashboard/${lastParam}/delete/${
-            params[0]
-        }?term=${getUrlParameter(
-            "term"
-        )}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
+                <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter("term")}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
     } else if (lastParam == "students") {
-        row += `<td><a href="/admin/dashboard/students/matriculation?student=${
-            params[params.length - 2]
-        }" id="view" class="btn save" title="Dades"><i class="fas fa-eye"></i></button></td>`;
+        row += `<td><a href="/admin/dashboard/students/matriculation?student=${params[params.length - 2]}" id="view" class="btn save" title="Dades"><i class="fas fa-eye"></i></button></td>`;
+    } else if (lastParam == "admins") {
+        row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
+               <td><button class="btn cancel" title="Elimina" onclick="deleteAdmin(${params[0]})"><i class="fas fa-trash"></i></button></td>`;
     }
     return row + "</tr>";
+}
+
+
+function deleteAdmin(id) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+    $.ajax({
+        url: `/api/admins/${id}`,
+        type: 'DELETE',
+        data: {id} ,
+        success: function(result) {
+            loadAdminsPage();
+        }
+    });
 }
 
 /**
@@ -1418,6 +1555,8 @@ function insertRowInDB(data, page) {
                 loadTermPage();
             } else if (page === "careers") {
                 loadCareerPage();
+            } else if (page === "admins") {
+                loadAdminsPage();
             }
         },
         error: (res) => {
@@ -1481,6 +1620,37 @@ function updateRowInDB(data, page) {
             );
         },
     });
+}
+
+/**
+ * @description "update tbody of admin HTML table"
+ * @param {Element[]} cols
+ */
+ function updateTableRowAdmin(cols) {
+    $("tbody").html('');
+    if (cols.length === 1) {
+        if ($(".label-group input#password").val() && $(".label-group input#password-confirmation").val()) {
+            const data = {
+                user: $(".label-group input#user").val(),
+                email: $(".label-group input#email").val(),
+                firstname: $(".label-group input#name").val(),
+                lastname1: $(".label-group input#surname").val(),
+                lastname2: $(".label-group input#secondsurname").val(),
+                password: $(".label-group input#password").val(),
+            }
+            insertRowInDB(data, "admins");
+        }
+    } else {
+        const data = {
+            user: $(".label-group input#user").val(),
+            email: $(".label-group input#email").val(),
+            firstname: $(".label-group input#name").val(),
+            lastname1: $(".label-group input#surname").val(),
+            lastname2: $(".label-group input#secondsurname").val(),
+            password: $(".label-group input#password").val(),
+        }
+        updateRowInDB(data, "admins");
+    }
 }
 
 /**
@@ -1580,44 +1750,106 @@ function updateTableRowCareers(cols) {
  */
 function validationTermForm(page) {
     let msg = "";
-    if (isNull($(".label-group input#name").val()))
-        msg += "El camp 'Nom' no pot estar buit.\n";
-    if (isNull($(".label-group input#description").val()))
-        msg += "El camp 'Descripció' no pot estar buit.\n";
-    if (page === "careers") {
-        if (isNull($(".label-group input#code").val()))
-            msg += "El camp 'Codi' no pot estar buit.\n";
-        if (isNull($(".label-group input#hours").val()))
-            msg += "El camp 'Hores' no pot estar buit.\n";
-    }
-    if (isNull($(".label-group input#start").val()))
-        msg += "El camp 'Data d'inici' no pot estar buit.\n";
-    if (isNull($(".label-group input#end").val()))
-        msg += "El camp 'Data de fi' no pot estar buit.\n";
+    if (page != "admins") {
+        if (isNull($(".label-group input#name").val())) msg += "El camp 'Nom' no pot estar buit.\n";
+        if (isNull($(".label-group input#description").val())) msg += "El camp 'Descripció' no pot estar buit.\n";
+        if (page === "careers") {
+            if (isNull($(".label-group input#code").val())) msg += "El camp 'Codi' no pot estar buit.\n";
+            if (isNull($(".label-group input#hours").val())) msg += "El camp 'Hores' no pot estar buit.\n";
+        }
+        if (isNull($(".label-group input#start").val())) msg += "El camp 'Data d'inici' no pot estar buit.\n";
+        if (isNull($(".label-group input#end").val())) msg += "El camp 'Data de fi' no pot estar buit.\n";
 
-    if (!msg) {
-        let start = momentFormat(
-            $(".label-group input#start").val(),
-            "DD-MM-YYYY",
-            "YYYYMMDD"
-        );
-        let end = momentFormat(
-            $(".label-group input#end").val(),
-            "DD-MM-YYYY",
-            "YYYYMMDD"
-        );
-        if (start === "Invalid date")
-            msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
-        else if (end === "Invalid date")
-            msg += "Data de fi invàlida 'DD-MM-AAAA'.\n";
-        else if (end < start)
-            msg += "La data de fi no pot ser mes petita que la d'inici.\n";
+        if (!msg) {
+            let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
+            let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
+            if (start === "Invalid date")
+                msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
+            else if (end === "Invalid date")
+                msg += "Data de fi invàlida 'DD-MM-AAAA'.\n";
+            else if (end < start)
+                msg += "La data de fi no pot ser mes petita que la d'inici.\n";
+        }
+    }
+        if (msg) {
+            generateMessages("error", msg, ".container-messages", 5);
+            return false;
+        } else return true;
+}
+
+function selectedModule(selectedInputParent) {
+    let groupOfSelectedInput = $('input[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == true) {
+        for(selectedInput of groupOfSelectedInput) {
+            $(selectedInput).prop('checked', true);
+        }
+
+        if($('input#module').length == $('input#module:checked').length) {
+            $('input[type=checkbox]#allCourse').prop('checked', true);
+        }
+    } else if($(selectedInputParent).prop('checked') == false) {
+        for(selectedInput of groupOfSelectedInput) {
+            $(selectedInput).prop('checked', false);
+        }
+        $('input[type=checkbox]#allCourse').prop('checked', false);
+    }
+}
+
+function selectedUf(selectedInputParent) {
+    let groupOfSelectedInput = $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == false) {
+        for(selectedInput of groupOfSelectedInput) {
+            if($(selectedInput).prop('checked') == false) {
+                $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', false);
+                $('input[type=checkbox]#allCourse').prop('checked', false);
+            }
+        }
     }
 
-    if (msg) {
-        generateMessages("error", msg, ".container-messages", 5);
-        return false;
-    } else return true;
+    if($(selectedInputParent).prop('checked') == true) {
+        if(groupOfSelectedInput.length == $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]:checked').length) {
+            $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', true);
+        }
+
+        if($('input#module').length == $('input#module:checked').length) {
+            $('input[type=checkbox]#allCourse').prop('checked', true);
+        }
+    }
+}
+
+function selectedAllCourse(selectedInputParent) {
+    if($(selectedInputParent).prop('checked') == true) {
+        $('.container-form-user input[type=checkbox]').prop('checked', true);
+    } else {
+        $('.container-form-user input[type=checkbox]').prop('checked', false);
+    }
+}
+
+function calculatePrice(requirementParameters) {
+    $.getJSON('/data/prices.json', function(prices) {
+        $('.container-form-user input[type=checkbox]:not(#allCourse)').attr('disabled', 'disabled');
+
+        $('#totalSelected').text(0);
+        // Age of the User
+        var age;
+
+        if(requirementParameters['age'] < 28) {
+            age = 'less28';
+        } else {
+            age = 'plus28';
+        }
+
+        // Calculating price for MIDDLE CAREER
+        if($('#codeCareer').text().includes('CFPM')) {
+            $('input[type=checkbox]:not(#allCourse)').attr('disabled', 'disabled');
+            $('input[type=checkbox]#module').removeAttr('disabled');
+            if($('input#allCourse').prop('checked') == true) {
+                $('#totalSelected').text(prices['middle_career']['all'][age]['base'] + prices['middle_career']['all'][age]['material']);
+            } else if ($('input#allCourse').prop('checked') == false) {
+                $('#totalSelected').text(prices['middle_career']['modules'][age]['base'] + ($('.container-form-user input[type=checkbox]:checked:not(#allCourse)').length * prices['middle_career']['modules'][age]['permodule']) + prices['middle_career']['modules'][age]['material']);
+            }
+        }
+    });
 }
 
 /**
@@ -1641,8 +1873,8 @@ $(function () {
         });
     } else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
-    } else if (location.pathname.includes("admin/dashboard/createAdmin")) {
-        loadCreateAdminPage();
+    } else if (location.pathname.includes("admin/dashboard/admins")) {
+        loadAdminsPage();
     } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();
@@ -1687,14 +1919,21 @@ $(function () {
             loadStudentsPage();
         }
         $("#file-csv").on("change", (e) => {
-            console.log('hola');
-            if (e.target.files[0].type === "text/csv" || e.target.files[0].type === "text/txt" || e.target.files[0].type === "text/xls" || e.target.files[0].type === "text/xlsx"){
-                $("#form-file").submit();
-            }else{
-                generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5);
-            } 
+            if (e.target.files[0].type === "text/csv") $("#form-file").submit();
+            else
+                generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
         })
-    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
+    }else if(location.pathname.endsWith("/dashboard/documents") || location.pathname.endsWith("/dashboard/documents/")){
+        if (getUrlParameter('status')) {
+            generateMessages(getUrlParameter('status'), getUrlParameter('text'), '.container-messages' ,5);
+        }
+        $('input[type="file"]').change(function (e) {
+            doc_name= e.target.id
+            importIMG(doc_name);
+        })
+        $("button.filter").on("click", filterStudentsPage);
+
+    }else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
@@ -1773,6 +2012,10 @@ $(function () {
         location.pathname.endsWith("/admin/dashboard/students/matriculation/")
     ) {
         loadAdminMatriculationPage();
+    } else if (location.pathname.includes("/admin/dashboard") ) {
+        if (getUrlParameter('status')) {
+            generateMessages(getUrlParameter('status'), getUrlParameter('text'), '.container-messages' ,5);
+        }
     } else if (
         location.pathname.endsWith("/admin/dashboard/profileReq") ||
         location.pathname.endsWith("/admin/dashboard/profileReq/")

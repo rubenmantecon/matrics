@@ -23,7 +23,7 @@ class StudentController extends Controller
 		$data = ['status' => 'Unauthorized, error 503'];
 		$token = $request->header('token');
 		if ($token) {
-			$user = User::select("token")->where('token', $token)->get()[0];
+			$user = User::select("token", "id")->where('token', $token)->get()[0];
 			if ($user['token']){
 				if($request->filter){
 					// There is some filter present!
@@ -33,7 +33,7 @@ class StudentController extends Controller
 					$allowed_filters = ["firstname", "lastname1", "lastname2", "order_firstname", "order_firstname", "order_lastname1", "order_lastname2"];
 					
 					if(sizeof(array_diff(array_keys($filters), $allowed_filters)) == 0){
-						$students = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id');
+						$students = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name", "enrolments.term_id", "enrolments.state")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne");
 						foreach($filters as $filter => $value){
 							if($filter == "firstname"){
 								$students->where("users.firstname", $value);
@@ -72,7 +72,7 @@ class StudentController extends Controller
 					}
 				}
 				else{
-					$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
+					$data = User::select("users.id", "users.firstname", "users.lastname1", "users.lastname2", "users.email", "careers.name", "enrolments.term_id", "enrolments.state")->join('enrolments', 'users.id', '=', 'enrolments.user_id')->join('careers', 'enrolments.career_id', '=', 'careers.id')->where("role", "alumne")->paginate(20)->onEachSide(2);
 				}
 
 			}
@@ -124,6 +124,18 @@ class StudentController extends Controller
 							$interesting_index["firstname"] = array_search("Nom", $element);
 							$interesting_index["lastname1"] = array_search("Primer cognom", $element);
 							$interesting_index["lastname2"] = array_search("Segon cognom", $element);
+
+							//campos nuevos enrolments
+							$interesting_index["address"] = array_search("Municipi residència", $element);
+							$interesting_index["city"] = array_search("Província residència", $element);
+							$interesting_index["postal_code"] = array_search("CP", $element);
+							$interesting_index["phone_number"] = array_search("Telèfon", $element);
+							$interesting_index["emergency_number"] = array_search("Telèfon", $element);
+							$interesting_index["tutor_1"] = array_search("Nom tutor 1", $element);
+							$interesting_index["tutor_1_dni"] = array_search("Núm. doc. tutor 1", $element);
+							$interesting_index["tutor_2"] = array_search("Nom tutor 2", $element);
+							$interesting_index["tutor_2_dni"] = array_search("Núm. doc. tutor 2", $element);
+
 							$interesting_index["email"] = array_search("Correu electrònic", $element);
 							$interesting_index["career_id"] = array_search("Codi ensenyament P1", $element);
 							$interesting_index["identificacion"]["dni"] = array_search("DNI", $element);
@@ -190,7 +202,18 @@ class StudentController extends Controller
 								// Create Enrolment or update it if exists.
 								$enrollment = Enrolment::updateOrCreate(
 									[
+										//campos nuevos enrolments
 										'dni' => $element[$interesting_index['identificacion']['actual']],
+										'address' => $element[$interesting_index["address"]],
+										'city' => $element[$interesting_index["city"]],
+										'postal_code' => $element[$interesting_index["postal_code"]],
+										'phone_number' => $element[$interesting_index["phone_number"]],
+										'emergency_number' => $element[$interesting_index["emergency_number"]],
+										'tutor_1' => $element[$interesting_index["tutor_1"]],
+										'tutor_1_dni' => $element[$interesting_index["tutor_1_dni"]],
+										'tutor_2' => $element[$interesting_index["tutor_2"]],
+										'tutor_2_dni' => $element[$interesting_index["tutor_2_dni"]],
+
 										'term_id' => $response->term_id,
 										'career_id' => $response->id
 									],

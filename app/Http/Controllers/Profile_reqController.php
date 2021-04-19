@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Req_enrol;
 use App\Models\Profile_req;
 use App\Models\Requirement;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Profiler\Profile;
@@ -145,13 +147,15 @@ class Profile_reqController extends Controller
 	public function destroy(Request $request, Profile_req $pro)
 	{
 		$id = $request->id;
+		Schema::disableForeignKeyConstraints();
 		Requirement::where('profile_id', $id)->delete();
-        $status = Profile_req::destroy($id);
+		$status = Profile_req::destroy($id);
+		Schema::enableForeignKeyConstraints();
 
-        if ($status) {
-            return response()->json(["status" => "success", "text" => "Perfil esborrat correctament."]);
-        } else {
-            return response()->json(["status" => "error", "text" => "No s'ha pogut esborrar el perfil."]);
-        }
+		if ($status) {
+			return response()->json(["status" => "success", "text" => "Perfil esborrat correctament."]);
+		} else {
+			return response()->json(["status" => "error", "text" => "No s'ha pogut esborrar el perfil."]);
+		}
 	}
 }

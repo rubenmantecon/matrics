@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Uf;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
-class UfController extends Controller
+
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,19 +24,8 @@ class UfController extends Controller
         $token = $request->header('token');
         if ($token) {
             $user = User::select("token")->where('token', $token)->get()[0];
-            if ($user['token']) {
-                $mp_id = $request->header('mp_id');
-                if (isset($mp_id) && $mp_id != "empty") {
-                    $data = Uf::select("*")->where("active", 1)->where("mp_id", $mp_id)->get();
-                    if (sizeof($data) == 0){
-                        return response()->json(['status' => "warning", "text" => 'No hi ha Unitats Formatives']);
-                    } else {
-                        return response()->json($data);
-                    }
-                } else {
-                    return response()->json(['status' => "error", "text" => 'Modul no trobat']);
-                }
-            }
+            if ($user['token'])
+                $data = User::select("*")->where("role", "admin")->where('id','!=',Auth::id())->get();
         }
         return response()->json($data);
     }
@@ -63,16 +54,20 @@ class UfController extends Controller
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
             if ($user['token']) {
 
-                $Uf = new Uf;
-                $Uf->start = $request->mp_id;
-                $Uf->end = $request->code;
-                $Uf->name = $request->name;
-                $Uf->description = $request->desc;
+                $user = new User;
+                $user->name = $request->user;
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->role = "admin";
+                $user->firstname = $request->firstname;
+                $user->lastname1 = $request->lastname1;
+                $user->lastname2 = $request->lastname2;
+                $user->token = hash('sha256',$request->email);
 
-                $status = $Uf->save();
+                $status = $user->save();
                 if ($status) {
-                    $data = ["status" => "Nova unitat formativa creada correctament."];
-                    Log::channel('dblogging')->info("Ha creado una nueva UF", ["user_id" => Auth::id(), "uf_id" => $Uf->id]);
+                    $data = ["status" => "Nou admin creat correctament."];
+                    Log::channel('dblogging')->info("Ha creado un nuevo Admin", ["user_id" => Auth::id(), "term_id" => $user->id]);
                 }
             }
             return response()->json($data);
@@ -82,10 +77,10 @@ class UfController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Uf  $uf
+     * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
-    // public function show(Uf $uf)
+    // public function show(Term $term)
     // {
     //     //
     // }
@@ -93,10 +88,10 @@ class UfController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Uf  $uf
+     * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
-    // public function edit(Uf $uf)
+    // public function edit(Term $term)
     // {
     //     //
     // }
@@ -105,10 +100,10 @@ class UfController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Uf  $uf
+     * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Uf $Uf)
+    public function update(Request $request, Term $term)
     {
         $data = ['status' => 'Unauthorized, error 503'];
         $token = $request->header('token');
@@ -116,23 +111,25 @@ class UfController extends Controller
             $user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
             if ($user['token']) {
                 if ($request->type === "softDelete") {
-                    $Uf->active = 0;
+                    $term->active = 0;
                 } else {
-                    $Uf->name = $request->name;
-                    $Uf->description = $request->desc;
+                    $term->name = $request->name;
+                    $term->description = $request->desc;
+                    $term->start = $request->start;
+                    $term->end = $request->end;
                 }
-                $Uf->touch();
+                $term->touch();
 
-                $status = $Uf->save();
+                $status = $term->save();
                 if ($status)
-                    $data = ["status" => "Unitat formativa actualitzada correctament."];
+                    $data = ["status" => "Curs actualitzat correctament."];
 
                 if ($request->type === "softDelete") {
-                    $data = ["status" => "Unitat formativa eliminada correctament."];
-                    Log::channel('dblogging')->info("Ha eliminado una Unidad Formativa", ["user_id" => Auth::id(), "uf_if" => $Uf->id]);
+                    $data = ["status" => "Curs eliminat correctament."];
+                    Log::channel('dblogging')->info("Ha eliminado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
                 } else {
-                    $data = ["status" => "Unitat formativa actualitzada correctament."];
-                    Log::channel('dblogging')->info("Ha actualizado una unidad formativa", ["user_id" => Auth::id(), "uf_id" => $Uf->id]);
+                    $data = ["status" => "Curs actualitzat correctament."];
+                    Log::channel('dblogging')->info("Ha actualizado un Curso", ["user_id" => Auth::id(), "term_id" => $term->id]);
                 }
             }
         }
@@ -142,11 +139,14 @@ class UfController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\uf  $uf
+     * @param  \App\Models\Term  $term
      * @return \Illuminate\Http\Response
      */
-    // public function destroy(uf $uf)
-    // {
-    //     //
-    // }
+    public function destroy(Request $request)
+    {
+
+        Schema::disableForeignKeyConstraints();
+        User::destroy($request->id);
+        Schema::enableForeignKeyConstraints();
+    }
 }

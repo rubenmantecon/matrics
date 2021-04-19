@@ -21,8 +21,8 @@
     --darkText: rgb(250, 250, 250);
     --saveBtn: #21ba45;
     --saveBtnHover: #20973c;
-    --normalBtn:#e0e1e2; 
-    --normalBtnWriting:#a7a7a7;
+    --normalBtn: #e0e1e2;
+    --normalBtnWriting: #a7a7a7;
     --selectedRow: #68ff6e;
     --cancelBtn: #ff695e;
     --cancelBtnHover: #c92b20;
@@ -200,17 +200,58 @@ body.night ul.pagination li.pageNumber a {
     color: #fff !important;
 }
 
-.dark-mode:checked + .label-dark-mode .blob {
+body.night .enrolments .files .file {
+    border: 2px solid #ffffff75;
+    background-color: #212121;
+    box-shadow: 0 0 6px black;
+}
+
+body.night .enrolments .files .file .header {
+    border-bottom: 2px solid #878787;
+    background-color: #111111bd;
+}
+
+body.night .enrolments .files .file .footer {
+    border-top: 2px solid #878787;
+    background-color: #111111bd;
+}
+
+body.night .enrolments .files .file .body {
+    box-shadow: 0 0 15px 3px inset black;
+}
+
+body.night .profile-req .cards .card-box .card {
+    border: 2px solid #ffffff75;
+    background-color: #212121;
+    box-shadow: 0 0 6px black;
+}
+
+body.night .profile-req .cards .card-box .card .header {
+    background-color: #111111bd;
+    border-bottom: 2px solid #878787;
+}
+
+body.night .profile-req .cards .card-box .card .body {
+    box-shadow: 0 0 15px 3px inset black;
+}
+
+body.night .profile-req .cards .card-box .card .footer {
+    border-top: 2px solid #878787;
+    background-color: #111111bd;
+}
+
+.dark-mode:checked+.label-dark-mode .blob {
     left: 0;
 }
 
-.dark-mode:checked + .label-dark-mode {
+.dark-mode:checked+.label-dark-mode {
     background-color: rgb(82, 81, 83);
 }
+
 /* SEMAFORO*/
 
 .statusok {
-    background: radial-gradient(#2cec59, #0c3717);
+    background: radial-gradient(#1ec445, #17692c);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -220,7 +261,7 @@ body.night ul.pagination li.pageNumber a {
 }
 
 .statuscancel {
-    background: radial-gradient(#f42626, #3a0909);
+    background: radial-gradient(#f42626, #691111);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -228,8 +269,9 @@ body.night ul.pagination li.pageNumber a {
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
+
 .statusprocesing {
-    background: radial-gradient(#f58027, #552c0d);
+    background: radial-gradient(#f58027, #864615);
     width: 3vh;
     height: 3vh;
     -moz-border-radius: 50%;
@@ -237,6 +279,7 @@ body.night ul.pagination li.pageNumber a {
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
+
 .statusnothing {
     background: radial-gradient(#e9e9e9, #2f2f2f);
     width: 3vh;
@@ -535,7 +578,7 @@ table td.loading:after {
 
 .btn.file:hover {
     background-color: var(--normalBtnHover) !important;
-    color:#fff;
+    color: #fff;
 }
 
 .btn.cancel {
@@ -626,17 +669,17 @@ div.icon.input-box {
     position: relative;
 }
 
-div.icon.input-box > i {
+div.icon.input-box>i {
     pointer-events: none;
 }
 
-div[class*="left icon"].input-box > i {
+div[class*="left icon"].input-box>i {
     right: auto;
     left: 1px;
     border-radius: 0.28571429rem 0 0 0.28571429rem;
 }
 
-div.icon.input-box > i {
+div.icon.input-box>i {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -655,7 +698,7 @@ div.icon.input-box > i {
     transition: opacity 0.3s ease;
 }
 
-div[class*="left icon"].input-box > input.input {
+div[class*="left icon"].input-box>input.input {
     padding-left: 2.67142857em !important;
     padding-right: 1em !important;
 }
@@ -730,23 +773,23 @@ header {
     height: 100px;
 }
 
-header > .logo-box {
+header>.logo-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-header > .logo-box > img.logo {
+header>.logo-box>img.logo {
     border-radius: 100px;
 }
 
-header > .items {
+header>.items {
     display: flex;
     flex-flow: row nowrap;
 }
 
-header > .items > .item {
+header>.items>.item {
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -757,15 +800,15 @@ header > .items > .item {
     color: #023382;
 }
 
-header > .items > .item.active {
+header>.items>.item.active {
     font-weight: bold;
 }
 
-header > .items > .item:hover {
+header>.items>.item:hover {
     color: #000000;
 }
 
-header > p.user {
+header>p.user {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -783,7 +826,7 @@ div.list {
     padding: 0 0;
 }
 
-div.list > .item {
+div.list>.item {
     display: flex;
     table-layout: fixed;
     list-style-type: none;
@@ -792,21 +835,21 @@ div.list > .item {
     line-height: 1.14285714em;
 }
 
-div.list > .item > .content {
+div.list>.item>.content {
     display: table-cell;
     width: 100%;
     padding: 0 0 0 0.5em;
     vertical-align: top;
 }
 
-div.list > .item > .content > .header {
+div.list>.item>.content>.header {
     display: block;
     margin: 0;
     font-weight: 700;
     color: rgba(0, 0, 0, 0.87);
 }
 
-div.list > .item > .content > .description {
+div.list>.item>.content>.description {
     display: block;
     color: rgba(0, 0, 0, 0.7);
 }
@@ -983,7 +1026,7 @@ ol.list a:before {
     padding: 20px;
     margin-left: 8px;
     margin-right: 8px;
-    box-shadow: 0 0 12px 2px black;
+    box-shadow: 0 0 10px 0 rgb(78, 78, 78);
 }
 
 form.form {
@@ -1082,14 +1125,14 @@ tbody tr:nth-child(even) {
     align-items: center;
 }
 
-.error-page > .number {
+.error-page>.number {
     font-size: 200px;
     font-weight: bold;
     margin: 0;
     user-select: none;
 }
 
-.error-page > .description {
+.error-page>.description {
     font-size: 50px;
     font-weight: bold;
     margin: 0;
@@ -1104,7 +1147,7 @@ tbody tr:nth-child(even) {
     align-items: center;
 }
 
-.landing > .container-title {
+.landing>.container-title {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -1112,35 +1155,35 @@ tbody tr:nth-child(even) {
     margin-top: 4em;
 }
 
-.landing > .container-title > .title {
+.landing>.container-title>.title {
     font-size: 3em;
     margin: 0 15px;
     text-align: center;
 }
 
-.landing > .container-title > img {
+.landing>.container-title>img {
     width: 11%;
 }
 
-.landing > main {
+.landing>main {
     padding-left: 2rem;
     padding-right: 2rem;
 }
 
-.landing > main * {
+.landing>main * {
     font-size: 20px;
 }
 
-.landing > main > p.subtitle.text {
+.landing>main>p.subtitle.text {
     margin-top: 2em;
 }
 
-.landing > main > p.text {
+.landing>main>p.text {
     text-align: center;
     margin: 7px 0;
 }
 
-.landing > main > .btn-container {
+.landing>main>.btn-container {
     text-align: center;
     font-size: 25px;
     margin-top: 70px;
@@ -1194,7 +1237,7 @@ body.body-term {
     margin-right: 5px;
 }
 
-.terms tbody td > p {
+.terms tbody td>p {
     font-size: 18px;
     font-weight: 500;
 }
@@ -1214,8 +1257,8 @@ body.body-term {
     background-color: #fff;
     top: unset !important;
     left: unset !important;
-    max-width: 700px !important;
-    width: 66% !important;
+    max-width: 1000px !important;
+    width: 85% !important;
     box-shadow: 0 0 20px 1px black;
     border-radius: 7px;
     z-index: 3;
@@ -1481,6 +1524,225 @@ main.login .container-form a img.logo {
     margin-right: 5vw;
 }
 
+.circle-box {
+    display: flex;
+    height: inherit;
+}
+
+.circle-box>.circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 200px;
+    margin: auto;
+}
+
+.circle-box>.circle.gray {
+    background-color: darkgray;
+    box-shadow: 0 0 3px 1px rgb(129, 129, 129);
+}
+
+.circle-box>.circle.orange {
+    background-color: orange;
+    box-shadow: 0 0 3px 1px rgb(167, 116, 21);
+}
+
+/* ENROLMENT */
+
+form.form-alumn-data {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    margin: auto;
+}
+
+form.form-alumn-data .label-group {
+    width: 33%;
+}
+
+form.form-alumn-data label {
+    font-size: 19px;
+}
+
+form.form-alumn-data label[for='modules'],
+form.form-alumn-data p.title.requirements {
+    font-size: 26px !important;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 0 1px #2f2c2c;
+}
+
+form.form-alumn-data div#modules {
+    display: block;
+    justify-content: center;
+    text-align: center;
+}
+
+
+form.form-alumn-data #modules .tag {
+    display: inline-block;
+    background: #b8dcdb;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 5px 10px;
+    margin: 3px 7px;
+    border-radius: 6px;
+    box-shadow: 0 0 3px 1px #6b8887;
+    color: #000;
+}
+
+form.form-alumn-data .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-flow: row wrap;
+}
+
+form.form-alumn-data .row .full {
+    width: -webkit-fill-available;
+}
+
+form.form-alumn-data input#career2,
+form.form-alumn-data input#term2 {
+    cursor: not-allowed !important;
+}
+
+form.form-alumn-data .row.btns>* {
+    width: 35%;
+    padding: 16px;
+    margin: 0 20px;
+    margin-bottom: 2em;
+}
+
+form.form-alumn-data select {
+    padding: 5px 10px;
+    color: #000;
+}
+
+form.form-alumn-data .req p.profile-name {
+    font-size: 1.1em;
+    text-shadow: 0 0 2px #adadad;
+}
+
+form.form-alumn-data .req p.profile-name span {
+    font-weight: bold;
+}
+
+.enrolments .files {
+    display: block;
+    justify-content: center;
+    text-align: center;
+    margin: 1.5em 0;
+}
+
+.enrolments .files .file {
+    display: inline-block;
+    background-color: #ececec;
+    border: 1px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 0 4px 2px grey;
+    margin: 0 2em 2em 2em;
+}
+
+.enrolments .files .file .header {
+    border-bottom: 2px solid #808080;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #d0d0d0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.enrolments .files .file .footer {
+    border-top: 2px solid #808080;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    background-color: #ececec;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.enrolments .files .file .footer>div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.enrolments .files .file .footer>div .state {
+    width: 25px;
+    height: 25px;
+    border-radius: 200px;
+    margin: 0 5px;
+}
+
+.enrolments .files .file .footer>div .state.red {
+    border: 1px solid #f00;
+    background-color: #ef3f3f;
+    box-shadow: 0 0 3px 1px #8c0e0e;
+}
+
+.enrolments .files .file .footer>div .state.orange {
+    border: 1px solid #f00;
+    background-color: #ef3f3f;
+    box-shadow: 0 0 3px 1px #8c0e0e;
+}
+
+.enrolments .files .file .body {
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 0 11px 0px inset #3e3e3e;
+}
+
+
+.enrolments .files .file .body .icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 3em;
+    margin: 10px 0;
+}
+
+.enrolments .bg-image {
+    background-color: #000000c7;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.enrolments .bg-image img {
+    box-shadow: 0 0 3px 1px;
+    background-color: #ffffff6b;
+    padding: 10px;
+}
+
+.enrolments .bg-image div.close {
+    color: white;
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    cursor: pointer;
+}
+
+.enrolments .bg-image div.close i {
+    font-size: 3em;
+    padding: 5px;
+    line-height: .7;
+}
+
+
 /*DASHBOARD STUDENTS*/
 
 .statesdiv {
@@ -1545,7 +1807,7 @@ main.login .container-form a img.logo {
     display: none !important;
 }
 
-.import td .container-cb input + label {
+.import td .container-cb input+label {
     display: inline-block;
     background: #ccc;
     width: 24px;
@@ -1574,7 +1836,7 @@ main.login .container-form a img.logo {
     z-index: -1;
 }
 
-.import td .container-cb input:checked + label {
+.import td .container-cb input:checked+label {
     background: white;
     color: rgb(3, 169, 244);
 }
@@ -1621,10 +1883,10 @@ main.login .container-form a img.logo {
 }
 
 .profile-req .cards .card-box .card {
-    border: 2px solid #ffffff75;
+    border: 1px solid #000;
     border-radius: 16px;
-    background-color: #212121;
-    box-shadow: 0 0 6px black;
+    background-color: #ececec;
+    box-shadow: 0 0 4px 2px grey;
     text-align: center;
     width: 85%;
     margin: auto;
@@ -1632,16 +1894,17 @@ main.login .container-form a img.logo {
 
 .profile-req .cards .card-box .card .header {
     padding: 10px 0;
-    border-bottom: 2px solid #878787;
+    border-bottom: 2px solid #808080;
     font-size: 25px;
     font-weight: bold;
-    background-color: #111111bd;
+    background-color: #d0d0d0;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+
 }
 
 .profile-req .cards .card-box .card .body {
-    box-shadow: 0 0 15px 3px inset black;
+    box-shadow: 0 0 11px 0px inset #3e3e3e;
     padding: 20px;
 }
 
@@ -1669,8 +1932,8 @@ main.login .container-form a img.logo {
 
 .profile-req .cards .card-box .card .footer {
     padding: 10px 0;
-    border-top: 2px solid #878787;
-    background-color: #111111bd;
+    border-top: 2px solid #808080;
+    background-color: #ececec;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
@@ -1756,6 +2019,10 @@ ul.pagination li.pageNumber:last-child {
 }
 
 @media (max-width: 1100px) {
+    form.form-alumn-data .label-group {
+        width: 50%;
+    }
+
     .toggle {
         margin-left: 20px;
     }
@@ -1868,14 +2135,18 @@ ul.pagination li.pageNumber:last-child {
         border-top-left-radius: 8px;
     }
 
-    .landing > .container-title > img {
+    .landing>.container-title>img {
         width: 30%;
         padding-left: 16px;
         padding-right: 16px;
     }
 
-    .landing > .container-title > .title {
+    .landing>.container-title>.title {
         margin: 0px;
+    }
+
+    form.form-alumn-data .label-group {
+        width: 100%;
     }
 }
 
@@ -1886,7 +2157,7 @@ ul.pagination li.pageNumber:last-child {
 }
 
 @media (max-width: 600px) {
-    .landing > main > p {
+    .landing>main>p {
         font-size: 18px !important;
     }
 
@@ -1935,6 +2206,7 @@ ul.pagination li.pageNumber:last-child {
 }
 
 @media (max-width: 375px) {
+
     .students td:nth-child(4),
     .students th:nth-child(4) {
         display: none;
@@ -1968,7 +2240,7 @@ ul.pagination li.pageNumber:last-child {
         color: rgba(255, 255, 255, 0.8) !important;
     }
 
-    div.icon.input-box > i {
+    div.icon.input-box>i {
         color: black;
     }
 
@@ -2034,5 +2306,45 @@ ul.pagination li.pageNumber:last-child {
     .modal-footer {
         border-bottom-right-radius: 16px;
         border-bottom-left-radius: 16px;
+    }
+
+    .enrolments .files .file {
+        border: 2px solid #ffffff75;
+        background-color: #212121;
+        box-shadow: 0 0 6px black;
+    }
+
+    .enrolments .files .file .header {
+        border-bottom: 2px solid #878787;
+        background-color: #111111bd;
+    }
+
+    .enrolments .files .file .footer {
+        border-top: 2px solid #878787;
+        background-color: #111111bd;
+    }
+
+    .enrolments .files .file .body {
+        box-shadow: 0 0 15px 3px inset black;
+    }
+
+    .profile-req .cards .card-box .card {
+        border: 2px solid #ffffff75;
+        background-color: #212121;
+        box-shadow: 0 0 6px black;
+    }
+    
+    .profile-req .cards .card-box .card .header {
+        background-color: #111111bd;
+        border-bottom: 2px solid #878787;
+    }
+    
+    .profile-req .cards .card-box .card .body {
+        box-shadow: 0 0 15px 3px inset black;
+    }
+    
+    .profile-req .cards .card-box .card .footer {
+        border-top: 2px solid #878787;
+        background-color: #111111bd;
     }
 }
