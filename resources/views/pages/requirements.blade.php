@@ -1,14 +1,16 @@
 <x-app-layout page="requirements">
     <div class="center">
+	@section('breadcrumbs')
+        {{ Breadcrumbs::render('requirements') }}
+    @endsection
         <form action="enrolments" method="post" class="form" required>
-        	<center>
 			@csrf
 			<div class="container-form-user">
 			@if(count($profile_req) > 0)
 				<label for="code">Perfils de requeriments: <span class="red">*</span></label>
 				@foreach ($profile_req as $prof)
 				     <div>
-					    <input type="checkbox" id="pr_{{$prof->id}}" name="pr_{{$prof->id}}" value="okey">
+					    <input type="checkbox" id="pr_{{$prof->id}}" name="pr[]" value="{{$prof->id}}">
 					    <label for="pr_{{$prof->id}}"> {{$prof->name}}</label>
 					</div>
 				@endforeach
@@ -36,6 +38,7 @@
 				<input type="radio" id="pr_extracurricular_deny" name="pr_extracurricular" value="no">
 				<label for="pr_extracurricular_deny"> Denegar</label>
 			</div>
+
 			<!--
 			https://stackoverflow.com/questions/8287779/how-to-use-the-required-attribute-with-a-radio-input-field
 
@@ -44,10 +47,7 @@
 				AUTORIZACION DE SALIDAS
 				AUTORIZACION DE EXTRAESCOLARES
 			-->
-			<input type="submit" class="btn save my-4" value="Siguiente">
 		    </div>
-		</center>
         </form>
-    </div>
 </x-app-layout>
 
