@@ -49,6 +49,28 @@
                     <label for="state.postal_code">Codigo Postal</label>
                     <p>{{ $enrollments[0]->postal_code }}</p>
                 </div>
+                @if($enrollments[0]->tutor_1_dni !== NULL )
+                    <div class="form-group grid sm:grid-cols-2">
+                        <label for="state.postal_code">Tutor 1</label>
+                        <p>{{ $enrollments[0]->tutor_1 }}</p>
+                    </div>
+                    @else
+                        <div class="form-group grid sm:grid-cols-2">
+                            <label for="state.postal_code">Tutor 1</label>
+                            <p>major d'edat</p>
+                        </div> 
+                @endif
+                @if($enrollments[0]->tutor_2_dni !== NULL)
+                    <div class="form-group grid sm:grid-cols-2">
+                        <label for="state.postal_code">Tutor 2</label>
+                        <p>{{ $enrollments[0]->tutor_2 }}</p>
+                    </div>
+                    @else
+                        <div class="form-group grid sm:grid-cols-2">
+                            <label for="state.postal_code">Tutor 2</label>
+                            <p>major d'edat</p>
+                        </div> 
+                @endif
             </form>
             <div class="form-group pt-5">
                 <label for="state.cambio">Solicitar cambios:</label>
