@@ -52,11 +52,9 @@ class RegisterAdminController extends Controller
 
         $status = $user->save();
         if ($status) {
-            $data = ["status" => "Admin creat correctament."];
             Log::channel('dblogging')->info("Ha creado un Admin", ["user_id" => Auth::id(), "user_id" => $user->id]);
-
+            return redirect("/admin/dashboard?status=success&text=Administrador creat correctament.");
         }
-        return redirect('/admin/dashboard');
     }
 
     /**
