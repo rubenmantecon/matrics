@@ -29,6 +29,38 @@
                     <label for="state.dni">DNI</label>
                     <p>{{ $enrollments[0]->dni }}</p>
                 </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.address">Adreça</label>
+                    <p>{{ $enrollments[0]->address }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.population">Poblacio</label>
+                    <p>{{ $enrollments[0]->city }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.phone_number">Telefon</label>
+                    <p>{{ $enrollments[0]->phone_number }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.emergency_number">Telefon d'emergència </label>
+                    <p>{{ $enrollments[0]->emergency_number }}</p>
+                </div>
+                <div class="form-group grid sm:grid-cols-2">
+                    <label for="state.postal_code">Codigo Postal</label>
+                    <p>{{ $enrollments[0]->postal_code }}</p>
+                </div>
+                @if(isset($enrollments[0]->tutor_1_dni))
+                    <div class="form-group grid sm:grid-cols-2">
+                        <label for="state.postal_code">Tutor 1</label>
+                        <p>{{ $enrollments[0]->tutor_1 }}</p>
+                    </div>
+                @endif
+                @if(isset($enrollments[0]->tutor_2_dni))
+                    <div class="form-group grid sm:grid-cols-2">
+                        <label for="state.postal_code">Tutor 2</label>
+                        <p>{{ $enrollments[0]->tutor_2 }}</p>
+                    </div>
+                @endif
             </form>
             <div class="form-group pt-5">
                 <label for="state.cambio">Solicitar cambios:</label>

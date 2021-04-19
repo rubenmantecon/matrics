@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyReqEnrolmentState extends Migration
+class UpdateUploadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,7 @@ class ModifyReqEnrolmentState extends Migration
      */
     public function up()
     {
-        //
-        DB::statement("ALTER TABLE `req_enrols` MODIFY COLUMN `state` ENUM('pending', 'validated','rejected','empty')");
+        DB::statement("ALTER TABLE `uploads` MODIFY COLUMN `data` MEDIUMBLOB ");
     }
 
     /**

@@ -563,6 +563,41 @@ function importCSV(page) {
     }
 }
 
+function importIMG(doc_name) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+        var fr = new FileReader(doc_name);
+        fr.onload = function () {
+            
+            var file = fr.result;
+            $.ajax({
+                url: "/api/documents",
+                method: 'POST',
+                headers: {
+                    token: $("meta[name='_token']").attr("content"),
+                },
+                data: {
+                    import_file: doc_name,
+                    file
+                },
+                success: (res) => {
+                    generateMessages(res.status, res.text, ".container-messages", 3);
+                    $("tbody").html('');
+                    
+                },
+                error: (res) => {
+                    console.log(res.responseJSON.message);
+                    generateMessages("error", "Error al pujar el Document, intenta-ho més tard", ".container-messages", 3)
+                }
+            });
+        }
+        fr.readAsDataURL($('#'+doc_name)[0].files[0]);
+    
+}
+
 /**
  *  @description "event for clone the term"
  */
@@ -930,6 +965,81 @@ function validationTermForm(page) {
         } else return true;
 }
 
+function selectedModule(selectedInputParent) {
+    let groupOfSelectedInput = $('input[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == true) {
+        for(selectedInput of groupOfSelectedInput) {
+            $(selectedInput).prop('checked', true);
+        }
+
+        if($('input#module').length == $('input#module:checked').length) {
+            $('input[type=checkbox]#allCourse').prop('checked', true);
+        }
+    } else if($(selectedInputParent).prop('checked') == false) {
+        for(selectedInput of groupOfSelectedInput) {
+            $(selectedInput).prop('checked', false);
+        }
+        $('input[type=checkbox]#allCourse').prop('checked', false);
+    }
+}
+
+function selectedUf(selectedInputParent) {
+    let groupOfSelectedInput = $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]');
+    if($(selectedInputParent).prop('checked') == false) {
+        for(selectedInput of groupOfSelectedInput) {
+            if($(selectedInput).prop('checked') == false) {
+                $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', false);
+                $('input[type=checkbox]#allCourse').prop('checked', false);
+            }
+        }
+    }
+
+    if($(selectedInputParent).prop('checked') == true) {
+        if(groupOfSelectedInput.length == $('input#uf[group="' + $(selectedInputParent).attr('group') + '"]:checked').length) {
+            $('input#module[group="' + $(selectedInputParent).attr('group') + '"]').prop('checked', true);
+        }
+
+        if($('input#module').length == $('input#module:checked').length) {
+            $('input[type=checkbox]#allCourse').prop('checked', true);
+        }
+    }
+}
+
+function selectedAllCourse(selectedInputParent) {
+    if($(selectedInputParent).prop('checked') == true) {
+        $('.container-form-user input[type=checkbox]').prop('checked', true);
+    } else {
+        $('.container-form-user input[type=checkbox]').prop('checked', false);
+    }
+}
+
+function calculatePrice(requirementParameters) {
+    $.getJSON('/data/prices.json', function(prices) {
+        $('.container-form-user input[type=checkbox]:not(#allCourse)').attr('disabled', 'disabled');
+
+        $('#totalSelected').text(0);
+        // Age of the User
+        var age;
+
+        if(requirementParameters['age'] < 28) {
+            age = 'less28';
+        } else {
+            age = 'plus28';
+        }
+
+        // Calculating price for MIDDLE CAREER
+        if($('#codeCareer').text().includes('CFPM')) {
+            $('input[type=checkbox]:not(#allCourse)').attr('disabled', 'disabled');
+            $('input[type=checkbox]#module').removeAttr('disabled');
+            if($('input#allCourse').prop('checked') == true) {
+                $('#totalSelected').text(prices['middle_career']['all'][age]['base'] + prices['middle_career']['all'][age]['material']);
+            } else if ($('input#allCourse').prop('checked') == false) {
+                $('#totalSelected').text(prices['middle_career']['modules'][age]['base'] + ($('.container-form-user input[type=checkbox]:checked:not(#allCourse)').length * prices['middle_career']['modules'][age]['permodule']) + prices['middle_career']['modules'][age]['material']);
+            }
+        }
+    });
+}
+
 /**
  * @description "JQuery DOM Ready: detect what is the current page of the user to load the functions"
  */
@@ -989,7 +1099,16 @@ $(function () {
             else
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
         })
-    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
+    }else if(location.pathname.endsWith("/dashboard/documents") || location.pathname.endsWith("/dashboard/documents/")){
+        if (getUrlParameter('status')) {
+            generateMessages(getUrlParameter('status'), getUrlParameter('text'), '.container-messages' ,5);
+        }
+        $('input[type="file"]').change(function (e) {
+            doc_name= e.target.id
+            importIMG(doc_name);
+        })
+
+    }else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
