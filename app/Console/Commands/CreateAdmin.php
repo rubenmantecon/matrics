@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Enrolment;
 use Illuminate\Console\Command;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -56,10 +57,19 @@ class CreateAdmin extends Command
             'lastname1' => $lastname1,
             'lastname2' => $lastname2,
             'token' => $token,
-            
         ]);
 
-    $this->info('Account created for '.$name);
+    Enrolment::query()
+        ->create([
+            'user_id' => 1,
+            'career_id' => 1,
+            'dni' => "12345678Z",
+            'state' => "registered",
+            'term_id' => 1,
+        ]);    
+
+
+    $this->info('Account created for '.$name.'and a standard Enrolment');
 
 
 }
