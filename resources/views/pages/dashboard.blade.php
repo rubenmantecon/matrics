@@ -34,6 +34,14 @@
                 <a href="/admin/dashboard/admins" class="btn primary-btn">Admins</a>
             </div>
         </div>
+		<div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md my-2 bg-white">
+			<div class="px-4 py-2">
+				<img src="{{ asset('images') }}" alt="logo" class="logo w-24 m-4" />
+			</div>
+			<div class="px-6 py-4">
+				<a href="/admin/dashboard/profileReq" class="btn primary-btn">Crea perfil requeriment</a>
+			</div>
+		</div>
     </div>
     @else
     <!-- @section('breadcrumbs')
@@ -94,17 +102,9 @@
                 <div class="px-4">
                     <img src="{{ asset('images/usuari.png') }}" alt="logo" class="logo w-24 m-4"/>
                 </div>
-
-<<<<<<< HEAD
-
-            <div class="px-6 py-4">
-                <a href="/dashboard/profile" class="btn primary-btn">Dades personals</a>
-=======
-            
                 <div class="px-6 py-4">
                     <a href="/dashboard/profile" class="btn primary-btn">Dades personals</a>
                 </div>
->>>>>>> 36376d71b05a2c6e38ec7ee09c91b2ea30f216de
             </div>
             <div class="option flex items-center justify-center border max-w-xs rounded overflow-hidden shadow-md bg-white">
                 <div class="px-4">

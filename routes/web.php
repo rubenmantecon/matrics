@@ -47,6 +47,10 @@ Route::get('/sample', function () {
     return view('pages.sample');
 });
 
+Route::get('/uploads', function () {
+    return view('pages.upload');
+});
+
 Route::get('/dashboard/profile', function () {
     $user_id = auth::id();
     $enrollments = Enrolment::where('user_id', $user_id)->get();
@@ -113,6 +117,7 @@ Route::resource('api/requirements', RequirementController::class);
 Route::resource('api/admins', AdminController::class);
 Route::resource('api/createAdmin', RegisterAdminController::class);
 Route::resource('api/documents',  UploadController::class);
+Route::resource('api/uploads', UploadController::class);
 
 require __DIR__ . '/auth.php';
 
