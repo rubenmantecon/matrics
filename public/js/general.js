@@ -548,7 +548,7 @@ function importIMG(doc_name) {
     });
         var fr = new FileReader(doc_name);
         fr.onload = function () {
-            
+
             var file = fr.result;
             $.ajax({
                 url: "/api/documents",
@@ -563,7 +563,7 @@ function importIMG(doc_name) {
                 success: (res) => {
                     generateMessages(res.status, res.text, ".container-messages", 3);
                     $("tbody").html('');
-                    
+
                 },
                 error: (res) => {
                     console.log(res.responseJSON.message);
@@ -572,7 +572,7 @@ function importIMG(doc_name) {
             });
         }
         fr.readAsDataURL($('#'+doc_name)[0].files[0]);
-    
+
 }
 
 /**
@@ -947,7 +947,6 @@ function calculatePrice(requirementParameters) {
 
         // Calculating price for MIDDLE CAREER
         if($('#codeCareer').text().includes('CFPM')) {
-            $('input[type=checkbox]:not(#allCourse)').attr('disabled', 'disabled');
             $('input[type=checkbox]#module').removeAttr('disabled');
             if($('input#allCourse').prop('checked') == true) {
                 $('#totalSelected').text(prices['middle_career']['all'][age]['base'] + prices['middle_career']['all'][age]['material']);
