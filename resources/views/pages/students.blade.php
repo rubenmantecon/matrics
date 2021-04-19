@@ -14,15 +14,16 @@
 				<label class="btn save" for="file"><i class="fas fa-file-import"></i> Importació</label>
 			</form>
 		</div>
-		<section class="filter">
-			<input type="text" placeholder="Nom" name="firstname" id="">
-			<input type="text" placeholder="Primer cognom" name="lastname1" id="">
-			<input type="text" placeholder="Segon cognom" name="lastname2" id="">
-			<input type="text" placeholder="Correu electrònic" name="email" id="">
-			<input type="text" placeholder="Codi de curs" name="career_id" id="">
-		</section>
-
-		<button type="submit" class="filter">Filtra</button>
+		<div class="w-11/12 mx-auto flex mt-4 mb-2 justify-around items-center">
+			<section class="filter w-fullflex flex-wrap justify-around">
+				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Nom" name="firstname" id="" />
+				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Primer cognom" name="lastname1" id="" />
+				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Segon cognom" name="lastname2" id="" />
+				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Correu electrònic" name="email" id="" />
+				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Codi de curs" name="career_id" id="" />
+			</section>
+			<button type="submit" class="filter btn primary-btn w-2/12">Filtra</button>
+		</div>
 		<table>
 			<caption>Llistat d'alumnes</caption>
 			<thead>
