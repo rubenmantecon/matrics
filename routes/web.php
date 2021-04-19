@@ -22,6 +22,8 @@ use App\Models\Profile_req;
 use App\Http\Controllers\RegisterAdminController;
 use App\Models\Career;
 use App\Models\Mp;
+use App\Models\Requirement;
+use App\Models\Req_enrol;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,12 +83,32 @@ Route::post('/dashboard/enrolments', function (Request $request) {
 		o
 		Podemos almacenarlos en la db (por si el usuario se queda a medias)
 	*/
+
+	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['enrolments.id AS enrolment_id', 'careers.code', 'careers.name', 'careers.id']);
+
+	// Get all requeriments from selected profile_req
 	
+	$q=0;
+	foreach($request->pr as $pr){
+		if(++$q == 1){
+			$r = Requirement::where('profile_id', '=', $pr);	
+		}
+		else{
+			$r->orWhere('profile_id', '=', $pr);
+		}
+	}
+	$requirements = $r->get(['id']);
 	
-	
-	$rights = ["image" => $request->pr_image, "excursions" => $request->pr_excursions, "extracurricular" => $request->pr_extracurricular];
-	
-	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['careers.code', 'careers.name', 'careers.id']);
+	// Create all as a template (empty registers in db)
+	foreach($requirements as $r){
+		$re = new Req_enrol;
+		$re->req_id = $r['id']; // or $r['id'] idk
+		$re->enrolment_id = $career->enrolment_id;
+		$re->state = null; // Waiting to be filled!
+		$re->save();
+	}
+
+	$rights = ["requirements" => $requirements, "image" => $request->pr_image, "excursions" => $request->pr_excursions, "extracurricular" => $request->pr_extracurricular];
 	
     $mps = Mp::where('career_id', $career["id"])->get(); //Mp::careers();
     
