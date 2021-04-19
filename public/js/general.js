@@ -897,13 +897,27 @@ function selectedAllCourse(selectedInputParent) {
 }
 
 function calculatePrice(requirementParameters) {
-    console.log('calculating');
     $.getJSON('/data/prices.json', function(prices) {
-        if($('#codeCareer').text().includes('CFPM')) {
-            if($('input#allCourse').prop('checked') == true) {
-                $('#totalSelected').text(+ prices['middle_career']['all']['less28']['base'] + prices['middle_career']['all']['less28']['material']);
-            } else if ($('input#allCourse').prop('checked') == false) {
+        $('.container-form-user input[type=checkbox]:not(#allCourse)').attr('disabled', 'disabled');
 
+        $('#totalSelected').text(0);
+        // Age of the User
+        var age;
+
+        if(requirementParameters['age'] < 28) {
+            age = 'less28';
+        } else {
+            age = 'plus28';
+        }
+
+        // Calculating price for MIDDLE CAREER
+        if($('#codeCareer').text().includes('CFPM')) {
+            $('input[type=checkbox]:not(#allCourse)').attr('disabled', 'disabled');
+            $('input[type=checkbox]#module').removeAttr('disabled');
+            if($('input#allCourse').prop('checked') == true) {
+                $('#totalSelected').text(prices['middle_career']['all'][age]['base'] + prices['middle_career']['all'][age]['material']);
+            } else if ($('input#allCourse').prop('checked') == false) {
+                $('#totalSelected').text(prices['middle_career']['modules'][age]['base'] + ($('.container-form-user input[type=checkbox]:checked:not(#allCourse)').length * prices['middle_career']['modules'][age]['permodule']) + prices['middle_career']['modules'][age]['material']);
             }
         }
     });

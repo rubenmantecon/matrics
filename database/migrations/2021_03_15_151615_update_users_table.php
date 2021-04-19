@@ -18,6 +18,7 @@ class UpdateUsersTable extends Migration
             $table->string('firstname');
             $table->string('lastname1');
             $table->string('lastname2');
+            $table->date('birthday');
         });
     }
 
@@ -33,6 +34,7 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('firstname');
             $table->dropColumn('lastname1');
             $table->dropColumn('lastname2');
+            $table->dropColumn('birthday');
         });
     }
 }

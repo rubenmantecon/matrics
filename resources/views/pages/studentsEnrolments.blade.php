@@ -27,7 +27,7 @@
                         <button type="button" class="w-full px-8 py-6 text-left">
                             <div class="flex items-center justify-between">
                                 <label>
-                                    <input type="checkbox" onchange="selectedModule(this)" id="module" group="module{{ $key+1 }}" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent" checked>
+                                    <input type="checkbox" onchange="selectedModule(this)" id="module" group="module{{ $key+1 }}" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent disabled:opacity-50" checked>
                                     {{ $mp->code }}. {{ $mp->name}}
                                 </label>
                                 <span class="ico-plus text-2xl text-gray-500" @click="selected !== 1 ? selected = 1 : selected = null">
@@ -40,7 +40,7 @@
                             @foreach ($mp->ufs as $uf)
                             <div class="p-6">
                                 <label class="ml-14 p-2.5">
-                                    <input type="checkbox" id="uf" group="module{{ $key+1 }}" onclick="selectedUf(this)" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent" checked>
+                                    <input type="checkbox" id="uf" group="module{{ $key+1 }}" onclick="selectedUf(this)" class="mr-8 appearance-none checked:bg-blue-600 checked:border-transparent disabled:opacity-50" checked>
                                     {{ $uf->code }}. {{ $uf->name}}
                                 </label>
                             </div>
@@ -62,7 +62,7 @@
         <script type="text/javascript" defer>
             calculatePrice({!! $rights !!});
 
-            document.querySelector('.container-form-user input[type=checkbox]').addEventListener('change', function () {
+            $('.container-form-user input[type=checkbox]').change(function() {
                 calculatePrice({!! $rights !!});
             });
         </script>
