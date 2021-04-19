@@ -8,7 +8,7 @@
 				<label for="code">Perfils de requeriments: <span class="red">*</span></label>
 				@foreach ($profile_req as $prof)
 				     <div>
-					    <input type="checkbox" id="pr_{{$prof->id}}" name="pr_{{$prof->id}}" value="okey">
+					    <input type="checkbox" id="pr_{{$prof->id}}" name="pr[]" value="{{$prof->id}}">
 					    <label for="pr_{{$prof->id}}"> {{$prof->name}}</label>
 					</div>
 				@endforeach
