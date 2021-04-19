@@ -164,6 +164,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
                         "students"
                     ));
                 }
+                $("ul.pagination").html('');
                 for (const item of res.links) {
                     if (item.label === "&laquo; Previous") item.label = '<i class="fas fa-angle-left"></i>';
                     else if (item.label === "Next &raquo;") item.label = '<i class="fas fa-angle-right"></i>';
