@@ -81,10 +81,9 @@ Route::post('/dashboard/enrolments', function (Request $request) {
 		o
 		Podemos almacenarlos en la db (por si el usuario se queda a medias)
 	*/
+	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['careers.code', 'careers.name', 'careers.id', 'enrolments.birth_date']);
 
-	$rights = '{"age": "'.Carbon::parse(Auth::user()->birthday)->age.'","image": "'.$request->pr_image.'", "excursions": "'.$request->pr_excursions.'", "extracurricular": "'.$request->pr_extracurricular.'"}';
-
-	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['careers.code', 'careers.name', 'careers.id']);
+    $rights = '{"age": "'.Carbon::parse($career['birth_date'])->age.'","image": "'.$request->pr_image.'", "excursions": "'.$request->pr_excursions.'", "extracurricular": "'.$request->pr_extracurricular.'"}';
 
     $mps = Mp::where('career_id', $career["id"])->get(); //Mp::careers();
 
