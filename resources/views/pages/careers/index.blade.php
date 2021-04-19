@@ -14,14 +14,14 @@
 				<label class="btn save" for="file-csv"><i class="fas fa-file-import"></i> Importació</label>
 			</form>
 		</div>
-		<table>
+		<table><!--
 			<section class="filter">
 				<input type="text" placeholder="Identificador de curs" name="careers_id" id="">
 				<input type="text" placeholder="Codi" name="careers_code" id="">
 				<input type="text" placeholder="Nom del Mòdul" name="careers_name" id="">
 			</section>
 
-			<button type="submit" class="filter">Filtra</button>
+			<button type="submit" class="filter">Filtra</button>-->
 			<caption>Llistat de cicles del curs <a class="return-term link" href="/admin/dashboard/terms">{{ $term }}</a></caption>
 			<thead>
 				<tr>
