@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use DB;
 
+use App\Models\Req_enrol;
+use App\Models\Upload;
 use App\Models\Enrolment;
 use App\Models\Term;
 use App\Models\User;
@@ -30,18 +32,19 @@ class EnrolmentController extends Controller
             $user = User::select("token")->where('token', $token)->get()[0];
             if ($user['token']) {
                 $user_id = $request->header('user_id');
-                if (isset($user_id) && $user_id != "empty") {
+                $term_id = $request->header('term_id');
+                if (isset($user_id) && $user_id != "empty" && isset($term_id) && $term_id != "empty") {
                     if ($user_id == "new") {
                         $terms = Term::all();
                         $careers = Career::all();
                         $data = ["terms" => $terms, "careers" => $careers];
                     } else {
-                        // ME FALTA COGER LOS REQUERIMINETOS CON LOS ARCHIVOS
                         $user = User::where("id", $user_id)->get()[0];
-                        $enrolment = Enrolment::where("user_id", $user_id)->get()[0];
-                        $career = Career::where("id", $enrolment['career_id'])->get()[0];
-                        $mps = Mp::where("career_id", $career['id'])->get();
-                        $data = ["user" => $user, "career" => $career, "mps" => $mps, "enrolment" => $enrolment];
+                        $enrolment = Enrolment::where("user_id", $user_id)->where("term_id", $term_id)->get()[0];
+                        $career = Career::select("careers.id AS career_id", "careers.term_id", "careers.code AS career_code", "careers.name AS career_name", "terms.name AS term_name", "terms.start", "terms.end")->where("careers.id", $enrolment['career_id'])->join("terms", "careers.term_id", "terms.id")->get()[0];
+                        $mps = Mp::where("career_id", $career['career_id'])->get();
+                        $files = Req_enrol::select("req_enrols.id AS req_enrol_id", "req_enrols.enrolment_id", "req_enrols.req_id", "req_enrols.state", "requirements.profile_id", "requirements.name AS req_name", "profile_reqs.name AS profile_name", "uploads.id AS upload_id")->join('requirements', 'req_enrols.req_id', '=', 'requirements.id')->join('profile_reqs', 'requirements.profile_id', '=', 'profile_reqs.id')->join('uploads', 'req_enrols.id', '=', 'uploads.req_enrol_id')->where("enrolment_id", $enrolment['id'])->get();
+                        $data = ["user" => $user, "career" => $career, "mps" => $mps, "enrolment" => $enrolment, "files" => $files];
                     }
                     return response()->json($data);
                 } else {
@@ -159,7 +162,6 @@ class EnrolmentController extends Controller
         } else {
             $data = ["status" => "Error en actualitzar enrolment."];
         }
-
         return redirect("/admin/dashboard/students");
     }
 

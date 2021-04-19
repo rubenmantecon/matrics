@@ -15,6 +15,14 @@
                 <label class="btn save" for="file"><i class="fas fa-file-import"></i> Importació</label>
             </form>
         </div>
+        <section class="filter">
+            <input type="text" placeholder="Nom" name="firstname" id="">
+            <input type="text" placeholder="Primer cognom" name="lastname1" id="">
+            <input type="text" placeholder="Segon cognom" name="lastname2" id="">
+            <input type="text" placeholder="Correu electrònic" name="email" id="">
+            <input type="text" placeholder="Codi de curs" name="career_id" id="">
+        </section>
+		<button type="submit" class="filter">Filtra</button>
         <table>
             <caption>Llistat d'alumnes</caption>
             <thead>

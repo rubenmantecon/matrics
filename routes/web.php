@@ -13,6 +13,7 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\UfController;
+use App\Http\Controllers\UploadController;
 use App\Models\Enrolment_uf;
 use App\Http\Controllers\MpsController;
 use App\Http\Controllers\Profile_reqController;
@@ -39,6 +40,10 @@ Route::get('/', function () {
 
 Route::get('/sample', function () {
     return view('pages.sample');
+});
+
+Route::get('/uploads', function () {
+    return view('pages.upload');
 });
 
 Route::get('/dashboard/profile', function () {
@@ -74,6 +79,7 @@ Route::resource('api/mps', MpsController::class);
 Route::resource('api/profile_reqs', Profile_reqController::class);
 Route::resource('api/requirements', RequirementController::class);
 Route::resource('api/createAdmin', RegisterAdminController::class);
+Route::resource('api/uploads', UploadController::class);
 
 require __DIR__ . '/auth.php';
 
