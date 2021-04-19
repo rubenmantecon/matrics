@@ -4,7 +4,7 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    
+
     @if(Auth::user()->role == 'admin')
     @section('breadcrumbs')
         {{ Breadcrumbs::render('dashboard') }}
@@ -31,7 +31,7 @@
                 <img src="{{ asset('images/admin.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
             <div class="px-6 py-4">
-                <a href="/admin/dashboard/createAdmin" class="btn primary-btn">Crea admin</a>
+                <a href="/admin/dashboard/admins" class="btn primary-btn">Admins</a>
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
                 <img src="{{ asset('images/usuari.png') }}" alt="logo" class="logo w-24 m-4"/>
             </div>
 
-        
+
             <div class="px-6 py-4">
                 <a href="/dashboard/profile" class="btn primary-btn">Dades personals</a>
             </div>

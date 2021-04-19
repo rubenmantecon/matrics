@@ -117,30 +117,53 @@ function loadLogsPage() {
     });
 }
 
-/* CREATE ADMIN */
+/* ADMIN */
 /**
- * @description "load all the functionalities of the create admin in HTML"
+ * @description "load all the functionalities of the admins in HTML"
  */
- function loadCreateAdminPage() {
-     $('form').submit(function (e) {
-        console.log('hey');
-        e.preventDefault();
-        e.stopPropagation();
-        let msg = "";
-        if (isNull($("input#username").val())) msg += "El camp 'Nom d'usuari' no pot estar buit.\n";
-        if (isNull($("input#firstname").val())) msg += "El camp 'Nom' no pot estar buit.\n";
-        if (isNull($("input#lastname1").val())) msg += "El camp 'Cognom' no pot estar buit.\n";
-        if (isNull($("input#lastname2").val())) msg += "El camp 'Segon cognom' no pot estar buit.\n";
-        if (isNull($("input#password").val())) msg += "El camp 'Contrasenya' no pot estar buit.\n";
-        if (isNull($("input#password_confirmation").val())) msg += "El camp 'Confirma contrasenya' no pot estar buit.\n";
-        if ($("input#password_confirmation").val() != $("input#password").val()) msg += "Les contrasenyes no coincideixen.\n";
+ function loadAdminsPage() {
+    $.ajax({
+        url: $("meta[name='url']").attr("content"),
+        method: 'GET',
+        headers: {
+            token: $("meta[name='_token']").attr("content"),
+        },
+        success: (res) => {
+            $("tbody").css("display", "none").html('');
+            if (res.length > 0) {
+                let contRows = 0;
+                for (const item of res) {
+                    $("tbody").append(insertNewRow(
+                        item.id,
+                        item.name,
+                        item.email,
+                        item.firstname,
+                        item.lastname1,
+                        item.lastname2,
+                        contRows,
+                        "admins"
+                    ));
+                    contRows++;
+                }
+            } else {
+                $("tbody").append(
+                    `<tr>
+                        <td colspan="10"><p>No s'ha trobat cap admin que no siguis tu.</p></td>
+                    </tr>`
+                );
+            }
+            $("tbody").append(
+                `<tr>
+                    <td colspan="10"><button type="button" id="new" class="btn secondary-btn"><i class="fas fa-user"></i> Afegeix un nou admin</button></td>
+                </tr>`
+            ).fadeIn(300);
 
-        if (msg) {
-            generateMessages("error", msg, ".container-messages", 5);
-            return false;
-        } else e.target.submit();
-     })
+            $("body").addClass("body-term");
+            $("#new, #edit").on("click", (e) => rowEventEditAndNew(e.target, "admins"));
+        }
+    });
 }
+
 
 
 /* STUDENTS */
@@ -587,6 +610,8 @@ function rowEventEditAndNew(tag, page) {
                         updateTableRowTerm(rowSelected.children());
                     } else if (page === "careers") {
                         updateTableRowCareers(rowSelected.children());
+                    } else if (page === "admins") {
+                        updateTableRowAdmin(rowSelected.children());
                     }
                     $("html").css("overflow", "auto");
                     setTimeout(() => $(".bg-dialog").removeClass("bg-opacity"), 700);
@@ -625,6 +650,10 @@ function rowEventEditAndNew(tag, page) {
     } else if (page === "careers") {
         const colsValues = [cols[1], cols[2], cols[3], cols[4], cols[5], cols[6]];
         const inputsIds = ["code", "name", "description", "hours", "start", "end"];
+        getInfoForModal(colsValues, inputsIds);
+    } else if (page === "admins") {
+        const colsValues = [cols[0], cols[1], cols[2], cols[3], cols[4], cols[5]];
+        const inputsIds = ["id" ,"user", "email", "name", "surname", "secondsurname"];
         getInfoForModal(colsValues, inputsIds);
     }
 
@@ -665,7 +694,6 @@ function insertNewRow(...params) {
         row += `<td>${(params[i]) ? params[i] : ''}</td>`;
     }
 
-    console.log("aaa", params)
     let lastParam = params[params.length - 1];
     if (lastParam == "terms") {
         row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
@@ -676,8 +704,28 @@ function insertNewRow(...params) {
                 <td><a href="/admin/dashboard/${lastParam}/delete/${params[0]}?term=${getUrlParameter('term')}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
     } else if (lastParam == "students") {
         row += `<td><a href="/admin/dashboard/students/matriculation?student=${params[params.length - 2]}" id="view" class="btn save" title="Dades"><i class="fas fa-eye"></i></button></td>`;
+    } else if (lastParam == "admins") {
+        row += `<td><button id="edit" class="btn save" title="Modificar"><i class="fas fa-pen"></i></button></td>
+               <td><button class="btn cancel" title="Elimina" onclick="deleteAdmin(${params[0]})"><i class="fas fa-trash"></i></button></td>`;
     }
     return row + "</tr>";
+}
+
+
+function deleteAdmin(id) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+    $.ajax({
+        url: `/api/admins/${id}`,
+        type: 'DELETE',
+        data: {id} ,
+        success: function(result) {
+            loadAdminsPage();
+        }
+    });
 }
 
 /**
@@ -704,6 +752,8 @@ function insertRowInDB(data, page) {
                 loadTermPage();
             } else if (page === "careers") {
                 loadCareerPage();
+            } else if (page === "admins") {
+                loadAdminsPage();
             }
         },
         error: (res) => {
@@ -755,6 +805,37 @@ function updateRowInDB(data, page) {
             generateMessages("error", "Error al servidor", ".container-messages", 3)
         }
     });
+}
+
+/**
+ * @description "update tbody of admin HTML table"
+ * @param {Element[]} cols
+ */
+ function updateTableRowAdmin(cols) {
+    $("tbody").html('');
+    if (cols.length === 1) {
+        if ($(".label-group input#password").val() && $(".label-group input#password-confirmation").val()) {
+            const data = {
+                user: $(".label-group input#user").val(),
+                email: $(".label-group input#email").val(),
+                firstname: $(".label-group input#name").val(),
+                lastname1: $(".label-group input#surname").val(),
+                lastname2: $(".label-group input#secondsurname").val(),
+                password: $(".label-group input#password").val(),
+            }
+            insertRowInDB(data, "admins");
+        }
+    } else {
+        const data = {
+            user: $(".label-group input#user").val(),
+            email: $(".label-group input#email").val(),
+            firstname: $(".label-group input#name").val(),
+            lastname1: $(".label-group input#surname").val(),
+            lastname2: $(".label-group input#secondsurname").val(),
+            password: $(".label-group input#password").val(),
+        }
+        updateRowInDB(data, "admins");
+    }
 }
 
 /**
@@ -822,30 +903,31 @@ function updateTableRowCareers(cols) {
  */
 function validationTermForm(page) {
     let msg = "";
-    if (isNull($(".label-group input#name").val())) msg += "El camp 'Nom' no pot estar buit.\n";
-    if (isNull($(".label-group input#description").val())) msg += "El camp 'Descripció' no pot estar buit.\n";
-    if (page === "careers") {
-        if (isNull($(".label-group input#code").val())) msg += "El camp 'Codi' no pot estar buit.\n";
-        if (isNull($(".label-group input#hours").val())) msg += "El camp 'Hores' no pot estar buit.\n";
-    }
-    if (isNull($(".label-group input#start").val())) msg += "El camp 'Data d'inici' no pot estar buit.\n";
-    if (isNull($(".label-group input#end").val())) msg += "El camp 'Data de fi' no pot estar buit.\n";
+    if (page != "admins") {
+        if (isNull($(".label-group input#name").val())) msg += "El camp 'Nom' no pot estar buit.\n";
+        if (isNull($(".label-group input#description").val())) msg += "El camp 'Descripció' no pot estar buit.\n";
+        if (page === "careers") {
+            if (isNull($(".label-group input#code").val())) msg += "El camp 'Codi' no pot estar buit.\n";
+            if (isNull($(".label-group input#hours").val())) msg += "El camp 'Hores' no pot estar buit.\n";
+        }
+        if (isNull($(".label-group input#start").val())) msg += "El camp 'Data d'inici' no pot estar buit.\n";
+        if (isNull($(".label-group input#end").val())) msg += "El camp 'Data de fi' no pot estar buit.\n";
 
-    if (!msg) {
-        let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
-        let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
-        if (start === "Invalid date")
-            msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
-        else if (end === "Invalid date")
-            msg += "Data de fi invàlida 'DD-MM-AAAA'.\n";
-        else if (end < start)
-            msg += "La data de fi no pot ser mes petita que la d'inici.\n";
+        if (!msg) {
+            let start = momentFormat($(".label-group input#start").val(), "DD-MM-YYYY", "YYYYMMDD");
+            let end = momentFormat($(".label-group input#end").val(), "DD-MM-YYYY", "YYYYMMDD");
+            if (start === "Invalid date")
+                msg += "Data d'inici invàlida 'DD-MM-AAAA'.\n";
+            else if (end === "Invalid date")
+                msg += "Data de fi invàlida 'DD-MM-AAAA'.\n";
+            else if (end < start)
+                msg += "La data de fi no pot ser mes petita que la d'inici.\n";
+        }
     }
-
-    if (msg) {
-        generateMessages("error", msg, ".container-messages", 5);
-        return false;
-    } else return true;
+        if (msg) {
+            generateMessages("error", msg, ".container-messages", 5);
+            return false;
+        } else return true;
 }
 
 /**
@@ -862,8 +944,8 @@ $(function () {
         })
     } else if (location.pathname.includes("admin/dashboard/logs")) {
         loadLogsPage();
-    } else if (location.pathname.includes("admin/dashboard/createAdmin")) {
-        loadCreateAdminPage();
+    } else if (location.pathname.includes("admin/dashboard/admins")) {
+        loadAdminsPage();
     } else if (location.pathname.includes("dashboard/terms/delete/")) {
         $("#name").focus();
         const name = $("span.code").text();

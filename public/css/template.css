@@ -21,7 +21,7 @@
     --darkText: rgb(250, 250, 250);
     --saveBtn: #21ba45;
     --saveBtnHover: #20973c;
-    --normalBtn:#e0e1e2; 
+    --normalBtn:#e0e1e2;
     --normalBtnWriting:#a7a7a7;
     --selectedRow: #68ff6e;
     --cancelBtn: #ff695e;
@@ -1207,8 +1207,8 @@ body.body-term {
     background-color: #fff;
     top: unset !important;
     left: unset !important;
-    max-width: 700px !important;
-    width: 66% !important;
+    max-width: 1000px !important;
+    width: 85% !important;
     box-shadow: 0 0 20px 1px black;
     border-radius: 7px;
     z-index: 3;

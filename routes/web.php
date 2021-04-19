@@ -18,7 +18,7 @@ use App\Http\Controllers\MpsController;
 use App\Http\Controllers\Profile_reqController;
 use App\Http\Controllers\RequirementController;
 use App\Models\Profile_req;
-use App\Http\Controllers\RegisterAdminController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +73,7 @@ Route::resource('api/enrolment_ufs', Enrolment_ufController::class);
 Route::resource('api/mps', MpsController::class);
 Route::resource('api/profile_reqs', Profile_reqController::class);
 Route::resource('api/requirements', RequirementController::class);
-Route::resource('api/createAdmin', RegisterAdminController::class);
+Route::resource('api/admins', AdminController::class);
 
 require __DIR__ . '/auth.php';
 
@@ -92,7 +92,7 @@ Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
 // Dashboard
 Breadcrumbs::for('home', static function ($trail) {
     $trail->push('Inici', route('dashboard'));
-});   
+});
 
 // Dashboard > Profile
 Breadcrumbs::for('profile', static function ($trail) {
