@@ -145,6 +145,7 @@ Route::resource('api/createAdmin', RegisterAdminController::class);
 Route::resource('api/documents',  UploadController::class);
 Route::resource('api/uploads', UploadController::class);
 
+Route::resource('api/upload', UploadController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/

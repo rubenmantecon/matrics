@@ -391,6 +391,7 @@ function loadStudentsPage(url = $("meta[name='url']").attr("content")) {
                         "students"
                     ));
                 }
+                $("ul.pagination").html('');
                 for (const item of res.links) {
                     if (item.label === "&laquo; Previous")
                         item.label = '<i class="fas fa-angle-left"></i>';
@@ -1206,12 +1207,7 @@ function loadImportPage(careers) {
                     )}`;
                 },
                 error: (res) => {
-                    generateMessages(
-                        "error",
-                        "Error en el servidor",
-                        ".container-messages",
-                        2.5
-                    );
+                    generateMessages("error", "Error al servidor", ".container-messages", 2.5);
                     console.log(res);
                 },
             });
@@ -1257,6 +1253,7 @@ function importCSV(page) {
                     file,
                 },
                 success: (res) => {
+                    console.log(res);
                     $("#form-file").trigger("reset");
                     localStorage.setItem("careers_json", res);
                     location.href = `/admin/dashboard/careers/import?term=${getUrlParameter(
@@ -1298,13 +1295,9 @@ function importCSV(page) {
                 error: (res) => {
                     $("#form-file").trigger("reset");
                     console.log(res.responseJSON.message);
-                    generateMessages(
-                        "error",
-                        "Alguns usuaris ja existeixen",
-                        ".container-messages",
-                        3
-                    );
-                },
+                    location.reload();
+                    generateMessages("error", "Alguns usuaris ja existeixen", ".container-messages", 3)
+                }
             });
         };
         fr.readAsDataURL($("#file")[0].files[0]);
@@ -1912,12 +1905,8 @@ $(function () {
     } else if (location.pathname.includes("admin/dashboard/logs")) {
         $("tbody").fadeIn(300);
         loadLogsPage();
-    } else if (
-        location.pathname.endsWith("/admin/dashboard/students/") ||
-        location.pathname.endsWith("/admin/dashboard/students")
-    ) {
-        $("#file").change(function () {
-            console.log("Hey!");
+    } else if (location.pathname.endsWith("/admin/dashboard/students/") || location.pathname.endsWith("/admin/dashboard/students")) {
+        $('#file').change(function () {
             importCSV("students");
         });
         $("tbody").fadeIn(300);
@@ -1956,8 +1945,7 @@ $(function () {
                 .html('<i class="fas fa-arrow-circle-right"></i>');
         });
         $("#file-csv").on("change", (e) => {
-            if (e.target.files[0].name.split(".").pop() === "csv") {
-                console.log("hey");
+            if (e.target.files[0].name.split('.').pop() === "csv") {
                 importCSV("careers");
             } else {
                 generateMessages(

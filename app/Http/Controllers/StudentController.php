@@ -102,7 +102,7 @@ class StudentController extends Controller
 		$token = $request->header('token');
 
 		// Check if the file contains csv extensión.
-		if (!str_contains($request->file, 'data:text/csv;')) {
+		if ($request->import_file != "csv") {
 			$res = ["status" => "error", "text" => "El archiu no te una extensió correcte. Archius admesos: .csv"];
 			return response()->json($res);
 		}
@@ -110,7 +110,7 @@ class StudentController extends Controller
 		if ($token) {
 			$user = User::select("token")->where('token', $token)->where("role", "admin")->get()[0];
 			if ($user['token']) {
-				if (isset($request->import_file)) {
+				if (isset($request->file)) {
 					$tmp = base64_decode(explode(",", $request->file)[1]);
 					$array = array_map("str_getcsv", explode("\n", $tmp));
 					$array = array_slice($array, 0, -1);

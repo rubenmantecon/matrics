@@ -35,7 +35,7 @@ class Enrolment_ufController extends Controller
                             return response()->json($data);
                         }
                     } else {
-                        return response()->json(['status' => "error", "text" => "unitat formativa no trobada"]);
+                        return response()->json(['status' => "error", "text" => "Unitat formativa no trobada"]);
                     }
                 // Filter enrolment_ufs by enrolment_id (enrolment_id)
                 } else if (isset($filter) && $filter == "enrolment"){
