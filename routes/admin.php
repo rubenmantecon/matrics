@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Models\Term;
 use App\Models\Career;
 use BabDev\Breadcrumbs\Contracts\BreadcrumbsGenerator;
@@ -67,6 +66,10 @@ Route::get('/dashboard/admins', function () {
 
 Route::get('/dashboard/students/matriculation', function () {
     return view('pages.studentsMatriculation');
+});
+
+Route::get('/dashboard/profileReq', function(){
+	return view('pages.profile_reqs.index');
 });
 
 
