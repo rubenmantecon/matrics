@@ -50,13 +50,17 @@ class RegisterAdminController extends Controller
         $user->lastname1 = $request->lastname1;
         $user->lastname2 = $request->lastname2;
 
+        if (count(User::where('email' , $user->email)->orWhere('name', $request->username)->get()))  {
+            return redirect("/admin/dashboard?status=error&text=Administrador no s'ha creat correctament.");
+        } 
+
         $status = $user->save();
         if ($status) {
-            $data = ["status" => "Admin creat correctament."];
             Log::channel('dblogging')->info("Ha creado un Admin", ["user_id" => Auth::id(), "user_id" => $user->id]);
-
+            return redirect("/admin/dashboard?status=success&text=Administrador creat correctament.");
         }
-        return redirect('/admin/dashboard');
+
+
     }
 
     /**

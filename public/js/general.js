@@ -956,6 +956,10 @@ $(function () {
         })
     } else if (location.pathname.endsWith("/admin/dashboard/students/matriculation") || location.pathname.endsWith("/admin/dashboard/students/matriculation/")) {
         loadAdminMatriculationPage();
+    } else if (location.pathname.includes("/admin/dashboard") ) {
+        if (getUrlParameter('status')) {
+            generateMessages(getUrlParameter('status'), getUrlParameter('text'), '.container-messages' ,5);
+        }
     }
 
     //"DARK-MODE"
