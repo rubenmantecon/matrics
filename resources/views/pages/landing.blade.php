@@ -27,7 +27,7 @@
         <div class="btn-container">
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="btn primary-btn">Dashboard</a>
+                    <a href="{{ url('/dashboard') }}" class="btn primary-btn">Panell de control</a>
                 @else
                     <a href="{{ route('login') }}" class="btn primary-btn">Accedeix</a>
                 @endauth
