@@ -56,7 +56,6 @@ class CreateAdmin extends Command
             'lastname1' => $lastname1,
             'lastname2' => $lastname2,
             'token' => $token,
-            
         ]);
 
     $this->info('Account created for '.$name);
