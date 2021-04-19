@@ -110,6 +110,11 @@ body.night .container-form-admin .label-group-admin label {
     font-weight: bold;
 }
 
+body.night #form_alumn {
+    color: rgba(0, 0, 0, 0.87) !important;
+    font-weight: bold;
+}
+
 body.night .container-form-user {
     background-color: var(--BGdarkSop) !important;
 }

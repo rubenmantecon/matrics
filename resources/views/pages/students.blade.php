@@ -14,8 +14,8 @@
 				<label class="btn save" for="file"><i class="fas fa-file-import"></i> Importació</label>
 			</form>
 		</div>
-		<div class="w-11/12 mx-auto flex mt-4 mb-2 justify-around items-center">
-			<section class="filter w-fullflex flex-wrap justify-around">
+		<div class="w-11/12 mx-auto flex mt-4 mb-2 justify-around items-center" id="form_alumn">
+			<section class="filter flex-wrap justify-around">
 				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Nom" name="firstname" id="" />
 				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Primer cognom" name="lastname1" id="" />
 				<x-input type="text" class="p-1 mt-2 xl:mt-0" placeholder="Segon cognom" name="lastname2" id="" />
