@@ -145,3 +145,10 @@ Breadcrumbs::for('enrolments', static function ($trail) {
     $trail->parent('home');
     $trail->push('Preu', '/dashboard/enrolments');
 });
+
+// Dashboard > Requeriments
+
+Breadcrumbs::for('requirements', static function ($trail) {
+    $trail->parent('home');
+    $trail->push('Requeriments', '/dashboard/requirements');
+});
