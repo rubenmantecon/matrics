@@ -43,9 +43,9 @@
             @endif
             </div>
             @if(Auth::user()->role == 'admin')
-            <p class="user"><i class="fas fa-user"></i> Admin</p>
+            <p class="user"><i class="fas fa-user"></i> Administrador</p>
             @else
-            <p class="user"><i class="fas fa-user"></i> Student</p>
+            <p class="user"><i class="fas fa-user"></i> Estudiant</p>
             @endif
 
             <!-- Settings Dropdown-->
