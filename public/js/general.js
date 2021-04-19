@@ -540,6 +540,41 @@ function importCSV(page) {
     }
 }
 
+function importIMG(doc_name) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+        var fr = new FileReader(doc_name);
+        fr.onload = function () {
+            
+            var file = fr.result;
+            $.ajax({
+                url: "/api/documents",
+                method: 'POST',
+                headers: {
+                    token: $("meta[name='_token']").attr("content"),
+                },
+                data: {
+                    import_file: doc_name,
+                    file
+                },
+                success: (res) => {
+                    generateMessages(res.status, res.text, ".container-messages", 3);
+                    $("tbody").html('');
+                    
+                },
+                error: (res) => {
+                    console.log(res.responseJSON.message);
+                    generateMessages("error", "Error al pujar el Document, intenta-ho més tard", ".container-messages", 3)
+                }
+            });
+        }
+        fr.readAsDataURL($('#'+doc_name)[0].files[0]);
+    
+}
+
 /**
  *  @description "event for clone the term"
  */
@@ -907,7 +942,16 @@ $(function () {
             else
                 generateMessages("error", "Els arxius han de ser .CSV", ".container-messages", 2.5)
         })
-    } else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
+    }else if(location.pathname.endsWith("/dashboard/documents") || location.pathname.endsWith("/dashboard/documents/")){
+        if (getUrlParameter('status')) {
+            generateMessages(getUrlParameter('status'), getUrlParameter('text'), '.container-messages' ,5);
+        }
+        $('input[type="file"]').change(function (e) {
+            doc_name= e.target.id
+            importIMG(doc_name);
+        })
+
+    }else if (location.pathname.endsWith("/admin/dashboard/careers/") || location.pathname.endsWith("/admin/dashboard/careers")) {
         loadCareerPage();
         $("#start, #end").datepicker(dataPickerOptions);
         $("#start, #end").on("focus", () => {
