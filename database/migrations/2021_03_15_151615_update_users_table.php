@@ -18,7 +18,7 @@ class UpdateUsersTable extends Migration
             $table->string('firstname');
             $table->string('lastname1');
             $table->string('lastname2');
-            $table->date('birthday');
+            $table->date('birthday')->default(date('Y-m-d'));
         });
     }
 

@@ -13,9 +13,9 @@ class UpdateUsersTable2 extends Migration
 	 */
 	public function up()
 	{
-		Schema::table('users', function (Blueprint $table) {
+		/* Schema::table('users', function (Blueprint $table) {
 			$table->date('birthday')->default(date('Y-m-d'));
-		});
+		}); */
 	}
 
 	/**
