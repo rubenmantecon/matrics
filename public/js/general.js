@@ -693,6 +693,8 @@ function loadLogsPage() {
 function loadAdminMatriculationPage() {
     const userId = getUrlParameter("student");
     const termId = getUrlParameter("term");
+		console.log(userId)
+		console.log(termId)
     if (userId === "new") {
         $("form input[name='_method']").remove();
         $("form .account-user").css("display", "none");
@@ -1653,7 +1655,7 @@ function insertNewRow(...params) {
             "term"
         )}" class="btn cancel" title="Elimina"><i class="fas fa-trash"></i></a></td>`;
     } else if (lastParam == "students") {
-        row += `<td><a href="/admin/dashboard/students/matriculation?student=${
+        row += `<td><a href="/admin/dashboard/students/matriculation${
             params[params.length - 2]
         }" id="view" class="btn save" title="Dades"><i class="fas fa-eye"></i></button></td>`;
     } else if (lastParam == "admins") {
