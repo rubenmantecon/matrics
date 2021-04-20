@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class UpdateUploadsTable extends Migration
 {
@@ -13,7 +12,13 @@ class UpdateUploadsTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE `uploads` MODIFY COLUMN `data` MEDIUMBLOB ");
+        //DB::statement("ALTER TABLE `uploads` MODIFY COLUMN `data` MEDIUMBLOB ");
+        if (DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql'){
+            DB::statement("ALTER TABLE `uploads` MODIFY COLUMN `data` MEDIUMBLOB ");
+        } else {
+            DB::statement("ALTER TABLE `uploads` ALTER COLUMN `date` TYPE BYTEA");
+        }
+        
     }
 
     /**
