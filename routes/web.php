@@ -96,7 +96,7 @@ Route::post('/dashboard/enrolments', function (Request $request) {
 	$q=0;
 	foreach($request->pr as $pr){
 		if(++$q == 1){
-			$r = Requirement::where('profile_id', '=', $pr);	
+			$r = Requirement::where('profile_id', '=', $pr);
 		}
 		else{
 			$r->orWhere('profile_id', '=', $pr);
