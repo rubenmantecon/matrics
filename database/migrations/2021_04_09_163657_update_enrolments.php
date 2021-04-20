@@ -15,7 +15,11 @@ class UpdateEnrolments extends Migration
     public function up()
     {
         //
-        DB::statement("ALTER TABLE enrolments MODIFY COLUMN state ENUM('pending', 'validated','unregistered')");
+        if (DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql'){
+            DB::statement("ALTER TABLE enrolments MODIFY COLUMN state ENUM('pending', 'validated','unregistered')");
+        } else {
+            DB::statement("ALTER TABLE enrolments ALTER COLUMN state ENUM('pending', 'validated','unregistered')");
+        }
     }
 
     /**

@@ -14,8 +14,14 @@ class ModifyReqEnrolmentState extends Migration
     public function up()
     {
         //
-        DB::statement("ALTER TABLE req_enrols MODIFY COLUMN state ENUM('pending', 'validated','rejected','empty')");
+        if (DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql'){
+            DB::statement("ALTER TABLE req_enrols MODIFY COLUMN state ENUM('pending', 'validated','rejected','empty')");
+        } else {
+            DB::statement("ALTER TABLE req_enrols ALTER COLUMN state ENUM('pending', 'validated','rejected','empty')");
+        }
+
     }
+    
 
     /**
      * Reverse the migrations.
