@@ -60,7 +60,7 @@ class DbTables extends Migration
             $table->foreignId('term_id')->constrained();
             $table->foreignId('career_id')->constrained();
             $table->string('dni');
-            $table->enum('state', ['registered', 'unregistered']);
+            $table->enum('state', ['pending', 'validated','rejected','empty']);
             $table->timestamps();
         });
 
