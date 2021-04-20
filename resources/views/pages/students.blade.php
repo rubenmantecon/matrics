@@ -9,6 +9,7 @@
 	@endsection
 	<div class="students">
 		<div class="btn-import">
+		<a href="/admin/dashboard/students/matriculation?student=new" class="btn primary-btn"><i class="fas fa-user"></i> Nou alumne</a>
 			<form enctype="multipart/form-data" action="/api/students/import" method="post" id="form-file">
 				<input type="file" name="file" id="file" class="dis-none">
 				<label class="btn save" for="file"><i class="fas fa-file-import"></i> Importació</label>
