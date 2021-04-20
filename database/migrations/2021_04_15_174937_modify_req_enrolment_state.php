@@ -14,7 +14,7 @@ class ModifyReqEnrolmentState extends Migration
     public function up()
     {
         //
-        DB::statement("ALTER TABLE `req_enrols` MODIFY COLUMN `state` ENUM('pending', 'validated','rejected','empty')");
+        DB::statement("ALTER TABLE req_enrols MODIFY COLUMN state ENUM('pending', 'validated','rejected','empty')");
     }
 
     /**

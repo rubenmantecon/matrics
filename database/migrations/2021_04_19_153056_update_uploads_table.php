@@ -14,9 +14,9 @@ class UpdateUploadsTable extends Migration
     {
         //DB::statement("ALTER TABLE `uploads` MODIFY COLUMN `data` MEDIUMBLOB ");
         if (DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql'){
-            DB::statement("ALTER TABLE `uploads` MODIFY COLUMN `data` MEDIUMBLOB ");
+            DB::statement("ALTER TABLE uploads MODIFY COLUMN data MEDIUMBLOB ");
         } else {
-            DB::statement("ALTER TABLE `uploads` ALTER COLUMN `date` TYPE BYTEA");
+            DB::statement("ALTER TABLE uploads ALTER COLUMN date TYPE BYTEA");
         }
         
     }

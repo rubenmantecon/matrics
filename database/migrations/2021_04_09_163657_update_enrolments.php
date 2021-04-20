@@ -15,7 +15,7 @@ class UpdateEnrolments extends Migration
     public function up()
     {
         //
-        DB::statement("ALTER TABLE `enrolments` MODIFY COLUMN `state` ENUM('pending', 'validated','unregistered')");
+        DB::statement("ALTER TABLE enrolments MODIFY COLUMN state ENUM('pending', 'validated','unregistered')");
     }
 
     /**
