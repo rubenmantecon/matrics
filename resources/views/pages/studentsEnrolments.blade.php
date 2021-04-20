@@ -58,6 +58,8 @@
             <div class="text-right">Total</div>
             <div id="totalSelected" class="text-center">0</div>
         </div>
+				<a href="documents" class="btn save my-4">Siguiente</a>
+
 
         <script type="text/javascript" defer>
             calculatePrice({!! $rights !!});

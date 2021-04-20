@@ -40,72 +40,71 @@ use App\Models\Req_enrol;
 */
 
 Route::get('/', function () {
-    $year = Carbon::now()->year;
-    $nextYear = $year + 1;
-    return view('pages.landing', ["year" => "$year/$nextYear"]);
+	$year = Carbon::now()->year;
+	$nextYear = $year + 1;
+	return view('pages.landing', ["year" => "$year/$nextYear"]);
 });
 
 Route::get('/sample', function () {
-    return view('pages.sample');
+	return view('pages.sample');
 });
 
 Route::get('/uploads', function () {
-    return view('pages.upload');
+	return view('pages.upload');
 });
 
 Route::get('/dashboard/profile', function () {
-    $user_id = auth::id();
-    $enrollments = Enrolment::where('user_id', $user_id)->get();
-    return view('pages.profile', ['enrollments' => $enrollments]);
+	$user_id = auth::id();
+	$enrollments = Enrolment::where('user_id', $user_id)->get();
+	return view('pages.profile', ['enrollments' => $enrollments]);
 });
 Route::get('/dashboard', function () {
-    $user_id = auth::id();
-    if (count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get()) > 0) {
-        if (count(Enrolment::where('user_id', $user_id)->get()) > count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get())) {
-            // Alumno que tiene que hacer la matricula, pero ya tiene una antigua (Antiguo alumno).
-            return redirect('/dashboard/requirements');
-        } else {
-            // Alumno que tiene que hacer la matricula, (Alumno nuevo)
-            return redirect('/dashboard/requirements');
-        }
-    } else {
-        // Alumno que ya ha hecho la matricula (actual).
-        return view('pages.dashboard');
-    }
+	$user_id = auth::id();
+	if (count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get()) > 0) {
+		if (count(Enrolment::where('user_id', $user_id)->get()) > count(Enrolment::where('user_id', $user_id)->where('state', 'unregistered')->get())) {
+			// Alumno que tiene que hacer la matricula, pero ya tiene una antigua (Antiguo alumno).
+			return redirect('/dashboard/requirements');
+		} else {
+			// Alumno que tiene que hacer la matricula, (Alumno nuevo)
+			return redirect('/dashboard/requirements');
+		}
+	} else {
+		// Alumno que ya ha hecho la matricula (actual).
+		return view('pages.dashboard');
+	}
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/dashboard/requirements', function () {
-    $profile_req = Profile_req::all();
-    return view('pages.requirements', ['profile_req' => $profile_req]);
+	$profile_req = Profile_req::all();
+	return view('pages.requirements', ['profile_req' => $profile_req]);
 });
 
 Route::post('/dashboard/enrolments', function (Request $request) {
-    $user_id = auth::id();
+	$user_id = auth::id();
 
-    /*
+	/*
 		Podemos enviarlos a la siguiente pagina
 		o
 		Podemos almacenarlos en la db (por si el usuario se queda a medias)
 	*/
 
-    $career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['enrolments.id AS enrolment_id', 'careers.code', 'careers.name', 'careers.id', 'enrolments.birth_date']);
+	$career = Enrolment::join("careers", "enrolments.career_id", "=", "careers.id")->where("enrolments.user_id", $user_id)->where("enrolments.state", "unregistered")->orderBy("enrolments.id", "DESC")->first(['enrolments.id AS enrolment_id', 'careers.code', 'careers.name', 'careers.id', 'enrolments.birth_date']);
 
 
 	// Get all requeriments from selected profile_req
-	
-	$q=0;
-	foreach($request->pr as $pr){
-		if(++$q == 1){
+
+	$q = 0;
+	foreach ($request->pr as $pr) {
+		if (++$q == 1) {
 			$r = Requirement::where('profile_id', '=', $pr);
-		}
-		else{
+		} else {
 			$r->orWhere('profile_id', '=', $pr);
 		}
 	}
 	$requirements = $r->get(['id']);
-	
+
 	// Create all as a template (empty registers in db)
-	foreach($requirements as $r){
+	foreach ($requirements as $r) {
 		$re = new Req_enrol;
 		$re->req_id = $r['id']; // or $r['id'] idk
 		$re->enrolment_id = $career->enrolment_id;
@@ -113,19 +112,19 @@ Route::post('/dashboard/enrolments', function (Request $request) {
 		$re->save();
 	}
 
-	$rights = '{"age": "' . Carbon::parse($career['birth_date'])->age . '","requirements": "'.$requirements. '","image": "' . $request->pr_image . '", "excursions": "' . $request->pr_excursions . '", "extracurricular": "' . $request->pr_extracurricular . '"}';
+	$rights = '{"age": "' . Carbon::parse($career['birth_date'])->age . '","requirements": ' . $requirements . ',"image": "' . $request->pr_image . '", "excursions": "' . $request->pr_excursions . '", "extracurricular": "' . $request->pr_extracurricular . '"}';
 
-    $mps = Mp::where('career_id', $career["id"])->get(); //Mp::careers();
+	$mps = Mp::where('career_id', $career["id"])->get(); //Mp::careers();
 
-    return view('pages.studentsEnrolments', ['career' => $career, 'mps' => $mps, 'rights' => $rights]);
+	return view('pages.studentsEnrolments', ['career' => $career, 'mps' => $mps, 'rights' => $rights]);
 });
 
 Route::get('/dashboard/documents', function () {
-    return view('pages.documents');
+	return view('pages.documents');
 });
 
 Route::get('/dashboard/documents', function () {
-    return view('pages.documents');
+	return view('pages.documents');
 });
 
 
@@ -149,11 +148,11 @@ Route::resource('api/upload', UploadController::class);
 require __DIR__ . '/auth.php';
 
 Route::name('admin') /*admin/dashboard*/
-    ->prefix('admin')
-    ->middleware(['auth', 'can:accessAdmin'])
-    ->group(function () {
-        require __DIR__ . '/admin.php';
-    });
+	->prefix('admin')
+	->middleware(['auth', 'can:accessAdmin'])
+	->group(function () {
+		require __DIR__ . '/admin.php';
+	});
 
 Route::get('auth/redirect', 'App\Http\Controllers\SocialController@redirect');
 Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
@@ -162,30 +161,30 @@ Route::get('auth/callback', 'App\Http\Controllers\SocialController@callback');
 
 // Dashboard
 Breadcrumbs::for('home', static function ($trail) {
-    $trail->push('Inici', route('dashboard'));
+	$trail->push('Inici', route('dashboard'));
 });
 
 // Dashboard > Profile
 Breadcrumbs::for('profile', static function ($trail) {
-    $trail->parent('home');
-    $trail->push('Dades personals', '/dashboard/profile');
+	$trail->parent('home');
+	$trail->push('Dades personals', '/dashboard/profile');
 });
 
 // Dashboard > Documents
 Breadcrumbs::for('documents', static function ($trail) {
-    $trail->parent('home');
-    $trail->push('Documents', '/dashboard/documents');
+	$trail->parent('home');
+	$trail->push('Documents', '/dashboard/documents');
 });
 
 // Dashboard > Enrolments
 Breadcrumbs::for('enrolments', static function ($trail) {
-    $trail->parent('home');
-    $trail->push('Preu', '/dashboard/enrolments');
+	$trail->parent('home');
+	$trail->push('Preu', '/dashboard/enrolments');
 });
 
 // Dashboard > Requeriments
 
 Breadcrumbs::for('requirements', static function ($trail) {
-    $trail->parent('home');
-    $trail->push('Requeriments', '/dashboard/requirements');
+	$trail->parent('home');
+	$trail->push('Requeriments', '/dashboard/requirements');
 });
