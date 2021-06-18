@@ -13,12 +13,19 @@ A Laravel web app for handling our very own school's enrollments. A good amount 
 ## Load Dependencies
 ``` npm run init-load ```
 
+If this command fails, delete `composer.lock` and try again
+
 ## Start Project
 `npm start` OR `php artisan serve`
 
+## Features
+- Can CRUD users and admins
+- Can import data from a CS, to load into the app
+- Social login
+- Live reload of tables upon change, via AJAX
 
 ### Generate Admin Account
-To fast-generate an Admin Account just run the next command in the instalation folder:
+For a quick admin account just run the next command in the instalation folder:
 - ```php artisan createadmin```
 
 
